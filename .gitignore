@@ -14,8 +14,12 @@
 /coverage
 
 # next.js
-/.next/
+.next/
 /out/
+
+# firebase
+.firebase/
+firebase-debug.log*
 
 # production
 /build
