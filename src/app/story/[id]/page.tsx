@@ -1,5 +1,4 @@
-import { doc, getDoc, collection, query, orderBy, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { adminDb } from "@/lib/firebase-admin";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -9,9 +8,9 @@ type Props = {
 
 async function getStory(id: string) {
   try {
-    const docRef = doc(db, "stories", id);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
+    const docRef = adminDb.collection("stories").doc(id);
+    const docSnap = await docRef.get();
+    if (docSnap.exists) {
       return docSnap.data();
     }
   } catch (error) {
@@ -20,6 +19,8 @@ async function getStory(id: string) {
   return null;
 }
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
@@ -27,18 +28,15 @@ export async function generateMetadata(
   const { id } = await params;
   const story = await getStory(id);
 
-  if (!story) {
-    return {
-      title: "Story Not Found - Healing Milestones",
-    };
+  let title = "Healing Milestones";
+  let desc = "Read a story of hope and positivity.";
+  let images = ["https://healingmilestones.in/logo.png"];
+
+  if (story) {
+    if (story.heading) title = story.heading;
+    if (story.description) desc = story.description;
+    if (story.mainImage) images = [story.mainImage];
   }
-
-  const title = story.heading || "A Healing Milestone";
-  const desc = story.description ? (story.description.length > 160 ? story.description.substring(0, 160) + "..." : story.description) : "Read this story on Healing Milestones.";
-
-  const images = story.mainImage 
-    ? [story.mainImage] 
-    : ["https://healingmilestones.in/logo.png"];
 
   return {
     title: `${title} - Healing Milestones`,
@@ -53,6 +51,7 @@ export async function generateMetadata(
           url: images[0],
           width: 800,
           height: 800,
+          alt: title,
         },
       ],
       type: "article",
@@ -61,7 +60,7 @@ export async function generateMetadata(
       card: "summary_large_image",
       title: title,
       description: desc,
-      images: [images[0]],
+      images: images,
     },
   };
 }
@@ -80,10 +79,10 @@ export default async function StoryPage({ params }: Props) {
   let authorName = "User";
   if (story.authorId && story.displayAuthorName) {
     try {
-      const authorRef = doc(db, "users", story.authorId);
-      const authorSnap = await getDoc(authorRef);
-      if (authorSnap.exists()) {
-        authorName = authorSnap.data().displayName || "User";
+      const authorRef = adminDb.collection("users").doc(story.authorId);
+      const authorSnap = await authorRef.get();
+      if (authorSnap.exists) {
+        authorName = authorSnap.data()?.displayName || "User";
       }
     } catch (e) {
       console.error("Error fetching author", e);
@@ -96,9 +95,9 @@ export default async function StoryPage({ params }: Props) {
   // 2. Fetch Comments
   let commentsList: any[] = [];
   try {
-    const commentsRef = collection(db, "stories", id, "comments");
-    const commentsQuery = query(commentsRef, orderBy("createdAt", "asc"));
-    const commentsSnap = await getDocs(commentsQuery);
+    const commentsRef = adminDb.collection("stories").doc(id).collection("comments");
+    const commentsQuery = commentsRef.orderBy("createdAt", "asc");
+    const commentsSnap = await commentsQuery.get();
     
     const userCache: Record<string, any> = {};
 
@@ -108,9 +107,9 @@ export default async function StoryPage({ params }: Props) {
       
       // 3. Fetch User data for comment
       if (userId && !userCache[userId]) {
-        const userRef = doc(db, "users", userId);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
+        const userRef = adminDb.collection("users").doc(userId);
+        const userSnap = await userRef.get();
+        if (userSnap.exists) {
           userCache[userId] = userSnap.data();
         }
       }

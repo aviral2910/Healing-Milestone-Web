@@ -1,5 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { adminDb } from "@/lib/firebase-admin";
 import Link from "next/link";
 
 async function getFeaturedStories() {
@@ -7,12 +6,12 @@ async function getFeaturedStories() {
     // 1. Fetch the list of featured story IDs from a settings document
     // You can manage this document in Firestore: collection "settings", doc "homepage"
     // with a field "featuredStoryIds" (array of strings)
-    const settingsRef = doc(db, "settings", "homepage");
-    const settingsSnap = await getDoc(settingsRef);
+    const settingsRef = adminDb.collection("settings").doc("homepage");
+    const settingsSnap = await settingsRef.get();
     
     let storyIds: string[] = [];
-    if (settingsSnap.exists() && settingsSnap.data().featuredStoryIds) {
-      storyIds = settingsSnap.data().featuredStoryIds;
+    if (settingsSnap.exists && settingsSnap.data()?.featuredStoryIds) {
+      storyIds = settingsSnap.data()?.featuredStoryIds;
     } else {
       // Fallback: Just return empty array if document doesn't exist yet
       return [];
@@ -21,9 +20,9 @@ async function getFeaturedStories() {
     // 2. Fetch the actual stories
     const stories = [];
     for (const id of storyIds) {
-      const storyRef = doc(db, "stories", id);
-      const storySnap = await getDoc(storyRef);
-      if (storySnap.exists()) {
+      const storyRef = adminDb.collection("stories").doc(id);
+      const storySnap = await storyRef.get();
+      if (storySnap.exists) {
         stories.push({ id, ...storySnap.data() });
       }
     }
@@ -85,6 +84,29 @@ export default async function Home() {
           </div>
         </div>
       </main>
+
+      {/* 2.5 Features Section */}
+      <section className="features-section">
+        <div className="features-container">
+          <div className="features-grid">
+            <div className="feature-card glass-card">
+              <div className="feature-icon">✨</div>
+              <h3>Daily Inspiration</h3>
+              <p>Start your day with uplifting quotes and stories designed to nurture a positive mindset.</p>
+            </div>
+            <div className="feature-card glass-card">
+              <div className="feature-icon">🌱</div>
+              <h3>Track Your Growth</h3>
+              <p>Celebrate your small wins and major milestones on your journey to better mental health.</p>
+            </div>
+            <div className="feature-card glass-card">
+              <div className="feature-icon">🤝</div>
+              <h3>Safe Space</h3>
+              <p>A supportive environment where your emotional well-being is always the top priority.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* 3. Community Section */}
       <section className="community-section">
