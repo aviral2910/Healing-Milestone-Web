@@ -36,20 +36,24 @@ export async function generateMetadata(
   const title = story.heading || "A Healing Milestone";
   const desc = story.description ? (story.description.length > 160 ? story.description.substring(0, 160) + "..." : story.description) : "Read this story on Healing Milestones.";
 
+  const images = story.mainImage 
+    ? [story.mainImage] 
+    : ["https://healingmilestones.in/logo.png"];
+
   return {
     title: `${title} - Healing Milestones`,
     description: desc,
     openGraph: {
       title: title,
       description: desc,
-      images: story.mainImage ? [story.mainImage] : [],
+      images: images,
       type: "article",
     },
     twitter: {
       card: "summary_large_image",
       title: title,
       description: desc,
-      images: story.mainImage ? [story.mainImage] : [],
+      images: images,
     },
   };
 }
