@@ -1,21 +1,34 @@
 let adminDb: any = null;
 
 if (typeof window === 'undefined') {
-  // We MUST use Node's native module.createRequire to bypass Turbopack's require override.
   const moduleName = 'module';
   const { createRequire } = eval(`require('${moduleName}')`);
-  
-  // Create a require function that originates from the current working directory
   const nativeRequire = createRequire(process.cwd() + '/');
-  
-  // Obfuscate the package name so Turbopack's static analysis ignores it
   const adminPkg = 'firebase' + '-admin';
   const admin = nativeRequire(adminPkg);
   
-  if (!admin.apps.length) {
-    admin.initializeApp();
+  console.log("FIREBASE-ADMIN: admin.apps =", admin.apps?.map((a: any) => a.name));
+  
+  const hasDefaultApp = admin.apps?.some((app: any) => app.name === '[DEFAULT]');
+  
+  if (!hasDefaultApp) {
+    console.log("FIREBASE-ADMIN: initializing [DEFAULT] app...");
+    try {
+      admin.initializeApp({
+        credential: admin.credential.applicationDefault()
+      });
+      console.log("FIREBASE-ADMIN: initialized successfully");
+    } catch (e) {
+      console.error("FIREBASE-ADMIN: error during initializeApp:", e);
+    }
   }
-  adminDb = admin.firestore();
+  
+  try {
+    adminDb = admin.firestore();
+    console.log("FIREBASE-ADMIN: firestore initialized");
+  } catch (e) {
+    console.error("FIREBASE-ADMIN: error initializing firestore:", e);
+  }
 }
 
 export { adminDb };

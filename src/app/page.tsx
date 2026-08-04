@@ -1,5 +1,7 @@
 import { adminDb } from "@/lib/firebase-admin";
 import Link from "next/link";
+import StoryCard from "@/components/StoryCard";
+import StoriesCarousel from "@/components/StoriesCarousel";
 
 async function getFeaturedStories() {
   try {
@@ -85,30 +87,24 @@ export default async function Home() {
         </div>
       </main>
 
-      {/* 2.5 Features Section */}
-      <section className="features-section">
-        <div className="features-container">
-          <div className="features-grid">
-            <div className="feature-card glass-card">
-              <div className="feature-icon">✨</div>
-              <h3>Daily Inspiration</h3>
-              <p>Start your day with uplifting quotes and stories designed to nurture a positive mindset.</p>
-            </div>
-            <div className="feature-card glass-card">
-              <div className="feature-icon">🌱</div>
-              <h3>Track Your Growth</h3>
-              <p>Celebrate your small wins and major milestones on your journey to better mental health.</p>
-            </div>
-            <div className="feature-card glass-card">
-              <div className="feature-icon">🤝</div>
-              <h3>Safe Space</h3>
-              <p>A supportive environment where your emotional well-being is always the top priority.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 3. Featured Stories Section */}
+      {featuredStories.length > 0 && (
+        <section className="featured-stories-section">
+          <h2 className="section-title">Stories of Hope</h2>
+          <p className="section-subtitle">Read real milestones shared by our community.</p>
+          
+          <StoriesCarousel 
+            stories={featuredStories.map((story: any) => ({
+              id: story.id,
+              mainImage: story.mainImage || null,
+              heading: story.heading || null,
+              description: story.description || null
+            }))} 
+          />
+        </section>
+      )}
 
-      {/* 3. Community Section */}
+      {/* 4. Community Section */}
       <section className="community-section">
         <div className="community-container">
           <h2 className="section-title">Join Our Community</h2>
@@ -135,36 +131,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
-      {/* 4. Featured Stories Section */}
-      {featuredStories.length > 0 && (
-        <section className="featured-stories-section">
-          <h2 className="section-title">Stories of Hope</h2>
-          <p className="section-subtitle">Read real milestones shared by our community.</p>
-          
-          <div className="stories-carousel">
-            {featuredStories.map((story: any) => (
-              <Link href={`/story/${story.id}`} key={story.id} className="glass-card story-card-link">
-                {story.mainImage && (
-                  <div className="story-card-image">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={story.mainImage} alt={story.heading || "Story"} />
-                  </div>
-                )}
-                <div className="story-card-content">
-                  <h3 className="story-card-title">{story.heading || "A Healing Milestone"}</h3>
-                  <p className="story-card-desc">
-                    {story.description ? (story.description.length > 100 ? story.description.substring(0, 100) + "..." : story.description) : ""}
-                  </p>
-                  <div className="story-card-footer">
-                    <span>Read more →</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* 5. Footer */}
       <footer className="home-footer">
