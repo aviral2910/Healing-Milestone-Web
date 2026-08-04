@@ -1,0 +1,336 @@
+/* [project]/src/app/globals.css [app-client] (css) */
+:root {
+  --background: #09090b;
+  --surface: #18181bb3;
+  --primary: #d4af37;
+  --primary-hover: #e8c755;
+  --text-primary: #fff;
+  --text-secondary: #a1a1aa;
+  --border: #d4af3726;
+  --glow: #d4af3733;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: radial-gradient(circle at top center, #1c1c1f 0%, var(--background) 100%);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  font-family: Outfit, sans-serif;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.banner {
+  border-bottom: 1px solid var(--border);
+  z-index: 50;
+  -webkit-backdrop-filter: blur(16px);
+  background: #09090bd9;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  display: flex;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 4px 30px #00000080;
+}
+
+.banner-brand {
+  align-items: center;
+  gap: 12px;
+  display: flex;
+}
+
+.banner-logo {
+  object-fit: contain;
+  width: 48px;
+  height: 48px;
+}
+
+.banner-title {
+  color: var(--text-primary);
+  flex-direction: column;
+  font-family: Oswald, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.1;
+  display: flex;
+}
+
+.download-btn {
+  background: linear-gradient(135deg, var(--primary) 0%, #b89326 100%);
+  color: #000;
+  cursor: pointer;
+  box-shadow: 0 4px 14px var(--glow);
+  border: none;
+  border-radius: 24px;
+  padding: 10px 20px;
+  font-size: .95rem;
+  font-weight: 700;
+  transition: all .3s cubic-bezier(.4, 0, .2, 1);
+}
+
+.download-btn:hover {
+  transform: translateY(-2px)scale(1.02);
+  box-shadow: 0 6px 20px #d4af3766;
+}
+
+.download-btn:active {
+  transform: translateY(0)scale(.98);
+}
+
+.story-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 48px;
+  box-shadow: 0 8px 32px #0006, inset 0 0 0 1px #ffffff0d;
+}
+
+.interaction-prompt {
+  text-align: center;
+  border: 1px solid var(--border);
+  background: #d4af370d;
+  border-radius: 8px;
+  padding: 16px;
+  font-weight: 500;
+  transition: all .2s;
+}
+
+.interaction-prompt:hover {
+  border-color: var(--primary);
+  background: #d4af371a;
+}
+
+.interaction-prompt a {
+  color: var(--primary);
+  display: block;
+}
+
+.reactions-container {
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+  padding-top: 24px;
+}
+
+.reactions-title {
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.reactions-list {
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  display: flex;
+}
+
+.reaction-badge {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: .95rem;
+  display: inline-flex;
+}
+
+.reaction-count {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.comments-section {
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+  padding-top: 24px;
+}
+
+.comments-title {
+  color: var(--primary);
+  margin-bottom: 24px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.comments-list {
+  flex-direction: column;
+  gap: 20px;
+  display: flex;
+}
+
+.comment-card {
+  background: var(--surface);
+  border: 1px solid #ffffff0d;
+  border-radius: 12px;
+  gap: 16px;
+  padding: 16px;
+  display: flex;
+}
+
+.comment-avatar img {
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.avatar-placeholder {
+  background: var(--primary);
+  color: #000;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: flex;
+}
+
+.comment-content {
+  flex: 1;
+}
+
+.comment-header {
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+  display: flex;
+}
+
+.comment-author {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.comment-date {
+  color: var(--text-secondary);
+  font-size: .85rem;
+}
+
+.comment-text {
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  font-size: .95rem;
+  line-height: 1.5;
+}
+
+.no-comments {
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 24px 0;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .story-container {
+    width: 95%;
+    margin: 20px auto;
+    padding: 0 16px;
+  }
+
+  .story-title {
+    font-size: 1.75rem;
+  }
+
+  .story-content {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .banner {
+    padding: 12px 16px;
+  }
+
+  .banner-title {
+    font-size: 1.1rem;
+  }
+
+  .banner-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .comment-card {
+    gap: 12px;
+    padding: 12px;
+  }
+}
+
+.story-title {
+  background: linear-gradient(to right, #fff, #e0e0e0);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  margin-bottom: 16px;
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.story-meta {
+  color: var(--text-secondary);
+  border-bottom: 1px solid #ffffff1a;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  font-size: 1rem;
+  display: flex;
+}
+
+.story-image-wrapper {
+  border-radius: 16px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px #0000004d;
+}
+
+.story-image {
+  object-fit: cover;
+  width: 100%;
+  max-height: 500px;
+  transition: transform .5s;
+  display: block;
+}
+
+.story-image:hover {
+  transform: scale(1.03);
+}
+
+.story-content {
+  color: #e4e4e7;
+  white-space: pre-wrap;
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.8;
+}
+
+.loading {
+  min-height: 60vh;
+  color: var(--primary);
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  display: flex;
+}
+
+/*# sourceMappingURL=src_app_globals_css_1igg3k2._.single.css.map*/
