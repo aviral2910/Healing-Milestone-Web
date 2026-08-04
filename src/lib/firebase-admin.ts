@@ -1,10 +1,10 @@
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
+// Use a dynamic import trick to prevent Next.js from trying to bundle firebase-admin
+const admin = typeof window === 'undefined' ? eval(`require('firebase-admin')`) : null;
 
-if (!getApps().length) {
-  initializeApp();
+if (admin && !admin.apps.length) {
+  admin.initializeApp();
 }
 
-const adminDb = getFirestore();
+const adminDb = admin ? admin.firestore() : null;
 
 export { adminDb };
