@@ -46,14 +46,22 @@ export async function generateMetadata(
     openGraph: {
       title: title,
       description: desc,
-      images: images,
+      url: `https://healingmilestones.in/story/${id}`,
+      siteName: "Healing Milestones",
+      images: [
+        {
+          url: images[0],
+          width: 800,
+          height: 800,
+        },
+      ],
       type: "article",
     },
     twitter: {
       card: "summary_large_image",
       title: title,
       description: desc,
-      images: images,
+      images: [images[0]],
     },
   };
 }
