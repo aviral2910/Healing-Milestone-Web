@@ -35,6 +35,8 @@ async function getFeaturedStories() {
   }
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const featuredStories = await getFeaturedStories();
 
@@ -93,12 +95,18 @@ export default async function Home() {
           </p>
           <div className="community-cards">
             <a href="https://t.me/+Ex7lEfq3s-U5Nzk1" target="_blank" rel="noopener noreferrer" className="glass-card community-link">
-              <div className="community-icon telegram">✈️</div>
+              <div className="community-icon telegram">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/telegram.svg" alt="Telegram Logo" style={{ width: "64px", height: "64px" }} />
+              </div>
               <h3>Telegram Group</h3>
               <p>Join the conversation and connect globally.</p>
             </a>
             <a href="https://chat.whatsapp.com/JN3iZDXnVb9HgkbbEGwzv4?mode=gi_t" target="_blank" rel="noopener noreferrer" className="glass-card community-link">
-              <div className="community-icon whatsapp">💬</div>
+              <div className="community-icon whatsapp">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/whatsapp.svg" alt="WhatsApp Logo" style={{ width: "64px", height: "64px" }} />
+              </div>
               <h3>WhatsApp Group</h3>
               <p>Get daily updates and share your milestones.</p>
             </a>
