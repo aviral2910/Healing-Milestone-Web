@@ -1,9 +1,0 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "com.genesisapps.healingmilestones",
-    "sha256_cert_fingerprints":
-    ["8E:B0:18:6B:B7:17:ED:96:C0:CF:95:11:E0:77:0F:D0:42:F2:26:F3:F8:58:64:A9:62:4A:96:9A:F9:C0:21:69"]
-  }
-}]
