@@ -1,0 +1,284 @@
+.profile-page-wrapper {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+  display: flex;
+  flex-direction: column;
+}
+
+.app-install-banner {
+  background: rgba(24, 24, 27, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  color: white;
+  padding: 16px 24px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.banner-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.banner-text strong {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.banner-text p {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.btn-download {
+  background: linear-gradient(135deg, #FFDF73 0%, #D4AF37 100%);
+  color: #09090b;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.btn-download:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+}
+
+.profile-main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 60px 24px 100px 24px; /* extra bottom padding for banner */
+  width: 100%;
+}
+
+.profile-header-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 50px 32px;
+  margin-bottom: 56px;
+  border-radius: 32px;
+  background: rgba(24, 24, 27, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Subtle glow behind the card */
+.profile-header-card::before {
+  content: "";
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.05), transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.profile-avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 24px;
+  border: 3px solid rgba(212, 175, 55, 0.8);
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.profile-name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+  background: linear-gradient(to right, #ffffff, #e0e0e0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.verified-badge {
+  background-color: #1DA1F2;
+  color: white;
+  font-size: 0.8rem;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.pro-badge {
+  background-color: var(--primary);
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 24px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-bio {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 650px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
+.profile-stories-section {
+  width: 100%;
+}
+
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 36px;
+  width: 100%;
+}
+
+.stories-grid .story-card {
+  min-width: 100%;
+  max-width: 100%;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger animations for first few cards */
+.stories-grid .story-card:nth-child(1) { animation-delay: 0.1s; }
+.stories-grid .story-card:nth-child(2) { animation-delay: 0.2s; }
+.stories-grid .story-card:nth-child(3) { animation-delay: 0.3s; }
+.stories-grid .story-card:nth-child(4) { animation-delay: 0.4s; }
+
+.stories-grid .story-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.stories-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  border-radius: 16px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+/* Override home-header for profile page */
+.profile-page-wrapper .home-header {
+  position: static; /* Not sticky, banner is sticky */
+  background: transparent;
+  border-bottom: 1px solid rgba(var(--primary-rgb), 0.1);
+}
+
+@media (max-width: 768px) {
+  .app-install-banner {
+    padding: 12px 16px;
+  }
+  
+  .profile-main {
+    padding: 24px 16px;
+  }
+  
+  .profile-header-card {
+    padding: 32px 20px;
+  }
+  
+  .profile-name {
+    font-size: 1.5rem;
+  }
+}

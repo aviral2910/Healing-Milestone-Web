@@ -18,12 +18,43 @@
 }
 
 body {
-  background: radial-gradient(circle at top center, #1c1c1f 0%, var(--background) 100%);
+  background-color: var(--background);
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.08), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(212, 175, 55, 0.06), transparent 25%);
   color: var(--text-primary);
   font-family: 'Outfit', sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: 
+    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 0% 100%, rgba(212, 175, 55, 0.03) 0%, transparent 40%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.glass-panel {
+  background: rgba(24, 24, 27, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.premium-gradient-text {
+  background: linear-gradient(135deg, #FFDF73 0%, #D4AF37 50%, #997A15 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
 a {
@@ -92,14 +123,121 @@ a {
 
 .story-container {
   max-width: 800px;
-  margin: 40px auto;
+  margin: -60px auto 40px auto; /* Overlaps hero section slightly */
   padding: 48px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px inset rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px inset rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  position: relative;
+  z-index: 10;
 }
+
+/* Immersive Hero Section */
+.story-hero-section {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  min-height: 400px;
+  max-height: 600px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  margin-top: -60px; /* pull up behind banner if needed, or leave normal */
+}
+
+.hero-bg-blur {
+  position: absolute;
+  top: -10%; left: -10%; width: 120%; height: 120%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(30px) brightness(0.6);
+  z-index: 1;
+}
+
+.hero-main-img {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 2;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to bottom, rgba(9, 9, 11, 0.2) 0%, rgba(9, 9, 11, 0.95) 100%);
+  z-index: 3;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  max-width: 1000px;
+  padding: 40px 24px 80px 24px; /* padding bottom extra for overlap */
+  text-align: center;
+}
+
+.hero-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 3.5rem;
+  line-height: 1.2;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: #fff;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1.1rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.author-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 16px 6px 6px;
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.author-avatar-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+}
+
+.author-avatar-small.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.story-content {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 300;
+  white-space: pre-wrap;
+}
+
 
 /* Reusable Interaction Prompt */
 .interaction-prompt {
@@ -162,13 +300,13 @@ a {
 /* Comments Section */
 .comments-section {
   margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .comments-title {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-family: 'Oswald', sans-serif;
   margin-bottom: 24px;
   color: var(--primary);
 }
@@ -182,46 +320,58 @@ a {
 .comment-card {
   display: flex;
   gap: 16px;
-  background: var(--surface);
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 16px;
-  border-radius: 12px;
+  transition: background 0.3s ease;
+}
+
+.comment-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.comment-avatar {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(212, 175, 55, 0.3);
 }
 
 .comment-avatar img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border: 1px solid var(--border);
 }
 
-.avatar-placeholder {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.comment-avatar .avatar-placeholder {
+  width: 100%;
+  height: 100%;
   background: var(--primary);
-  color: #000;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .comment-content {
-  flex: 1;
+  flex-grow: 1;
 }
 
 .comment-header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 .comment-author {
   font-weight: 600;
+  font-size: 1.05rem;
   color: var(--text-primary);
 }
 
@@ -231,10 +381,9 @@ a {
 }
 
 .comment-text {
-  color: var(--text-secondary);
-  line-height: 1.5;
-  font-size: 0.95rem;
-  white-space: pre-wrap;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .no-comments {
@@ -589,6 +738,7 @@ a {
 .story-card {
   min-width: 340px;
   max-width: 360px;
+  min-height: 420px;
   padding: 0;
   overflow: hidden;
   text-align: left;
@@ -599,6 +749,23 @@ a {
   flex-direction: column;
   transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.story-card.no-image {
+  background: linear-gradient(135deg, rgba(39, 39, 42, 0.6) 0%, rgba(24, 24, 27, 0.9) 100%);
+  border-top: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.story-card.no-image::before {
+  content: '"';
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 12rem;
+  color: rgba(212, 175, 55, 0.05);
+  line-height: 1;
+  pointer-events: none;
 }
 
 .story-card:hover {
@@ -655,7 +822,7 @@ a {
 }
 
 .story-card-content {
-  padding: 24px;
+  padding: 32px 24px 24px 24px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -665,20 +832,37 @@ a {
   margin-top: -20px;
 }
 
+.story-card.no-image .story-card-content {
+  margin-top: 0;
+  padding: 48px 32px 32px 32px;
+  background: transparent;
+}
+
+.story-card.no-image .story-card-title {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.story-card.no-image .story-card-desc {
+  font-size: 1.15rem;
+}
+
 .story-card-title {
-  font-size: 1.35rem;
-  margin-bottom: 12px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.6rem;
+  margin-bottom: 14px;
   color: var(--text-primary);
-  font-weight: 600;
-  line-height: 1.3;
+  font-weight: 500;
+  line-height: 1.25;
 }
 
 .story-card-desc {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.05rem;
   margin-bottom: 24px;
   flex: 1;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-weight: 300;
 }
 
 .story-card-footer {
@@ -788,4 +972,74 @@ a {
   .banner-brand {
     margin: 0 auto;
   }
+}
+
+/* Legal Pages */
+.legal-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.legal-page::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at center, rgba(212, 175, 55, 0.15) 0%, rgba(9, 9, 11, 0) 50%);
+  animation: rotateGradient 30s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.legal-main {
+  flex: 1;
+  padding: 100px 24px 60px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.legal-content {
+  padding: 48px;
+  background: var(--surface);
+}
+
+.legal-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.legal-last-updated {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 40px;
+}
+
+.legal-body h2 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+.legal-body p, .legal-body ul {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.legal-body ul {
+  padding-left: 24px;
+}
+
+.legal-body li {
+  margin-bottom: 8px;
 }

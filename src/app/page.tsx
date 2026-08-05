@@ -46,12 +46,14 @@ export default async function Home() {
       {/* 1. Header / Navbar */}
       <header className="home-header">
         <div className="banner-brand">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Logo" className="banner-logo" />
-          <div className="banner-title">
-            <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
-            <div style={{ letterSpacing: '0.2px' }}>MILESTONES</div>
-          </div>
+          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Logo" className="banner-logo" />
+            <div className="banner-title">
+              <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
+              <div style={{ letterSpacing: '0.2px' }}>MILESTONES</div>
+            </div>
+          </Link>
         </div>
       </header>
 
@@ -143,9 +145,9 @@ export default async function Home() {
             <p className="footer-tagline">Nurturing hope and positivity, one milestone at a time.</p>
           </div>
           <div className="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact Us</a>
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/terms">Terms of Service</Link>
+            <a href="mailto:support@healingmilestones.in">Contact Us</a>
           </div>
         </div>
         <div className="footer-bottom">

@@ -1,4 +1,5 @@
 import { adminDb } from "@/lib/firebase-admin";
+import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -77,12 +78,15 @@ export default async function StoryPage({ params }: Props) {
   
   // Fetch Author
   let authorName = "User";
+  let authorPicture = "";
+  
   if (story.authorId && story.displayAuthorName) {
     try {
       const authorRef = adminDb.collection("users").doc(story.authorId);
       const authorSnap = await authorRef.get();
       if (authorSnap.exists) {
         authorName = authorSnap.data()?.displayName || "User";
+        authorPicture = authorSnap.data()?.profilePicture || "";
       }
     } catch (e) {
       console.error("Error fetching author", e);
@@ -133,36 +137,50 @@ export default async function StoryPage({ params }: Props) {
     <>
       <div className="banner">
         <div className="banner-brand">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Logo" className="banner-logo" />
-          <div className="banner-title">
-            <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
-            <div style={{ letterSpacing: '0.2px' }}>MILESTONES</div>
-          </div>
+          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Logo" className="banner-logo" />
+            <div className="banner-title">
+              <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
+              <div style={{ letterSpacing: '0.2px' }}>MILESTONES</div>
+            </div>
+          </Link>
         </div>
         <a href="https://healingmilestones.in" target="_blank" rel="noopener noreferrer">
           <button className="download-btn">Download the App</button>
         </a>
       </div>
-      <main className="story-container">
-        <h1 className="story-title">{story.heading}</h1>
-        <div className="story-meta">
-          <span>By {story.displayAuthorName ? authorName : "Anonymous"}</span>
-          <span>•</span>
-          <span>{dateStr}</span>
-        </div>
-        
+      {/* Full-width Immersive Hero Section */}
+      <div className="story-hero-section">
         {story.mainImage && (
-          <div className="story-image-wrapper">
+          <>
+            <div className="hero-bg-blur" style={{ backgroundImage: `url(${story.mainImage})` }}></div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src={story.mainImage} 
-              alt="Story cover" 
-              className="story-image"
-            />
-          </div>
+            <img src={story.mainImage} alt="Story Cover" className="hero-main-img" />
+          </>
         )}
-        
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <h1 className="hero-title">{story.heading}</h1>
+          <div className="hero-meta">
+            <div className="author-badge">
+              {authorPicture ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={authorPicture} alt={authorName} className="author-avatar-small" />
+              ) : (
+                <div className="author-avatar-small placeholder">
+                  {story.displayAuthorName ? authorName.charAt(0).toUpperCase() : "?"}
+                </div>
+              )}
+              <span className="author-name">By {story.displayAuthorName ? authorName : "Anonymous"}</span>
+            </div>
+            <span className="meta-dot">•</span>
+            <span className="meta-date">{dateStr}</span>
+          </div>
+        </div>
+      </div>
+
+      <main className="story-container">
         <div className="story-content">
           {story.description}
         </div>

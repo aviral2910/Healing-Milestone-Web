@@ -24,7 +24,7 @@ export default function StoryCard({ story }: { story: any }) {
 
   return (
     <div 
-      className={`glass-card story-card ${isNavigating ? "navigating" : ""}`}
+      className={`glass-card story-card ${isNavigating ? "navigating" : ""} ${!hasImage ? "no-image" : ""}`}
       onClick={handleClick}
       role="button"
       tabIndex={0}
@@ -42,8 +42,8 @@ export default function StoryCard({ story }: { story: any }) {
         <h3 className="story-card-title">{story.heading || "A Healing Milestone"}</h3>
         <p className="story-card-desc">
           {story.description 
-            ? (story.description.length > 120 
-                ? story.description.substring(0, 120) + "..." 
+            ? (story.description.length > (hasImage ? 120 : 250)
+                ? story.description.substring(0, hasImage ? 120 : 250) + "..." 
                 : story.description) 
             : "Read about this amazing journey..."}
         </p>
