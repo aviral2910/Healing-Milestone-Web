@@ -108,13 +108,13 @@ export default async function Home() {
 
       {/* 4. Share Your Journey Section */}
       <section className="share-journey-section">
-        <div className="share-journey-card glass-card">
-          <h2 className="share-journey-title">
-            Inspire Others with Your <span className="text-gold">Milestones</span>
-          </h2>
-          <p className="share-journey-subtitle">
-            Every path is unique, but no one has to walk it alone. By sharing your milestones—no matter how small—you inspire hope and light the way for others in our community.
-          </p>
+        <h2 className="section-title">
+          Inspire Others with Your <span className="text-gold">Milestones</span>
+        </h2>
+        <p className="section-subtitle">
+          Every path is unique, but no one has to walk it alone. By sharing your milestones—no matter how small—you inspire hope and light the way for others in our community.
+        </p>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Link href="/share-intro" className="share-journey-cta">
             Share Your Journey ➔
           </Link>

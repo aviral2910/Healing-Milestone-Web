@@ -1059,38 +1059,14 @@ a {
 
 /* Share Your Journey Section */
 .share-journey-section {
-  padding: 60px 24px;
+  padding: 80px 24px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   position: relative;
   z-index: 10;
-}
-
-.share-journey-card {
-  max-width: 800px;
-  width: 100%;
-  padding: 48px;
-  border-radius: 24px;
-  background: rgba(212, 175, 55, 0.05); /* very subtle gold tint */
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  text-align: center;
-}
-
-.share-journey-title {
-  font-family: 'Oswald', sans-serif;
-  font-size: 2.5rem;
-  color: var(--text-primary);
-  margin-bottom: 16px;
-}
-
-.share-journey-subtitle {
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 32px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .share-journey-cta {
@@ -1104,6 +1080,7 @@ a {
   text-decoration: none;
   transition: all 0.3s ease;
   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+  margin-top: 16px;
 }
 
 .share-journey-cta:hover {
@@ -1117,11 +1094,5 @@ a {
   }
   .share-form-container {
     padding: 1.5rem;
-  }
-  .share-journey-card {
-    padding: 32px 20px;
-  }
-  .share-journey-title {
-    font-size: 2rem;
   }
 }
