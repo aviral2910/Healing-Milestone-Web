@@ -1057,11 +1057,71 @@ a {
   box-shadow: 0 8px 32px var(--glow);
 }
 
+/* Share Your Journey Section */
+.share-journey-section {
+  padding: 60px 24px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+
+.share-journey-card {
+  max-width: 800px;
+  width: 100%;
+  padding: 48px;
+  border-radius: 24px;
+  background: rgba(212, 175, 55, 0.05); /* very subtle gold tint */
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  text-align: center;
+}
+
+.share-journey-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.share-journey-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.share-journey-cta {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--primary) 0%, #b89326 100%);
+  color: #000;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 16px 32px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+}
+
+.share-journey-cta:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.5);
+}
+
 @media (max-width: 600px) {
   .share-page-wrapper {
     padding: 2rem 1rem;
   }
   .share-form-container {
     padding: 1.5rem;
+  }
+  .share-journey-card {
+    padding: 32px 20px;
+  }
+  .share-journey-title {
+    font-size: 2rem;
   }
 }
