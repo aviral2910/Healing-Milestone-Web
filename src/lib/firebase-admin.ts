@@ -15,7 +15,8 @@ if (typeof window === 'undefined') {
     console.log("FIREBASE-ADMIN: initializing [DEFAULT] app...");
     try {
       admin.initializeApp({
-        credential: admin.credential.applicationDefault()
+        credential: admin.credential.applicationDefault(),
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'healingmilestones-6d4ef'
       });
       console.log("FIREBASE-ADMIN: initialized successfully");
     } catch (e) {

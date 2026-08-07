@@ -130,6 +130,14 @@ export default async function Home() {
               <h3>WhatsApp Group</h3>
               <p>Get daily updates and share your milestones.</p>
             </a>
+            <a href="https://www.instagram.com/healingmilestones/" target="_blank" rel="noopener noreferrer" className="glass-card community-link">
+              <div className="community-icon instagram">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/instagram.svg" alt="Instagram Logo" style={{ width: "64px", height: "64px" }} />
+              </div>
+              <h3>Instagram</h3>
+              <p>Follow us for daily inspiration.</p>
+            </a>
           </div>
         </div>
       </section>

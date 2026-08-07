@@ -1043,3 +1043,25 @@ a {
 .legal-body li {
   margin-bottom: 8px;
 }
+
+
+.share-page-wrapper {
+  min-height: 100vh;
+  padding: 4rem 2rem;
+}
+.share-form-container {
+  background-color: var(--surface);
+  padding: 2.5rem;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 32px var(--glow);
+}
+
+@media (max-width: 600px) {
+  .share-page-wrapper {
+    padding: 2rem 1rem;
+  }
+  .share-form-container {
+    padding: 1.5rem;
+  }
+}
