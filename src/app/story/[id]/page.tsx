@@ -1,4 +1,3 @@
-import { adminDb } from "@/lib/firebase-admin";
 import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
@@ -9,10 +8,11 @@ type Props = {
 
 async function getStory(id: string) {
   try {
-    const docRef = adminDb.collection("stories").doc(id);
-    const docSnap = await docRef.get();
-    if (docSnap.exists) {
-      return docSnap.data();
+    const response = await fetch(`https://healing-milestones-api.onrender.com/api/stories/${id}`, {
+      next: { revalidate: 60 }
+    });
+    if (response.ok) {
+      return await response.json();
     }
   } catch (error) {
     console.error("Error fetching story:", error);
@@ -76,61 +76,27 @@ export default async function StoryPage({ params }: Props) {
     return notFound();
   }
   
-  // Fetch Author
-  let authorName = "User";
-  let authorPicture = "";
-  
-  if (story.authorId && story.displayAuthorName) {
-    try {
-      const authorRef = adminDb.collection("users").doc(story.authorId);
-      const authorSnap = await authorRef.get();
-      if (authorSnap.exists) {
-        authorName = authorSnap.data()?.displayName || "User";
-        authorPicture = authorSnap.data()?.profilePicture || "";
-      }
-    } catch (e) {
-      console.error("Error fetching author", e);
-    }
-  }
-
+  const authorName = story.authorName || "User";
+  const authorPicture = story.authorPicture || "";
   const reactions = story.reactions || {};
   const likesCount = story.likesCount || 0;
 
   // 2. Fetch Comments
   let commentsList: any[] = [];
   try {
-    const commentsRef = adminDb.collection("stories").doc(id).collection("comments");
-    const commentsQuery = commentsRef.orderBy("createdAt", "asc");
-    const commentsSnap = await commentsQuery.get();
-    
-    const userCache: Record<string, any> = {};
-
-    for (const commentDoc of commentsSnap.docs) {
-      const commentData = commentDoc.data();
-      const userId = commentData.userId;
-      
-      // 3. Fetch User data for comment
-      if (userId && !userCache[userId]) {
-        const userRef = adminDb.collection("users").doc(userId);
-        const userSnap = await userRef.get();
-        if (userSnap.exists) {
-          userCache[userId] = userSnap.data();
-        }
-      }
-
-      commentsList.push({
-        id: commentDoc.id,
-        text: commentData.commentText,
-        createdAt: commentData.createdAt?.toDate(),
-        user: userCache[userId] || { displayName: "Anonymous" }
-      });
+    const commentsRes = await fetch(`https://healing-milestones-api.onrender.com/api/stories/${id}/comments`, {
+      next: { revalidate: 60 }
+    });
+    if (commentsRes.ok) {
+      const data = await commentsRes.json();
+      commentsList = data.items || [];
     }
   } catch (e) {
     console.error("Error fetching comments", e);
   }
 
-  const dateStr = story.publishedAt && story.publishedAt.seconds 
-    ? new Date(story.publishedAt.seconds * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  const dateStr = story.publishedAt
+    ? new Date(story.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     : 'Recently';
 
   return (
@@ -169,7 +135,7 @@ export default async function StoryPage({ params }: Props) {
                 <img src={authorPicture} alt={authorName} className="author-avatar-small" />
               ) : (
                 <div className="author-avatar-small placeholder">
-                  {story.displayAuthorName ? authorName.charAt(0).toUpperCase() : "?"}
+                  {story.displayAuthorName && authorName ? authorName.charAt(0).toUpperCase() : "?"}
                 </div>
               )}
               <span className="author-name">By {story.displayAuthorName ? authorName : "Anonymous"}</span>
@@ -233,7 +199,7 @@ export default async function StoryPage({ params }: Props) {
                       <span className="comment-author">{comment.user.displayName}</span>
                       {comment.createdAt && (
                         <span className="comment-date">
-                          {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(comment.createdAt)}
+                          {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(comment.createdAt))}
                         </span>
                       )}
                     </div>

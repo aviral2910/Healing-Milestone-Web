@@ -4,8 +4,6 @@ import { useState } from 'react';
 import AppBar from '@/components/AppBar';
 import Footer from '@/components/Footer';
 import { StoryType, StorySubmissionPhase } from '@/lib/models/storySubmission';
-import { db } from '@/lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
 import Link from 'next/link';
 
 export default function ShareStoryPage() {
@@ -21,24 +19,32 @@ export default function ShareStoryPage() {
     const formData = new FormData(e.currentTarget);
     
     const data = {
-      createdAt: new Date(),
-      phase: StorySubmissionPhase.SUBMITTED,
       name: formData.get('name') as string,
       email: formData.get('email') as string,
       phoneNumber: (formData.get('phoneNumber') as string) || null,
-      storyType: StoryType.STORY,
+      isAnonymous: formData.get('isAnonymous') === 'true',
+      preferredName: (formData.get('preferredName') as string) || null,
       theme: formData.get('theme') as string,
       mainStory: formData.get('mainStory') as string,
       theStruggle: (formData.get('theStruggle') as string) || null,
       theTurningPoint: (formData.get('theTurningPoint') as string) || null,
       theLesson: (formData.get('theLesson') as string) || null,
       keywords: (formData.get('keywords') as string) || null,
-      isAnonymous: formData.get('isAnonymous') === 'true',
-      preferredName: (formData.get('preferredName') as string) || null,
     };
 
     try {
-      await addDoc(collection(db, 'story_submissions'), data);
+      const response = await fetch('https://healing-milestones-api.onrender.com/api/stories/submit_web', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to submit story: ${response.statusText}`);
+      }
+
       setSuccess(true);
     } catch (err: any) {
       console.error("Submission error:", err);

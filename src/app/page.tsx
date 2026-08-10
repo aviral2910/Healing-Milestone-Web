@@ -1,35 +1,25 @@
-import { adminDb } from "@/lib/firebase-admin";
 import Link from "next/link";
 import StoryCard from "@/components/StoryCard";
 import StoriesCarousel from "@/components/StoriesCarousel";
 
 async function getFeaturedStories() {
   try {
-    // 1. Fetch the list of featured story IDs from a settings document
-    // You can manage this document in Firestore: collection "settings", doc "homepage"
-    // with a field "featuredStoryIds" (array of strings)
-    const settingsRef = adminDb.collection("settings").doc("homepage");
-    const settingsSnap = await settingsRef.get();
+    const response = await fetch('https://healing-milestones-api.onrender.com/api/stories/?limit=5', {
+      next: { revalidate: 60 } // Revalidate every minute
+    });
     
-    let storyIds: string[] = [];
-    if (settingsSnap.exists && settingsSnap.data()?.featuredStoryIds) {
-      storyIds = settingsSnap.data()?.featuredStoryIds;
-    } else {
-      // Fallback: Just return empty array if document doesn't exist yet
+    if (!response.ok) {
+      console.error("Failed to fetch stories from FastAPI");
       return [];
     }
-
-    // 2. Fetch the actual stories
-    const stories = [];
-    for (const id of storyIds) {
-      const storyRef = adminDb.collection("stories").doc(id);
-      const storySnap = await storyRef.get();
-      if (storySnap.exists) {
-        stories.push({ id, ...storySnap.data() });
-      }
-    }
     
-    return stories;
+    const data = await response.json();
+    return data.items.map((story: any) => ({
+      id: story.id,
+      mainImage: story.main_image || null,
+      heading: story.heading || null,
+      description: story.short_description || story.description || null
+    }));
   } catch (error) {
     console.error("Error fetching featured stories:", error);
     return [];

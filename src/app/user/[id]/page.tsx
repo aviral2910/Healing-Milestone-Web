@@ -1,4 +1,3 @@
-import { adminDb } from "@/lib/firebase-admin";
 import { Metadata } from "next";
 import Link from "next/link";
 import StoriesCarousel from "@/components/StoriesCarousel";
@@ -13,11 +12,13 @@ interface Props {
 // 1. Fetch User Data
 async function getUserData(userId: string) {
   try {
-    const userRef = adminDb.collection("users").doc(userId);
-    const userSnap = await userRef.get();
+    const response = await fetch(`https://healing-milestones-api.onrender.com/api/users/${userId}`, {
+      next: { revalidate: 60 }
+    });
     
-    if (userSnap.exists) {
-      return { id: userId, ...userSnap.data() };
+    if (response.ok) {
+      const data = await response.json();
+      return { id: userId, ...data };
     }
     return null;
   } catch (error) {
@@ -29,31 +30,15 @@ async function getUserData(userId: string) {
 // 2. Fetch User's Stories
 async function getUserStories(userId: string) {
   try {
-    const storiesSnap = await adminDb.collection("stories")
-      .where("authorId", "==", userId)
-      .get();
-      
-    const stories: any[] = [];
-    storiesSnap.forEach((doc: any) => {
-      const data = doc.data();
-      stories.push({ 
-        id: doc.id, 
-        ...data,
-        createdAt: data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : data.createdAt,
-        publishedAt: data.publishedAt?.toDate ? data.publishedAt.toDate().toISOString() : data.publishedAt,
-        verifiedAt: data.verifiedAt?.toDate ? data.verifiedAt.toDate().toISOString() : data.verifiedAt,
-      });
+    const response = await fetch(`https://healing-milestones-api.onrender.com/api/users/${userId}/stories`, {
+      next: { revalidate: 60 }
     });
     
-    // Sort manually by createdAt to avoid needing an index
-    stories.sort((a, b) => {
-       const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-       const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-       return dateB - dateA;
-    });
-
-    // Final sanitization to remove any other non-serializable objects before passing to client components
-    return JSON.parse(JSON.stringify(stories));
+    if (response.ok) {
+      const data = await response.json();
+      return data.items || [];
+    }
+    return [];
   } catch (error) {
     console.error("Error fetching user stories:", error);
     return [];
