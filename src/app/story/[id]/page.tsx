@@ -76,10 +76,10 @@ export default async function StoryPage({ params }: Props) {
     return notFound();
   }
   
-  const authorName = story.authorName || "User";
-  const authorPicture = story.authorPicture || "";
-  const reactions = story.reactions || {};
-  const likesCount = story.likesCount || 0;
+  const authorName = story.author?.displayName || story.authorName || "User";
+  const authorPicture = story.author?.profilePicture || story.authorPicture || "";
+  const reactions = story.reactionCounts || story.reactions || {};
+  const likesCount = Object.values(reactions).reduce((a, b) => (a as number) + (b as number), 0) || story.likesCount || 0;
 
   // 2. Fetch Comments
   let commentsList: any[] = [];

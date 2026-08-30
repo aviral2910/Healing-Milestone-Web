@@ -16,9 +16,9 @@ async function getFeaturedStories() {
     const data = await response.json();
     return data.items.map((story: any) => ({
       id: story.id,
-      mainImage: story.main_image || null,
+      mainImage: story.mainImage || null,
       heading: story.heading || null,
-      description: story.short_description || story.description || null
+      description: story.shortDescription || story.description || null
     }));
   } catch (error) {
     console.error("Error fetching featured stories:", error);
