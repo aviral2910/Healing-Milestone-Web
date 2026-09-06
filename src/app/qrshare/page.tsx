@@ -101,13 +101,19 @@ export default function QRSharePage() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--background)', color: 'var(--text-primary)', fontFamily: 'system-ui, sans-serif' }}>
       
-      <header style={{ padding: '24px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-        <h1 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary)' }}>Healing Milestones</h1>
+      <div className="banner" style={{ padding: '16px 24px' }}>
+        <div className="banner-brand" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <img src="/logo.png" alt="Logo" className="banner-logo" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
+          <div className="banner-title" style={{ fontFamily: 'sans-serif', fontWeight: 600, fontSize: '1.25rem', color: '#fff', lineHeight: 1.1 }}>
+            <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
+            <div style={{ letterSpacing: '0.2px' }}>MILESTONES</div>
+          </div>
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)' }}>
           <ShieldCheck size={18} />
-          <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>End-to-End Secure Sync</span>
+          <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>Secure Sync</span>
         </div>
-      </header>
+      </div>
 
       <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
         <div style={{ maxWidth: '420px', width: '100%', backgroundColor: 'var(--surface)', padding: '3rem 2rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
@@ -118,7 +124,7 @@ export default function QRSharePage() {
 
           <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>Desktop Sync</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: '1.5' }}>
-            Open the Healing Milestones mobile app and scan this QR code to instantly display your Health Snapshot on this screen.
+            Open the Healing Milestones mobile app and scan this QR code to instantly display your Journey, Story, or Health Snapshot on this screen.
           </p>
 
           <div style={{ position: 'relative', width: '220px', height: '220px', backgroundColor: 'white', padding: '16px', borderRadius: '16px', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 32px rgba(250, 204, 21, 0.15)' }}>
