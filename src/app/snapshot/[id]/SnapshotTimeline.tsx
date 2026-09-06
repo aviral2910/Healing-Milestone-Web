@@ -126,7 +126,7 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                                   backgroundColor: 'rgba(250, 204, 21, 0.1)', color: 'var(--primary)', 
                                   padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', fontWeight: '600', letterSpacing: '0.5px' 
                                 }}>
-                                  #{tag.toUpperCase()}
+                                  #{tag.replace('_', ' ').toUpperCase()}
                                 </span>
                               ))
                             ) : (
