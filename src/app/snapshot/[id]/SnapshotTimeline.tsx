@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: any[], expiresAt: string }) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
@@ -17,47 +17,59 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
     setSelectedFile(null);
   };
 
-  // 1. Filter the timeline (Type + Search)
-  const filteredTimeline = timeline.filter(item => {
-    // Type filter
-    if (filter === 'milestones' && item.type !== 'milestone') return false;
-    if (filter === 'reports' && item.type !== 'report') return false;
-    
-    // Search filter
-    if (searchQuery.trim() !== '') {
-      const query = searchQuery.toLowerCase();
-      const textMatch = item.text?.toLowerCase().includes(query);
-      const titleMatch = item.title?.toLowerCase().includes(query);
-      const tagMatch = item.tags?.some((t: string) => t.toLowerCase().includes(query));
-      if (!textMatch && !titleMatch && !tagMatch) return false;
-    }
-    return true;
-  });
-
-  // 2. Sort the timeline
-  const sortedTimeline = [...filteredTimeline].sort((a, b) => {
-    const dateA = new Date(a.date || 0).getTime();
-    const dateB = new Date(b.date || 0).getTime();
-    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-  });
-
-  // 3. Group timeline items by date (Preserving Sort Order)
-  const groupedArray: { dateStr: string, items: any[] }[] = [];
-  sortedTimeline.forEach(item => {
-    const dateStr = item.date
-      ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(item.date))
-      : 'Unknown Date';
-      
-    const lastGroup = groupedArray[groupedArray.length - 1];
-    if (!lastGroup || lastGroup.dateStr !== dateStr) {
-      groupedArray.push({ dateStr, items: [item] });
+  // Prevent body scrolling when lightbox is open (fixes mobile background jump/flicker)
+  useEffect(() => {
+    if (selectedFile) {
+      document.body.style.overflow = 'hidden';
     } else {
-      lastGroup.items.push(item);
+      document.body.style.overflow = '';
     }
-  });
+    return () => { document.body.style.overflow = ''; };
+  }, [selectedFile]);
 
-  const countMilestones = timeline.filter(i => i.type === 'milestone').length;
-  const countReports = timeline.filter(i => i.type === 'report').length;
+  // Memoize heavy calculations to prevent re-rendering flicker when opening lightbox
+  const { groupedArray, countMilestones, countReports } = useMemo(() => {
+    // 1. Filter
+    const filtered = timeline.filter(item => {
+      if (filter === 'milestones' && item.type !== 'milestone') return false;
+      if (filter === 'reports' && item.type !== 'report') return false;
+      if (searchQuery.trim() !== '') {
+        const query = searchQuery.toLowerCase();
+        const textMatch = item.text?.toLowerCase().includes(query);
+        const titleMatch = item.title?.toLowerCase().includes(query);
+        const tagMatch = item.tags?.some((t: string) => t.toLowerCase().includes(query));
+        if (!textMatch && !titleMatch && !tagMatch) return false;
+      }
+      return true;
+    });
+
+    // 2. Sort
+    const sorted = [...filtered].sort((a, b) => {
+      const dateA = new Date(a.date || 0).getTime();
+      const dateB = new Date(b.date || 0).getTime();
+      return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+    });
+
+    // 3. Group
+    const grouped: { dateStr: string, items: any[] }[] = [];
+    sorted.forEach(item => {
+      const dateStr = item.date
+        ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(item.date))
+        : 'Unknown Date';
+      const lastGroup = grouped[grouped.length - 1];
+      if (!lastGroup || lastGroup.dateStr !== dateStr) {
+        grouped.push({ dateStr, items: [item] });
+      } else {
+        lastGroup.items.push(item);
+      }
+    });
+
+    return {
+      groupedArray: grouped,
+      countMilestones: timeline.filter(i => i.type === 'milestone').length,
+      countReports: timeline.filter(i => i.type === 'report').length
+    };
+  }, [timeline, filter, searchQuery, sortOrder]);
 
   return (
     <div className="milestones-timeline" style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
