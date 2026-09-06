@@ -61,10 +61,24 @@ export default function QRSharePage() {
     const unsubscribe = onSnapshot(doc(db, 'qr_sessions', sessionId), async (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data();
-        if (data.status === 'linked' && data.view_id) {
-          setStatus('success');
-          await deleteDoc(doc(db, 'qr_sessions', sessionId));
-          router.push(`/snapshot/${data.view_id}`);
+        if (data.status === 'linked') {
+          // Support both the new generic format and the legacy view_id format
+          const targetId = data.target_id || data.view_id;
+          const targetType = data.target_type || 'snapshot'; // default to snapshot
+          
+          if (targetId) {
+            setStatus('success');
+            await deleteDoc(doc(db, 'qr_sessions', sessionId));
+            
+            // Route dynamically based on type
+            if (targetType === 'journey') {
+              router.push(`/journey/${targetId}`);
+            } else if (targetType === 'story') {
+              router.push(`/story/${targetId}`);
+            } else {
+              router.push(`/snapshot/${targetId}`);
+            }
+          }
         }
       }
     });
