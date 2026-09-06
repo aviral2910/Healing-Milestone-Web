@@ -41,19 +41,24 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
         <div className="timeline-container" style={{ position: 'relative', paddingLeft: '2.5rem' }}>
           {/* No global line here! The line is now broken per date group. */}
           
-          {Object.entries(groupedTimeline).map(([dateStr, items]) => (
-            <div key={dateStr} style={{ position: 'relative', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+          {Object.entries(groupedTimeline).map(([dateStr, items], groupIndex) => (
+            <div key={dateStr} style={{ position: 'relative', paddingBottom: '1.5rem', paddingTop: groupIndex > 0 ? '2rem' : '0' }}>
               
+              {/* SUBTLE DIVIDER */}
+              {groupIndex > 0 && (
+                <div style={{ position: 'absolute', top: '0', left: '-40px', right: '0', height: '1px', backgroundColor: 'rgba(255,255,255,0.06)' }}></div>
+              )}
+
               {/* BROKEN VERTICAL LINE JUST FOR THIS DATE GROUP */}
-              <div style={{ position: 'absolute', left: '-29px', top: '16px', bottom: '0', width: '2px', backgroundColor: 'rgba(255, 255, 255, 0.15)' }}></div>
+              <div style={{ position: 'absolute', left: '-29px', top: groupIndex > 0 ? '48px' : '16px', bottom: '0', width: '2px', backgroundColor: 'rgba(255, 255, 255, 0.15)' }}></div>
 
               {/* DATE HEADER ON TIMELINE */}
               <div style={{ position: 'relative', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
                 <div style={{ 
-                  position: 'absolute', left: '-35px', width: '12px', height: '12px', 
-                  borderRadius: '50%', backgroundColor: 'var(--background)', border: '2px solid var(--border)', zIndex: 2 
+                  position: 'absolute', left: '-35px', width: '14px', height: '14px', 
+                  borderRadius: '50%', backgroundColor: 'var(--background)', border: '2px solid rgba(255,255,255,0.6)', zIndex: 2 
                 }}></div>
-                <h3 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-primary)', fontWeight: 'bold' }}>{dateStr}</h3>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-primary)', fontWeight: 'bold', letterSpacing: '0.5px' }}>{dateStr}</h3>
               </div>
 
               {items.map((item: any) => {
