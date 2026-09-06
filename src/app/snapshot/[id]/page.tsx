@@ -173,19 +173,28 @@ export default async function ViewSnapshotPage({ params }: Props) {
                   return (
                     <div key={`r-${item.id}`} className="milestone-card" style={{ position: 'relative', marginBottom: '2rem' }}>
                       <div style={{ 
-                        position: 'absolute', left: '-2rem', top: '6px', width: '12px', height: '12px', 
-                        borderRadius: '50%', backgroundColor: '#3b82f6', boxShadow: '0 0 10px rgba(59,130,246,0.5)'
-                      }}></div>
+                        position: 'absolute', left: '-41px', top: '16px', width: '24px', height: '24px', 
+                        borderRadius: '50%', backgroundColor: '#3b82f6', boxShadow: '0 0 10px rgba(59,130,246,0.5)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2
+                      }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                          <polyline points="14 2 14 8 20 8"></polyline>
+                          <line x1="16" y1="13" x2="8" y2="13"></line>
+                          <line x1="16" y1="17" x2="8" y2="17"></line>
+                          <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                      </div>
                       <div style={{ backgroundColor: 'var(--surface)', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--border)', borderLeft: '4px solid #3b82f6' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                           <div style={{ fontWeight: '600', color: '#3b82f6', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            📄 Medical Report
+                            Medical Report
                           </div>
                           <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{itemDateStr}</div>
                         </div>
                         <h3 style={{ margin: '0 0 1rem 0', color: 'var(--text-primary)', fontSize: '1.1rem' }}>{item.title}</h3>
                         
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <div style={{ display: 'flex', overflowX: 'auto', gap: '1rem', paddingBottom: '0.5rem', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
                           {(item.files || []).map((file: any, index: number) => {
                             const url = typeof file === 'string' ? file : file.url;
                             if (!url) return null;
@@ -193,36 +202,26 @@ export default async function ViewSnapshotPage({ params }: Props) {
                             const isImage = url.toLowerCase().match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
 
                             return (
-                              <div key={index} style={{ border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.2)' }}>
-                                {isPdf ? (
-                                  <div style={{ width: '100%', height: '400px', backgroundColor: '#fff' }}>
-                                    <iframe src={`${url}#toolbar=0`} width="100%" height="100%" style={{ border: 'none' }} title={`Medical Document ${index + 1}`} />
-                                  </div>
-                                ) : isImage ? (
-                                  // eslint-disable-next-line @next/next/no-img-element
-                                  <img src={url} alt={`Medical Document ${index + 1}`} style={{ width: '100%', height: 'auto', display: 'block' }} />
-                                ) : (
-                                  <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
-                                    Document preview not available
-                                  </div>
-                                )}
-                                
-                                <div style={{ padding: '12px', display: 'flex', justifyContent: 'center', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                                  <a href={url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', width: '100%' }}>
-                                    <button style={{ 
-                                      width: '100%', padding: '10px', backgroundColor: 'rgba(59,130,246,0.1)', color: '#3b82f6', 
-                                      border: '1px solid rgba(59,130,246,0.2)', borderRadius: '8px', fontWeight: '600', 
-                                      cursor: 'pointer' 
-                                    }}>
-                                      {isPdf ? 'Open Full PDF' : isImage ? 'Open Full Image' : 'Download File'}
-                                    </button>
-                                  </a>
-                                </div>
+                              <div key={index} style={{ flex: '0 0 85%', scrollSnapAlign: 'start', position: 'relative', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#fff', height: '300px' }}>
+                                <a href={url} target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%', position: 'relative' }}>
+                                  {isPdf ? (
+                                    <>
+                                      <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'pointer' }}></div>
+                                      <iframe src={`${url}#toolbar=0`} style={{ width: '100%', height: '100%', border: 'none', pointerEvents: 'none' }} title={`Medical Document ${index + 1}`} />
+                                    </>
+                                  ) : isImage ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={url} alt={`Medical Document ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                  ) : (
+                                    <div style={{ padding: '2rem', textAlign: 'center', color: '#666', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                      Click to view document
+                                    </div>
+                                  )}
+                                </a>
                               </div>
                             );
                           })}
-                        </div>
-                      </div>
+                        </div>                      </div>
                     </div>
                   );
                 }
