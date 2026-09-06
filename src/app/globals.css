@@ -69,8 +69,9 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky;
+  position: absolute;
   top: 0;
+  width: 100%;
   z-index: 50;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
