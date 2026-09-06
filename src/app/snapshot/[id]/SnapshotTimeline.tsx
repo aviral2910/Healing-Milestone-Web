@@ -45,7 +45,7 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
             <div key={dateStr} style={{ position: 'relative', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
               
               {/* BROKEN VERTICAL LINE JUST FOR THIS DATE GROUP */}
-              <div style={{ position: 'absolute', left: '-29px', top: '16px', bottom: '0', width: '2px', backgroundColor: 'var(--border)' }}></div>
+              <div style={{ position: 'absolute', left: '-29px', top: '16px', bottom: '0', width: '2px', backgroundColor: 'rgba(255, 255, 255, 0.15)' }}></div>
 
               {/* DATE HEADER ON TIMELINE */}
               <div style={{ position: 'relative', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
@@ -134,6 +134,7 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                                 <div 
                                   key={`img-${index}`} 
                                   onClick={(e) => openLightbox(url, e)}
+                                  className="media-hover-card"
                                   style={{ 
                                     position: 'relative', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', 
                                     overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.3)', height: '180px', cursor: 'zoom-in' 
