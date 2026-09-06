@@ -1,3 +1,4 @@
+import MilestoneCard from "./MilestoneCard";
 import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
@@ -159,76 +160,9 @@ export default async function JourneyPage({ params }: Props) {
             <div className="timeline-container" style={{ position: 'relative', paddingLeft: '2rem' }}>
               <div style={{ position: 'absolute', left: '11px', top: '10px', bottom: '0', width: '2px', backgroundColor: 'var(--border)' }}></div>
               
-              {milestones.map((milestone: any) => {
-                const isClosure = milestone.is_closure;
-                const mDateStr = milestone.created_at
-                  ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(milestone.created_at))
-                  : '';
-                
-                return (
-                  <div key={milestone.id} className="milestone-card" style={{ position: 'relative', marginBottom: '2rem' }}>
-                    <div style={{ 
-                      position: 'absolute', 
-                      left: '-2rem', 
-                      top: '6px', 
-                      width: '12px', 
-                      height: '12px', 
-                      borderRadius: '50%', 
-                      backgroundColor: isClosure ? '#22c55e' : 'var(--primary)',
-                      boxShadow: `0 0 10px ${isClosure ? 'rgba(34,197,94,0.5)' : 'var(--glow)'}`
-                    }}></div>
-                    
-                    <div style={{
-                      backgroundColor: 'var(--surface)',
-                      borderRadius: '16px',
-                      padding: '1.5rem',
-                      border: '1px solid var(--border)'
-                    }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                        <div style={{ fontWeight: '600', color: isClosure ? '#22c55e' : 'var(--text-primary)' }}>
-                          {isClosure ? 'Journey Completed' : 'Update'}
-                        </div>
-                        <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                          {mDateStr}
-                        </div>
-                      </div>
-                      
-                      {milestone.media_url && (
-                        <div style={{ marginBottom: '1rem', borderRadius: '12px', overflow: 'hidden' }}>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={milestone.media_url} alt="Milestone media" style={{ width: '100%', height: 'auto', display: 'block' }} />
-                        </div>
-                      )}
-                      
-                      {milestone.content && (
-                        <div style={{ color: '#eaeaea', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
-                          {milestone.content}
-                        </div>
-                      )}
-                      
-                      <div style={{ 
-                        marginTop: '1.5rem', 
-                        paddingTop: '1rem', 
-                        borderTop: '1px solid rgba(255,255,255,0.05)',
-                        display: 'flex',
-                        gap: '1.5rem',
-                        color: 'var(--text-secondary)'
-                      }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                          <span style={{ fontSize: '1.1rem' }}>❤️</span>
-                          <span>{milestone.reaction_count || 0}</span>
-                        </div>
-                        {milestone.are_comments_enabled && (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                            <span style={{ fontSize: '1.1rem' }}>💬</span>
-                            <span>{milestone.comment_count || 0}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {milestones.map((milestone: any) => (
+                <MilestoneCard key={milestone.id} milestone={milestone} />
+              ))}
             </div>
           ) : (
             <div className="no-milestones" style={{ color: 'var(--text-secondary)', padding: '2rem 0' }}>

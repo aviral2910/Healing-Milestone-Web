@@ -43,8 +43,9 @@ export default function TermsOfService() {
             <h2>3. Intellectual Property</h2>
             <p>The Service and its original content (excluding User Content), features, and functionality are and will remain the exclusive property of Healing Milestones and its licensors.</p>
 
-            <h2>4. Disclaimer</h2>
+            <h2>4. Medical Disclaimer & No Duty of Care</h2>
             <p>Healing Milestones is a platform for sharing personal journeys and community support. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+            <p><strong>Important Notice Regarding Medical Professionals:</strong> Healing Milestones is a consumer application acting as a digital journal. Following a user's journey—even if done by a medical professional or initiated via a shared QR code—does <strong>not</strong> constitute medical monitoring, remote patient monitoring (RPM), or an active doctor-patient relationship. Healthcare providers using the app are not obligated to monitor user posts for medical emergencies. If you are experiencing a medical emergency, you must immediately contact emergency services or your healthcare clinic directly.</p>
 
             <h2>5. Limitations</h2>
             <p>In no event shall Healing Milestones or its suppliers be liable for any damages arising out of the use or inability to use the materials on Healing Milestones.</p>
