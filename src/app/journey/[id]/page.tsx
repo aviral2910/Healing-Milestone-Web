@@ -9,7 +9,7 @@ type Props = {
 async function getJourney(id: string) {
   try {
     const response = await fetch(`https://healing-milestones-api.onrender.com/api/journeys/${id}`, {
-      next: { revalidate: 60 }
+      cache: 'no-store'
     });
     if (response.ok) {
       return await response.json();
@@ -23,7 +23,7 @@ async function getJourney(id: string) {
 async function getMilestones(id: string) {
   try {
     const response = await fetch(`https://healing-milestones-api.onrender.com/api/milestones/?journey_id=${id}&is_public=true`, {
-      next: { revalidate: 60 }
+      cache: 'no-store'
     });
     if (response.ok) {
       return await response.json();
