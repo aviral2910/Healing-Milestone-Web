@@ -104,7 +104,7 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
         </div>
 
         {/* Quick Filters Row */}
-        <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+        <div className="hide-scrollbar" style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <button 
             onClick={() => setFilter('all')}
             style={{
