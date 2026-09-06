@@ -4,17 +4,14 @@ import { useState } from 'react';
 
 export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: any[], expiresAt: string }) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [selectedType, setSelectedType] = useState<'pdf' | 'image' | null>(null);
 
-  const openLightbox = (url: string, isPdf: boolean, e: React.MouseEvent) => {
+  const openLightbox = (url: string, e: React.MouseEvent) => {
     e.preventDefault();
     setSelectedFile(url);
-    setSelectedType(isPdf ? 'pdf' : 'image');
   };
 
   const closeLightbox = () => {
     setSelectedFile(null);
-    setSelectedType(null);
   };
 
   // Group timeline items by date
@@ -42,10 +39,14 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
       
       {timeline.length > 0 ? (
         <div className="timeline-container" style={{ position: 'relative', paddingLeft: '2.5rem' }}>
-          <div style={{ position: 'absolute', left: '11px', top: '10px', bottom: '0', width: '2px', backgroundColor: 'var(--border)' }}></div>
+          {/* No global line here! The line is now broken per date group. */}
           
           {Object.entries(groupedTimeline).map(([dateStr, items]) => (
-            <div key={dateStr}>
+            <div key={dateStr} style={{ position: 'relative', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+              
+              {/* BROKEN VERTICAL LINE JUST FOR THIS DATE GROUP */}
+              <div style={{ position: 'absolute', left: '-29px', top: '16px', bottom: '0', width: '2px', backgroundColor: 'var(--border)' }}></div>
+
               {/* DATE HEADER ON TIMELINE */}
               <div style={{ position: 'relative', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
                 <div style={{ 
@@ -65,9 +66,9 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                     <div key={`m-${item.id}`} className="milestone-card" style={{ position: 'relative', marginBottom: '2rem' }}>
                       <div style={{ 
                         position: 'absolute', left: '-35px', top: '24px', width: '12px', height: '12px', 
-                        borderRadius: '50%', backgroundColor: 'var(--primary)', boxShadow: '0 0 10px var(--glow)'
+                        borderRadius: '50%', backgroundColor: 'var(--primary)', boxShadow: '0 0 10px var(--glow)', zIndex: 2
                       }}></div>
-                      <div style={{ backgroundColor: 'var(--surface)', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--border)' }}>
+                      <div className="interactive-card" style={{ backgroundColor: 'var(--surface)', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--border)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                           <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>Journal Update</div>
                           <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{itemTimeStr}</div>
@@ -75,7 +76,7 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                         {item.mediaUrl && (
                           <div style={{ marginBottom: '1rem', borderRadius: '12px', overflow: 'hidden' }}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img onClick={(e) => openLightbox(item.mediaUrl, false, e)} src={item.mediaUrl} alt="Media" style={{ width: '100%', height: 'auto', display: 'block', cursor: 'zoom-in' }} />
+                            <img onClick={(e) => openLightbox(item.mediaUrl, e)} src={item.mediaUrl} alt="Media" style={{ width: '100%', height: 'auto', display: 'block', cursor: 'zoom-in' }} />
                           </div>
                         )}
                         {item.text && (
@@ -86,7 +87,17 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                   );
                 } else if (item.type === 'report') {
                   const files = item.files || [];
-                  const gridCols = files.length === 1 ? '1fr' : '1fr 1fr';
+                  const imageFiles = files.filter((f: any) => {
+                    const u = typeof f === 'string' ? f : f.url;
+                    return u?.toLowerCase().match(/\.(jpeg|jpg|gif|png|webp)$/);
+                  });
+                  const pdfFiles = files.filter((f: any) => {
+                    const u = typeof f === 'string' ? f : f.url;
+                    return !u?.toLowerCase().match(/\.(jpeg|jpg|gif|png|webp)$/);
+                  });
+
+                  const imageGridCols = imageFiles.length === 1 ? '1fr' : '1fr 1fr';
+                  const pdfGridCols = pdfFiles.length === 1 ? '1fr' : '1fr 1fr';
 
                   return (
                     <div key={`r-${item.id}`} className="milestone-card" style={{ position: 'relative', marginBottom: '2rem' }}>
@@ -105,7 +116,7 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                         </svg>
                       </div>
 
-                      <div style={{ backgroundColor: 'var(--surface)', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--border)' }}>
+                      <div className="interactive-card" style={{ backgroundColor: 'var(--surface)', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--border)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                           <div style={{ fontWeight: '600', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                             Medical Report
@@ -114,40 +125,51 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                         </div>
                         <h3 style={{ margin: '0 0 1rem 0', color: 'var(--text-primary)', fontSize: '1.1rem' }}>{item.title}</h3>
                         
-                        {/* GRID INSTEAD OF CAROUSEL */}
-                        <div style={{ display: 'grid', gridTemplateColumns: gridCols, gap: '1rem' }}>
-                          {files.map((file: any, index: number) => {
-                            const url = typeof file === 'string' ? file : file.url;
-                            if (!url) return null;
-                            const isPdf = url.toLowerCase().includes('.pdf');
-                            const isImage = url.toLowerCase().match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
-
-                            return (
-                              <div 
-                                key={index} 
-                                onClick={(e) => openLightbox(url, isPdf, e)}
-                                style={{ 
-                                  position: 'relative', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', 
-                                  overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.3)', height: '180px', cursor: 'zoom-in' 
-                                }}
-                              >
-                                {isPdf ? (
-                                  <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)' }}>
-                                    <span style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>📄</span>
-                                    <span style={{ color: 'var(--primary)', fontWeight: '500', fontSize: '0.9rem' }}>View PDF</span>
-                                  </div>
-                                ) : isImage ? (
-                                  // eslint-disable-next-line @next/next/no-img-element
+                        {/* SEPARATE IMAGES GRID */}
+                        {imageFiles.length > 0 && (
+                          <div style={{ display: 'grid', gridTemplateColumns: imageGridCols, gap: '1rem', marginBottom: pdfFiles.length > 0 ? '1rem' : '0' }}>
+                            {imageFiles.map((file: any, index: number) => {
+                              const url = typeof file === 'string' ? file : file.url;
+                              return (
+                                <div 
+                                  key={`img-${index}`} 
+                                  onClick={(e) => openLightbox(url, e)}
+                                  style={{ 
+                                    position: 'relative', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', 
+                                    overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.3)', height: '180px', cursor: 'zoom-in' 
+                                  }}
+                                >
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
                                   <img src={url} alt={`Document ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                ) : (
-                                  <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666' }}>
-                                    View Document
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {/* SEPARATE PDFS GRID */}
+                        {pdfFiles.length > 0 && (
+                          <div style={{ display: 'grid', gridTemplateColumns: pdfGridCols, gap: '1rem' }}>
+                            {pdfFiles.map((file: any, index: number) => {
+                              const url = typeof file === 'string' ? file : file.url;
+                              return (
+                                <div 
+                                  key={`pdf-${index}`} 
+                                  onClick={() => window.open(url, '_blank')}
+                                  style={{ 
+                                    position: 'relative', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', 
+                                    overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.2)', height: '180px', cursor: 'pointer',
+                                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
+                                  }}
+                                >
+                                  <span style={{ fontSize: '3rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>📄</span>
+                                  <span style={{ color: 'var(--primary)', fontWeight: '500', fontSize: '0.9rem' }}>View PDF</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+
                       </div>
                     </div>
                   );
@@ -186,17 +208,8 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
             &times;
           </div>
           
-          {selectedType === 'pdf' ? (
-            <div 
-              onClick={e => e.stopPropagation()}
-              style={{ width: '100%', maxWidth: '1000px', height: '85vh', backgroundColor: '#fff', borderRadius: '12px', overflow: 'hidden', cursor: 'default' }}
-            >
-              <iframe src={`${selectedFile}#toolbar=0`} style={{ width: '100%', height: '100%', border: 'none' }} title="PDF Document" />
-            </div>
-          ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img onClick={e => e.stopPropagation()} src={selectedFile} alt="Fullscreen Document" style={{ maxWidth: '100%', maxHeight: '85vh', objectFit: 'contain', cursor: 'default' }} />
-          )}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img onClick={e => e.stopPropagation()} src={selectedFile} alt="Fullscreen Document" style={{ maxWidth: '100%', maxHeight: '85vh', objectFit: 'contain', cursor: 'default' }} />
         </div>
       )}
     </div>
