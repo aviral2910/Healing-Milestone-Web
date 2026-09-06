@@ -137,7 +137,7 @@ export default async function ViewSnapshotPage({ params }: Props) {
           </div>
           
           {timeline.length > 0 ? (
-            <div className="timeline-container" style={{ position: 'relative', paddingLeft: '2rem' }}>
+            <div className="timeline-container" style={{ position: 'relative', paddingLeft: '2.5rem' }}>
               <div style={{ position: 'absolute', left: '11px', top: '10px', bottom: '0', width: '2px', backgroundColor: 'var(--border)' }}></div>
               
               {timeline.map((item: any) => {
@@ -149,7 +149,7 @@ export default async function ViewSnapshotPage({ params }: Props) {
                   return (
                     <div key={`m-${item.id}`} className="milestone-card" style={{ position: 'relative', marginBottom: '2rem' }}>
                       <div style={{ 
-                        position: 'absolute', left: '-2rem', top: '6px', width: '12px', height: '12px', 
+                        position: 'absolute', left: '-35px', top: '24px', width: '12px', height: '12px', 
                         borderRadius: '50%', backgroundColor: 'var(--primary)', boxShadow: '0 0 10px var(--glow)'
                       }}></div>
                       <div style={{ backgroundColor: 'var(--surface)', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--border)' }}>
