@@ -5,6 +5,8 @@ import { useState } from 'react';
 export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: any[], expiresAt: string }) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'milestones' | 'reports'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
   const openLightbox = (url: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -15,77 +17,139 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
     setSelectedFile(null);
   };
 
-  // Filter the timeline before grouping
+  // 1. Filter the timeline (Type + Search)
   const filteredTimeline = timeline.filter(item => {
-    if (filter === 'all') return true;
-    if (filter === 'milestones') return item.type === 'milestone';
-    if (filter === 'reports') return item.type === 'report';
+    // Type filter
+    if (filter === 'milestones' && item.type !== 'milestone') return false;
+    if (filter === 'reports' && item.type !== 'report') return false;
+    
+    // Search filter
+    if (searchQuery.trim() !== '') {
+      const query = searchQuery.toLowerCase();
+      const textMatch = item.text?.toLowerCase().includes(query);
+      const titleMatch = item.title?.toLowerCase().includes(query);
+      const tagMatch = item.tags?.some((t: string) => t.toLowerCase().includes(query));
+      if (!textMatch && !titleMatch && !tagMatch) return false;
+    }
     return true;
   });
 
-  // Group timeline items by date
-  const groupedTimeline: Record<string, any[]> = {};
-  filteredTimeline.forEach(item => {
-    const itemDateStr = item.date
+  // 2. Sort the timeline
+  const sortedTimeline = [...filteredTimeline].sort((a, b) => {
+    const dateA = new Date(a.date || 0).getTime();
+    const dateB = new Date(b.date || 0).getTime();
+    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+  });
+
+  // 3. Group timeline items by date (Preserving Sort Order)
+  const groupedArray: { dateStr: string, items: any[] }[] = [];
+  sortedTimeline.forEach(item => {
+    const dateStr = item.date
       ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(item.date))
       : 'Unknown Date';
-    if (!groupedTimeline[itemDateStr]) {
-      groupedTimeline[itemDateStr] = [];
+      
+    const lastGroup = groupedArray[groupedArray.length - 1];
+    if (!lastGroup || lastGroup.dateStr !== dateStr) {
+      groupedArray.push({ dateStr, items: [item] });
+    } else {
+      lastGroup.items.push(item);
     }
-    groupedTimeline[itemDateStr].push(item);
   });
 
   const countMilestones = timeline.filter(i => i.type === 'milestone').length;
   const countReports = timeline.filter(i => i.type === 'report').length;
 
   return (
-    <div className="milestones-timeline" style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="milestones-timeline" style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
-      {/* QUICK FILTERS */}
-      <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', WebkitOverflowScrolling: 'touch', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem', marginBottom: '0.5rem' }}>
-        <button 
-          onClick={() => setFilter('all')}
-          style={{
-            padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
-            backgroundColor: filter === 'all' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-            color: filter === 'all' ? '#000' : 'var(--text-primary)',
-            border: filter === 'all' ? '1px solid var(--primary)' : '1px solid var(--border)',
-            transition: 'all 0.2s', whiteSpace: 'nowrap'
-          }}
-        >
-          All ({timeline.length})
-        </button>
-        <button 
-          onClick={() => setFilter('reports')}
-          style={{
-            padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
-            backgroundColor: filter === 'reports' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-            color: filter === 'reports' ? '#000' : 'var(--text-primary)',
-            border: filter === 'reports' ? '1px solid var(--primary)' : '1px solid var(--border)',
-            transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px'
-          }}
-        >
-          📄 Medical Reports ({countReports})
-        </button>
-        <button 
-          onClick={() => setFilter('milestones')}
-          style={{
-            padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
-            backgroundColor: filter === 'milestones' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-            color: filter === 'milestones' ? '#000' : 'var(--text-primary)',
-            border: filter === 'milestones' ? '1px solid var(--primary)' : '1px solid var(--border)',
-            transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px'
-          }}
-        >
-          📝 Journals ({countMilestones})
-        </button>
+      {/* HEADER CONTROLS (Search, Sort, Filters) */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem', marginBottom: '0.5rem' }}>
+        
+        {/* Search & Sort Row */}
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <input 
+              type="text" 
+              placeholder="Search symptoms, reports, tags..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ 
+                width: '100%', padding: '12px 16px', borderRadius: '12px', 
+                backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', 
+                color: 'var(--text-primary)', fontSize: '0.95rem', outline: 'none',
+                transition: 'border-color 0.2s ease'
+              }} 
+              onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+              onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
+            />
+          </div>
+          <button 
+            onClick={() => setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc')}
+            style={{
+              padding: '12px 16px', borderRadius: '12px', cursor: 'pointer',
+              backgroundColor: 'rgba(255,255,255,0.03)', color: 'var(--text-primary)',
+              border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '500',
+              transition: 'all 0.2s ease', whiteSpace: 'nowrap'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
+            onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {sortOrder === 'desc' 
+                ? <><path d="M12 5v14M19 12l-7 7-7-7"/></> 
+                : <><path d="M12 19V5M5 12l7-7 7 7"/></>}
+            </svg>
+            {sortOrder === 'desc' ? 'Newest First' : 'Oldest First'}
+          </button>
+        </div>
+
+        {/* Quick Filters Row */}
+        <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          <button 
+            onClick={() => setFilter('all')}
+            style={{
+              padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
+              backgroundColor: filter === 'all' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+              color: filter === 'all' ? '#000' : 'var(--text-primary)',
+              border: filter === 'all' ? '1px solid var(--primary)' : '1px solid var(--border)',
+              transition: 'all 0.2s', whiteSpace: 'nowrap'
+            }}
+          >
+            All ({timeline.length})
+          </button>
+          <button 
+            onClick={() => setFilter('reports')}
+            style={{
+              padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
+              backgroundColor: filter === 'reports' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+              color: filter === 'reports' ? '#000' : 'var(--text-primary)',
+              border: filter === 'reports' ? '1px solid var(--primary)' : '1px solid var(--border)',
+              transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px'
+            }}
+          >
+            📄 Medical Reports ({countReports})
+          </button>
+          <button 
+            onClick={() => setFilter('milestones')}
+            style={{
+              padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
+              backgroundColor: filter === 'milestones' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+              color: filter === 'milestones' ? '#000' : 'var(--text-primary)',
+              border: filter === 'milestones' ? '1px solid var(--primary)' : '1px solid var(--border)',
+              transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px'
+            }}
+          >
+            📝 Journals ({countMilestones})
+          </button>
+        </div>
+
       </div>
       
-      {filteredTimeline.length > 0 ? (
+      {groupedArray.length > 0 ? (
         <div className="timeline-container" style={{ position: 'relative', paddingLeft: '2.5rem' }}>
           
-          {Object.entries(groupedTimeline).map(([dateStr, items], groupIndex) => (
-            <div key={dateStr} style={{ position: 'relative', paddingBottom: '1.5rem', paddingTop: groupIndex > 0 ? '2rem' : '0' }}>
+          {groupedArray.map((group, groupIndex) => (
+            <div key={group.dateStr} style={{ position: 'relative', paddingBottom: '1.5rem', paddingTop: groupIndex > 0 ? '2rem' : '0' }}>
               
               {/* SUBTLE DIVIDER */}
               {groupIndex > 0 && (
@@ -101,10 +165,10 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                   position: 'absolute', left: '-35px', width: '14px', height: '14px', 
                   borderRadius: '50%', backgroundColor: 'var(--background)', border: '2px solid rgba(255,255,255,0.6)', zIndex: 2 
                 }}></div>
-                <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-primary)', fontWeight: 'bold', letterSpacing: '0.5px' }}>{dateStr}</h3>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-primary)', fontWeight: 'bold', letterSpacing: '0.5px' }}>{group.dateStr}</h3>
               </div>
 
-              {items.map((item: any) => {
+              {group.items.map((item: any) => {
                 const itemTimeStr = item.date
                   ? new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(item.date))
                   : '';
@@ -267,7 +331,7 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
         </div>
       ) : (
         <div className="no-milestones" style={{ color: 'var(--text-secondary)', padding: '2rem 0', textAlign: 'center' }}>
-          No timeline items match this filter.
+          No timeline items match this search/filter.
         </div>
       )}
       
