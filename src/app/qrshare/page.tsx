@@ -75,6 +75,8 @@ export default function QRSharePage() {
               router.push(`/journey/${targetId}`);
             } else if (targetType === 'story') {
               router.push(`/story/${targetId}`);
+            } else if (targetType === 'user') {
+              router.push(`/user/${targetId}`);
             } else {
               router.push(`/snapshot/${targetId}`);
             }
