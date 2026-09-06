@@ -121,14 +121,31 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                             {tags.length > 0 ? (
-                              tags.map((tag: string, idx: number) => (
-                                <span key={idx} style={{ 
-                                  backgroundColor: 'rgba(250, 204, 21, 0.1)', color: 'var(--primary)', 
-                                  padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', fontWeight: '600', letterSpacing: '0.5px' 
-                                }}>
-                                  #{tag.replace('_', ' ').toUpperCase()}
-                                </span>
-                              ))
+                              tags.map((tag: string, idx: number) => {
+                                const t = tag.toLowerCase();
+                                let bgColor = 'rgba(250, 204, 21, 0.1)';
+                                let textColor = 'var(--primary)';
+                                
+                                if (['proud', 'hopeful', 'relieved', 'grateful', 'determined'].includes(t)) {
+                                  textColor = '#5FA072'; // Sage Green
+                                  bgColor = 'rgba(95, 160, 114, 0.1)';
+                                } else if (['anxious', 'grieving', 'exhausted', 'frustrated', 'overwhelmed', 'isolated'].includes(t)) {
+                                  textColor = '#9B7EBD'; // Muted Purple
+                                  bgColor = 'rgba(155, 126, 189, 0.1)';
+                                } else if (['neutral', 'reflective', 'waiting'].includes(t)) {
+                                  textColor = '#9CA3AF'; // Cool Grey
+                                  bgColor = 'rgba(156, 163, 175, 0.1)';
+                                }
+
+                                return (
+                                  <span key={idx} style={{ 
+                                    backgroundColor: bgColor, color: textColor, 
+                                    padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', fontWeight: '700', letterSpacing: '0.5px' 
+                                  }}>
+                                    {tag.replace('_', ' ').toUpperCase()}
+                                  </span>
+                                );
+                              })
                             ) : (
                               <span style={{ fontWeight: '600', color: 'var(--text-primary)' }}>Journal Update</span>
                             )}
