@@ -185,15 +185,43 @@ export default async function ViewSnapshotPage({ params }: Props) {
                         </div>
                         <h3 style={{ margin: '0 0 1rem 0', color: 'var(--text-primary)', fontSize: '1.1rem' }}>{item.title}</h3>
                         
-                        <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                          <button style={{ 
-                            padding: '10px 16px', backgroundColor: 'rgba(59,130,246,0.1)', color: '#3b82f6', 
-                            border: '1px solid rgba(59,130,246,0.2)', borderRadius: '8px', fontWeight: '600', 
-                            cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' 
-                          }}>
-                            View Document
-                          </button>
-                        </a>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                          {(item.files || []).map((file: any, index: number) => {
+                            const url = typeof file === 'string' ? file : file.url;
+                            if (!url) return null;
+                            const isPdf = url.toLowerCase().includes('.pdf');
+                            const isImage = url.toLowerCase().match(/\.(jpeg|jpg|gif|png|webp)$/) != null;
+
+                            return (
+                              <div key={index} style={{ border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.2)' }}>
+                                {isPdf ? (
+                                  <div style={{ width: '100%', height: '400px', backgroundColor: '#fff' }}>
+                                    <iframe src={`${url}#toolbar=0`} width="100%" height="100%" style={{ border: 'none' }} title={`Medical Document ${index + 1}`} />
+                                  </div>
+                                ) : isImage ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img src={url} alt={`Medical Document ${index + 1}`} style={{ width: '100%', height: 'auto', display: 'block' }} />
+                                ) : (
+                                  <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                                    Document preview not available
+                                  </div>
+                                )}
+                                
+                                <div style={{ padding: '12px', display: 'flex', justifyContent: 'center', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                                  <a href={url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', width: '100%' }}>
+                                    <button style={{ 
+                                      width: '100%', padding: '10px', backgroundColor: 'rgba(59,130,246,0.1)', color: '#3b82f6', 
+                                      border: '1px solid rgba(59,130,246,0.2)', borderRadius: '8px', fontWeight: '600', 
+                                      cursor: 'pointer' 
+                                    }}>
+                                      {isPdf ? 'Open Full PDF' : isImage ? 'Open Full Image' : 'Download File'}
+                                    </button>
+                                  </a>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                   );
