@@ -118,7 +118,7 @@ export default async function ViewSnapshotPage({ params }: Props) {
               <div className="author-avatar-small placeholder">
                 {authorName.charAt(0).toUpperCase()}
               </div>
-              <span className="author-name">By {authorName}</span>
+              <span className="author-name">{authorName}</span>
             </div>
             <span className="meta-dot">•</span>
             <span className="meta-date" style={{ color: '#ef4444' }}>Expires: {expiresAt}</span>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: any[], expiresAt: string }) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [filter, setFilter] = useState<'all' | 'milestones' | 'reports'>('all');
 
   const openLightbox = (url: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -14,9 +15,17 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
     setSelectedFile(null);
   };
 
+  // Filter the timeline before grouping
+  const filteredTimeline = timeline.filter(item => {
+    if (filter === 'all') return true;
+    if (filter === 'milestones') return item.type === 'milestone';
+    if (filter === 'reports') return item.type === 'report';
+    return true;
+  });
+
   // Group timeline items by date
   const groupedTimeline: Record<string, any[]> = {};
-  timeline.forEach(item => {
+  filteredTimeline.forEach(item => {
     const itemDateStr = item.date
       ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(item.date))
       : 'Unknown Date';
@@ -26,20 +35,54 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
     groupedTimeline[itemDateStr].push(item);
   });
 
+  const countMilestones = timeline.filter(i => i.type === 'milestone').length;
+  const countReports = timeline.filter(i => i.type === 'report').length;
+
   return (
     <div className="milestones-timeline" style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
-        <h2 style={{ color: 'var(--text-primary)', margin: 0 }}>
-          Snapshot Timeline ({timeline.length})
-        </h2>
-        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', backgroundColor: 'rgba(255,255,255,0.05)', padding: '4px 10px', borderRadius: '12px' }}>
-          Read Only
-        </div>
+      
+      {/* QUICK FILTERS */}
+      <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', WebkitOverflowScrolling: 'touch', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem', marginBottom: '0.5rem' }}>
+        <button 
+          onClick={() => setFilter('all')}
+          style={{
+            padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
+            backgroundColor: filter === 'all' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+            color: filter === 'all' ? '#000' : 'var(--text-primary)',
+            border: filter === 'all' ? '1px solid var(--primary)' : '1px solid var(--border)',
+            transition: 'all 0.2s', whiteSpace: 'nowrap'
+          }}
+        >
+          All ({timeline.length})
+        </button>
+        <button 
+          onClick={() => setFilter('reports')}
+          style={{
+            padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
+            backgroundColor: filter === 'reports' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+            color: filter === 'reports' ? '#000' : 'var(--text-primary)',
+            border: filter === 'reports' ? '1px solid var(--primary)' : '1px solid var(--border)',
+            transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px'
+          }}
+        >
+          📄 Medical Reports ({countReports})
+        </button>
+        <button 
+          onClick={() => setFilter('milestones')}
+          style={{
+            padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
+            backgroundColor: filter === 'milestones' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+            color: filter === 'milestones' ? '#000' : 'var(--text-primary)',
+            border: filter === 'milestones' ? '1px solid var(--primary)' : '1px solid var(--border)',
+            transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px'
+          }}
+        >
+          📝 Journals ({countMilestones})
+        </button>
       </div>
       
-      {timeline.length > 0 ? (
+      {filteredTimeline.length > 0 ? (
         <div className="timeline-container" style={{ position: 'relative', paddingLeft: '2.5rem' }}>
-          {/* No global line here! The line is now broken per date group. */}
           
           {Object.entries(groupedTimeline).map(([dateStr, items], groupIndex) => (
             <div key={dateStr} style={{ position: 'relative', paddingBottom: '1.5rem', paddingTop: groupIndex > 0 ? '2rem' : '0' }}>
@@ -67,6 +110,7 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                   : '';
                 
                 if (item.type === 'milestone') {
+                  const tags = item.tags || [];
                   return (
                     <div key={`m-${item.id}`} className="milestone-card" style={{ position: 'relative', marginBottom: '2rem' }}>
                       <div style={{ 
@@ -75,13 +119,26 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                       }}></div>
                       <div className="interactive-card" style={{ backgroundColor: 'var(--surface)', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--border)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                          <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>Journal Update</div>
-                          <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{itemTimeStr}</div>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                            {tags.length > 0 ? (
+                              tags.map((tag: string, idx: number) => (
+                                <span key={idx} style={{ 
+                                  backgroundColor: 'rgba(250, 204, 21, 0.1)', color: 'var(--primary)', 
+                                  padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', fontWeight: '600', letterSpacing: '0.5px' 
+                                }}>
+                                  #{tag.toUpperCase()}
+                                </span>
+                              ))
+                            ) : (
+                              <span style={{ fontWeight: '600', color: 'var(--text-primary)' }}>Journal Update</span>
+                            )}
+                          </div>
+                          <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', whiteSpace: 'nowrap', marginLeft: '12px' }}>{itemTimeStr}</div>
                         </div>
                         {item.mediaUrl && (
                           <div style={{ marginBottom: '1rem', borderRadius: '12px', overflow: 'hidden' }}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img onClick={(e) => openLightbox(item.mediaUrl, e)} src={item.mediaUrl} alt="Media" style={{ width: '100%', height: 'auto', display: 'block', cursor: 'zoom-in' }} />
+                            <img onClick={(e) => openLightbox(item.mediaUrl, e)} src={item.mediaUrl} alt="Media" className="media-hover-card" style={{ width: '100%', height: 'auto', display: 'block', cursor: 'zoom-in' }} />
                           </div>
                         )}
                         {item.text && (
@@ -192,8 +249,8 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
           ))}
         </div>
       ) : (
-        <div className="no-milestones" style={{ color: 'var(--text-secondary)', padding: '2rem 0' }}>
-          No timeline items available in this snapshot.
+        <div className="no-milestones" style={{ color: 'var(--text-secondary)', padding: '2rem 0', textAlign: 'center' }}>
+          No timeline items match this filter.
         </div>
       )}
       
