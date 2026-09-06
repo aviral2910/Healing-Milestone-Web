@@ -214,14 +214,16 @@ export default async function JourneyPage({ params }: Props) {
                         gap: '1.5rem',
                         color: 'var(--text-secondary)'
                       }}>
-                        <a href="https://healingmilestones.in" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', color: 'inherit' }}>
-                          <span style={{ fontSize: '1.2rem' }}>❤️</span>
-                          <span>React</span>
-                        </a>
-                        <a href="https://healingmilestones.in" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', color: 'inherit' }}>
-                          <span style={{ fontSize: '1.2rem' }}>💬</span>
-                          <span>Comment</span>
-                        </a>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                          <span style={{ fontSize: '1.1rem' }}>❤️</span>
+                          <span>{milestone.reaction_count || 0}</span>
+                        </div>
+                        {milestone.are_comments_enabled && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                            <span style={{ fontSize: '1.1rem' }}>💬</span>
+                            <span>{milestone.comment_count || 0}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
