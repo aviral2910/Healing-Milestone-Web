@@ -46,6 +46,10 @@ export default function QRSharePage() {
         if (prev <= 1) {
           setStatus('expired');
           clearInterval(interval);
+          // Immediately delete the session from the database to keep it clean
+          if (sessionId) {
+            deleteDoc(doc(db, 'qr_sessions', sessionId)).catch(console.error);
+          }
           return 0;
         }
         return prev - 1;
