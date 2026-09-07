@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MonitorSmartphone, ExternalLink } from "lucide-react";
 import StoryCard from "@/components/StoryCard";
 import StoriesCarousel from "@/components/StoriesCarousel";
 
@@ -34,7 +35,7 @@ export default async function Home() {
   return (
     <div className="home-wrapper">
       {/* 1. Header / Navbar */}
-      <header className="home-header">
+      <header className="home-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '24px' }}>
         <div className="banner-brand">
           <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -45,6 +46,10 @@ export default async function Home() {
             </div>
           </Link>
         </div>
+        <Link href="/web" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '24px', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem', transition: 'all 0.2s' }} onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}>
+          <MonitorSmartphone size={16} />
+          Web Sync
+        </Link>
       </header>
 
       {/* 2. Hero Section */}
@@ -112,6 +117,24 @@ export default async function Home() {
       </section>
 
       {/* 5. Community Section */}
+      {/* Web Sync Section */}
+      <section className="share-journey-section" style={{ backgroundColor: '#0f0f11', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+          <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(250, 204, 21, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto', color: 'var(--primary)' }}>
+            <MonitorSmartphone size={32} />
+          </div>
+          <h2 className="section-title">See it on the Big Screen</h2>
+          <p className="section-subtitle">
+            Securely beam your Health Snapshots, Journeys, and Stories to any computer, tablet, or smart TV in seconds. No login required—just scan and sync.
+          </p>
+          <div style={{ marginTop: '2.5rem' }}>
+            <Link href="/web" className="download-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+              Open Web Sync <ExternalLink size={18} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="community-section">
         <div className="community-container">
           <h2 className="section-title">Join Our Community</h2>
@@ -158,6 +181,7 @@ export default async function Home() {
             <p className="footer-tagline">Nurturing hope and positivity, one milestone at a time.</p>
           </div>
           <div className="footer-links">
+            <Link href="/web" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>Web Sync</Link>
             <Link href="/privacy">Privacy Policy</Link>
             <Link href="/terms">Terms of Service</Link>
             <a href="mailto:support@healingmilestones.in">Contact Us</a>

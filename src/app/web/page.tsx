@@ -122,7 +122,7 @@ export default function QRSharePage() {
             <MonitorSmartphone size={32} />
           </div>
 
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>Desktop Sync</h2>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>Web Sync</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: '1.5' }}>
             Open the Healing Milestones mobile app and scan this QR code to instantly display your Journey, Story, or Health Snapshot on this screen.
           </p>
