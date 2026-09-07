@@ -1,3 +1,4 @@
+import { safeUtcDate } from '@/utils/dateUtils';
 import MilestoneCard from "./MilestoneCard";
 import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
@@ -97,7 +98,7 @@ export default async function JourneyPage({ params }: Props) {
   const milestones = await getMilestones(id) || [];
 
   const dateStr = journey.created_at
-    ? new Date(journey.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    ? safeUtcDate(journey.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     : 'Recently';
 
   return (

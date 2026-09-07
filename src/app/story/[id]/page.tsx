@@ -1,3 +1,4 @@
+import { safeUtcDate } from '@/utils/dateUtils';
 import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
@@ -96,7 +97,7 @@ export default async function StoryPage({ params }: Props) {
   }
 
   const dateStr = story.publishedAt
-    ? new Date(story.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    ? safeUtcDate(story.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     : 'Recently';
 
   return (
@@ -199,7 +200,7 @@ export default async function StoryPage({ params }: Props) {
                       <span className="comment-author">{comment.user.displayName}</span>
                       {comment.createdAt && (
                         <span className="comment-date">
-                          {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(comment.createdAt))}
+                          {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(safeUtcDate(comment.createdAt))}
                         </span>
                       )}
                     </div>

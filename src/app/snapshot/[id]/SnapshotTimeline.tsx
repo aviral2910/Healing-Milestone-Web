@@ -1,4 +1,5 @@
 'use client';
+import { safeUtcDate } from '@/utils/dateUtils';
 
 import { useState, useMemo, useEffect } from 'react';
 
@@ -47,8 +48,8 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
 
     // 2. Sort
     const sorted = [...filtered].sort((a, b) => {
-      const dateA = new Date(a.date || 0).getTime();
-      const dateB = new Date(b.date || 0).getTime();
+      const dateA = safeUtcDate(a.date || 0).getTime();
+      const dateB = safeUtcDate(b.date || 0).getTime();
       return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
     });
 
@@ -56,7 +57,7 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
     const grouped: { dateStr: string, items: any[] }[] = [];
     sorted.forEach(item => {
       const dateStr = item.date
-        ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(item.date))
+        ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(safeUtcDate(item.date))
         : 'Unknown Date';
       const lastGroup = grouped[grouped.length - 1];
       if (!lastGroup || lastGroup.dateStr !== dateStr) {
@@ -210,7 +211,7 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
 
               {group.items.map((item: any) => {
                 const itemTimeStr = item.date
-                  ? new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(item.date))
+                  ? new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(safeUtcDate(item.date))
                   : '';
                 
                 if (item.type === 'milestone') {

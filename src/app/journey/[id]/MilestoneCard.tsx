@@ -1,4 +1,5 @@
 'use client';
+import { safeUtcDate } from '@/utils/dateUtils';
 
 import React, { useState, useEffect } from 'react';
 
@@ -9,7 +10,7 @@ export default function MilestoneCard({ milestone }: { milestone: any }) {
 
   const isClosure = milestone.is_closure;
   const mDateStr = milestone.created_at
-    ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(milestone.created_at))
+    ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(safeUtcDate(milestone.created_at))
     : '';
 
   const handleOpenComments = async () => {
@@ -152,7 +153,7 @@ export default function MilestoneCard({ milestone }: { milestone: any }) {
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
                           <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>{comment.user.displayName}</span>
                           <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
-                            {new Date(comment.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            {safeUtcDate(comment.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </span>
                         </div>
                         <div style={{ marginTop: '0.2rem', color: '#e5e5e5', lineHeight: '1.4', fontSize: '0.95rem' }}>

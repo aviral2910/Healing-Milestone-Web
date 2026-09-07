@@ -1,3 +1,4 @@
+import { safeUtcDate } from '@/utils/dateUtils';
 import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -74,15 +75,15 @@ export default async function ViewSnapshotPage({ params }: Props) {
   }
 
   const authorName = viewData.journeys?.[0]?.authorName || "Patient";
-  const expiresAt = viewData.expiresAt ? new Date(viewData.expiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : "Unknown";
+  const expiresAt = viewData.expiresAt ? safeUtcDate(viewData.expiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : "Unknown";
 
   // Merge and sort timeline
   const milestones = (viewData.milestones || []).map((m: any) => ({ ...m, type: 'milestone' }));
   const reports = (viewData.reports || []).map((r: any) => ({ ...r, type: 'report' }));
   
   const timeline = [...milestones, ...reports].sort((a, b) => {
-    const dateA = new Date(a.date || 0).getTime();
-    const dateB = new Date(b.date || 0).getTime();
+    const dateA = safeUtcDate(a.date || 0).getTime();
+    const dateB = safeUtcDate(b.date || 0).getTime();
     return dateB - dateA; // Descending
   });
 
