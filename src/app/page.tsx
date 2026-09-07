@@ -46,7 +46,7 @@ export default async function Home() {
             </div>
           </Link>
         </div>
-        <Link href="/web" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '24px', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem', transition: 'all 0.2s' }} onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}>
+        <Link href="/web" className="download-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem' }}>
           <MonitorSmartphone size={16} />
           Web Sync
         </Link>
