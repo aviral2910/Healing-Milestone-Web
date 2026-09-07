@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 
 export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: any[], expiresAt: string }) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [filter, setFilter] = useState<'all' | 'milestones' | 'reports'>('all');
+  const [filter, setFilter] = useState<'all' | 'milestones' | 'reports' | 'prescriptions'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
@@ -28,11 +28,12 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
   }, [selectedFile]);
 
   // Memoize heavy calculations to prevent re-rendering flicker when opening lightbox
-  const { groupedArray, countMilestones, countReports } = useMemo(() => {
+  const { groupedArray, countMilestones, countReports, countPrescriptions } = useMemo(() => {
     // 1. Filter
     const filtered = timeline.filter(item => {
       if (filter === 'milestones' && item.type !== 'milestone') return false;
-      if (filter === 'reports' && item.type !== 'report') return false;
+      if (filter === 'reports' && (item.type !== 'report' || item.category === 'prescription')) return false;
+      if (filter === 'prescriptions' && (item.type !== 'report' || item.category !== 'prescription')) return false;
       if (searchQuery.trim() !== '') {
         const query = searchQuery.toLowerCase();
         const textMatch = item.text?.toLowerCase().includes(query);
@@ -67,7 +68,8 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
     return {
       groupedArray: grouped,
       countMilestones: timeline.filter(i => i.type === 'milestone').length,
-      countReports: timeline.filter(i => i.type === 'report').length
+      countReports: timeline.filter(i => i.type === 'report' && i.category !== 'prescription').length,
+      countPrescriptions: timeline.filter(i => i.type === 'report' && i.category === 'prescription').length
     };
   }, [timeline, filter, searchQuery, sortOrder]);
 
@@ -140,6 +142,18 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
             }}
           >
             📄 Medical Reports ({countReports})
+          </button>
+          <button 
+            onClick={() => setFilter('prescriptions')}
+            style={{
+              padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
+              backgroundColor: filter === 'prescriptions' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+              color: filter === 'prescriptions' ? '#000' : 'var(--text-primary)',
+              border: filter === 'prescriptions' ? '1px solid var(--primary)' : '1px solid var(--border)',
+              transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px'
+            }}
+          >
+            💊 Prescriptions ({countPrescriptions})
           </button>
           <button 
             onClick={() => setFilter('milestones')}
