@@ -125,7 +125,7 @@ export default async function Home() {
           </div>
           <h2 className="section-title">See it on the Big Screen</h2>
           <p className="section-subtitle">
-            Securely beam your Health Snapshots, Journeys, and Stories to any computer, tablet, or smart TV in seconds. No login required—just scan and sync.
+            Instantly share a selected Journey, Story, or Health Snapshot with your doctor or family on any screen. Your account stays safely on your phone, ensuring complete privacy. No logins, no link sharing—just scan to share, and the screen automatically clears when you're done.
           </p>
           <div style={{ marginTop: '2.5rem' }}>
             <Link href="/web" className="download-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
