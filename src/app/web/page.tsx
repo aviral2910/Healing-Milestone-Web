@@ -116,60 +116,76 @@ export default function QRSharePage() {
       </div>
 
       <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-        <div style={{ maxWidth: '420px', width: '100%', backgroundColor: 'var(--surface)', padding: '3rem 2rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
+        <div style={{ maxWidth: '850px', width: '100%', backgroundColor: 'var(--surface)', padding: '3rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', display: 'flex', flexWrap: 'wrap', gap: '3rem', alignItems: 'center', justifyContent: 'space-between' }}>
           
-          <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(250, 204, 21, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'var(--primary)' }}>
-            <MonitorSmartphone size={32} />
+          {/* Left Side: Title and Steps */}
+          <div style={{ flex: '1 1 300px', minWidth: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: 'rgba(250, 204, 21, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'var(--primary)' }}>
+              <MonitorSmartphone size={28} />
+            </div>
+
+            <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem', color: 'var(--text-primary)', fontWeight: 'bold' }}>Web Sync</h2>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.5' }}>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>1</div>
+                <div>Open the <strong>Healing Milestones</strong> mobile app.</div>
+              </div>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>2</div>
+                <div>View any Journey, Story, or Snapshot and tap <strong>Share</strong>.</div>
+              </div>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>3</div>
+                <div>Select <strong>Share to Web</strong> and point your camera here.</div>
+              </div>
+            </div>
           </div>
 
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>Web Sync</h2>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: '1.5' }}>
-            Open the Healing Milestones mobile app and scan this QR code to instantly display your Journey, Story, or Health Snapshot on this screen.
-          </p>
+          {/* Right Side: QR Code and Timer */}
+          <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 auto' }}>
+            <div style={{ position: 'relative', width: '260px', height: '260px', backgroundColor: 'white', padding: '16px', borderRadius: '16px', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 32px rgba(250, 204, 21, 0.15)' }}>
+              
+              {status === 'loading' && <div style={{ color: '#000', fontWeight: 'bold' }}>Generating...</div>}
+              
+              {status === 'active' && sessionId && (
+                <QRCode value={`https://healingmilestones.in/sync?session=${sessionId}`} size={228} style={{ height: "auto", maxWidth: "100%", width: "100%" }} />
+              )}
 
-          <div style={{ position: 'relative', width: '220px', height: '220px', backgroundColor: 'white', padding: '16px', borderRadius: '16px', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 32px rgba(250, 204, 21, 0.15)' }}>
-            
-            {status === 'loading' && <div style={{ color: '#000', fontWeight: 'bold' }}>Generating...</div>}
-            
-            {status === 'active' && sessionId && (
-              <QRCode value={`https://healingmilestones.in/sync?session=${sessionId}`}  size={188} style={{ height: "auto", maxWidth: "100%", width: "100%" }} />
+              {status === 'expired' && (
+                <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(255,255,255,0.95)', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+                  <span style={{ color: '#ef4444', fontWeight: 'bold', marginBottom: '16px', fontSize: '1.2rem' }}>Code Expired</span>
+                  <button 
+                    onClick={generateSession}
+                    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px', backgroundColor: 'var(--primary)', color: '#000', border: 'none', borderRadius: '24px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', transition: 'transform 0.2s' }}
+                  >
+                    <RefreshCw size={18} />
+                    New Code
+                  </button>
+                </div>
+              )}
+
+              {status === 'success' && (
+                <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(250, 204, 21, 0.95)', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                  <ShieldCheck size={48} color="#000" style={{ marginBottom: '16px' }} />
+                  <span style={{ color: '#000', fontWeight: 'bold', fontSize: '1.3rem' }}>Sync Complete!</span>
+                </div>
+              )}
+            </div>
+
+            {status === 'active' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: timeLeft < 60 ? '#ef4444' : 'var(--text-secondary)', fontWeight: '600', fontSize: '1.1rem', transition: 'color 0.3s' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: timeLeft < 60 ? '#ef4444' : 'var(--primary)', boxShadow: `0 0 10px ${timeLeft < 60 ? '#ef4444' : 'var(--primary)'}` }}></div>
+                Expires in {formatTime(timeLeft)}
+              </div>
             )}
-
+            
             {status === 'expired' && (
-              <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(255,255,255,0.95)', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-                <span style={{ color: '#ef4444', fontWeight: 'bold', marginBottom: '16px', fontSize: '1.1rem' }}>Code Expired</span>
-                <button 
-                  onClick={generateSession}
-                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 20px', backgroundColor: 'var(--primary)', color: '#000', border: 'none', borderRadius: '24px', fontWeight: 'bold', cursor: 'pointer', transition: 'transform 0.2s' }}
-                  onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                  onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                >
-                  <RefreshCw size={18} />
-                  New Code
-                </button>
-              </div>
-            )}
-
-            {status === 'success' && (
-              <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(250, 204, 21, 0.95)', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <ShieldCheck size={48} color="#000" style={{ marginBottom: '16px' }} />
-                <span style={{ color: '#000', fontWeight: 'bold', fontSize: '1.2rem' }}>Sync Complete!</span>
+              <div style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', textAlign: 'center', maxWidth: '260px' }}>
+                For your security, QR codes expire after 5 minutes.
               </div>
             )}
           </div>
-
-          {status === 'active' && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: timeLeft < 60 ? '#ef4444' : 'var(--text-secondary)', fontWeight: '600', fontSize: '1.1rem', transition: 'color 0.3s' }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: timeLeft < 60 ? '#ef4444' : 'var(--primary)', boxShadow: `0 0 10px ${timeLeft < 60 ? '#ef4444' : 'var(--primary)'}` }}></div>
-              Expires in {formatTime(timeLeft)}
-            </div>
-          )}
-          
-          {status === 'expired' && (
-            <div style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-              For your security, QR codes expire after 5 minutes.
-            </div>
-          )}
 
         </div>
       </main>
