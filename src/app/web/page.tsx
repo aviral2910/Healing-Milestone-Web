@@ -132,7 +132,7 @@ export default function QRSharePage() {
             {status === 'loading' && <div style={{ color: '#000', fontWeight: 'bold' }}>Generating...</div>}
             
             {status === 'active' && sessionId && (
-              <QRCode value={sessionId} size={188} style={{ height: "auto", maxWidth: "100%", width: "100%" }} />
+              <QRCode value={`https://healingmilestones.in/sync?session=${sessionId}`}  size={188} style={{ height: "auto", maxWidth: "100%", width: "100%" }} />
             )}
 
             {status === 'expired' && (

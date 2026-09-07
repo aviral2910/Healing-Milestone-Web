@@ -3,8 +3,8 @@
     "apps": [],
     "details": [
       {
-        "appID": "YOUR_TEAM_ID.com.example.healingMilestones",
-        "paths": ["/story/*"]
+        "appID": "TEAMID.com.example.healingMilestones",
+        "paths": [ "*" ]
       }
     ]
   }
