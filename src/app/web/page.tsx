@@ -115,45 +115,174 @@ export default function QRSharePage() {
         </div>
       </div>
 
-      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-        <div style={{ maxWidth: '850px', width: '100%', backgroundColor: 'var(--surface)', padding: '3rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', display: 'flex', flexWrap: 'wrap', gap: '3rem', alignItems: 'center', justifyContent: 'space-between' }}>
+      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem 1rem' }}>
+        <style>{`
+          .sync-card {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4rem;
+            padding: 3.5rem;
+            background: linear-gradient(145deg, #18181b, #09090b);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            max-width: 860px;
+            width: 100%;
+          }
+          .sync-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+          }
+          .sync-title-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 2rem;
+          }
+          .sync-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+            margin: 0;
+          }
+          .icon-box {
+            width: 54px;
+            height: 54px;
+            border-radius: 16px;
+            background: rgba(250, 204, 21, 0.1);
+            color: #facc15;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+          }
+          .step-item {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            color: #a1a1aa;
+            font-size: 1.05rem;
+            line-height: 1.6;
+          }
+          .step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(250, 204, 21, 0.15);
+            color: #facc15;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+          }
+          .sync-right {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 32px;
+            border-radius: 28px;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+          }
+          .qr-container {
+            position: relative;
+            background: white;
+            padding: 16px;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 240px;
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .timer-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+          }
+          @media (max-width: 800px) {
+            .sync-card {
+              flex-direction: column;
+              padding: 2.5rem 1.5rem;
+              gap: 3rem;
+            }
+            .sync-title-row {
+              justify-content: center;
+              margin-bottom: 2.5rem;
+            }
+            .step-item {
+              font-size: 1rem;
+            }
+            .qr-container {
+              width: 220px;
+              height: 220px;
+            }
+            .sync-right {
+              width: 100%;
+              padding: 24px;
+            }
+          }
+        `}</style>
+
+        <div className="sync-card">
           
           {/* Left Side: Title and Steps */}
-          <div style={{ flex: '1 1 300px', minWidth: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <div style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: 'rgba(250, 204, 21, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'var(--primary)' }}>
-              <MonitorSmartphone size={28} />
+          <div className="sync-left">
+            <div className="sync-title-row">
+              <div className="icon-box">
+                <MonitorSmartphone size={28} strokeWidth={2.5} />
+              </div>
+              <h2 className="sync-title">Web Sync</h2>
             </div>
-
-            <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem', color: 'var(--text-primary)', fontWeight: 'bold' }}>Web Sync</h2>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.5' }}>
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>1</div>
-                <div>Open the <strong>Healing Milestones</strong> mobile app.</div>
+            <div className="steps-container">
+              <div className="step-item">
+                <div className="step-num">1</div>
+                <div>Open the <strong style={{ color: '#fff' }}>Healing Milestones</strong> app on your mobile device.</div>
               </div>
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>2</div>
-                <div>View any Journey, Story, or Snapshot and tap <strong>Share</strong>.</div>
+              <div className="step-item">
+                <div className="step-num">2</div>
+                <div>View any Journey, Story, or Snapshot and tap the <strong style={{ color: '#fff' }}>Share</strong> button.</div>
               </div>
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>3</div>
-                <div>Select <strong>Share to Web</strong> and point your camera here.</div>
+              <div className="step-item">
+                <div className="step-num">3</div>
+                <div>Select <strong style={{ color: '#fff' }}>Share to Web</strong> and point your camera at this screen.</div>
               </div>
             </div>
           </div>
 
           {/* Right Side: QR Code and Timer */}
-          <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 auto' }}>
-            <div style={{ position: 'relative', width: '260px', height: '260px', backgroundColor: 'white', padding: '16px', borderRadius: '16px', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 32px rgba(250, 204, 21, 0.15)' }}>
+          <div className="sync-right">
+            <div className="qr-container">
               
               {status === 'loading' && <div style={{ color: '#000', fontWeight: 'bold' }}>Generating...</div>}
               
               {status === 'active' && sessionId && (
-                <QRCode value={`https://healingmilestones.in/sync?session=${sessionId}`} size={228} style={{ height: "auto", maxWidth: "100%", width: "100%" }} />
+                <QRCode value={`https://healingmilestones.in/sync?session=${sessionId}`} size={208} style={{ height: "auto", maxWidth: "100%", width: "100%" }} />
               )}
 
               {status === 'expired' && (
-                <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(255,255,255,0.95)', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+                <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(255,255,255,0.95)', borderRadius: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
                   <span style={{ color: '#ef4444', fontWeight: 'bold', marginBottom: '16px', fontSize: '1.2rem' }}>Code Expired</span>
                   <button 
                     onClick={generateSession}
@@ -166,7 +295,7 @@ export default function QRSharePage() {
               )}
 
               {status === 'success' && (
-                <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(250, 204, 21, 0.95)', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(250, 204, 21, 0.95)', borderRadius: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                   <ShieldCheck size={48} color="#000" style={{ marginBottom: '16px' }} />
                   <span style={{ color: '#000', fontWeight: 'bold', fontSize: '1.3rem' }}>Sync Complete!</span>
                 </div>
@@ -174,15 +303,15 @@ export default function QRSharePage() {
             </div>
 
             {status === 'active' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: timeLeft < 60 ? '#ef4444' : 'var(--text-secondary)', fontWeight: '600', fontSize: '1.1rem', transition: 'color 0.3s' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: timeLeft < 60 ? '#ef4444' : 'var(--primary)', boxShadow: `0 0 10px ${timeLeft < 60 ? '#ef4444' : 'var(--primary)'}` }}></div>
+              <div className="timer-pill" style={{ color: timeLeft < 60 ? '#ef4444' : '#e4e4e7' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: timeLeft < 60 ? '#ef4444' : 'var(--primary)', boxShadow: `0 0 10px ${timeLeft < 60 ? 'rgba(239, 68, 68, 0.5)' : 'rgba(250, 204, 21, 0.5)'}` }}></div>
                 Expires in {formatTime(timeLeft)}
               </div>
             )}
             
             {status === 'expired' && (
-              <div style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', textAlign: 'center', maxWidth: '260px' }}>
-                For your security, QR codes expire after 5 minutes.
+              <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textAlign: 'center', maxWidth: '240px' }}>
+                For your security, QR codes expire automatically.
               </div>
             )}
           </div>
