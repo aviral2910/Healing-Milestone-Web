@@ -29,7 +29,7 @@ function BiomarkerIcon({ name }: { name: string }) {
 
 export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: any[], expiresAt: string }) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [filter, setFilter] = useState<'all' | 'milestones' | 'medical_records' | 'reports' | 'prescriptions'>('all');
+  const [filter, setFilter] = useState<'all' | 'milestones' | 'medical_records' | 'reports' | 'prescriptions' | 'biomarkers'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
@@ -193,6 +193,19 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
             }}
           >
             💊 Prescriptions ({countPrescriptions})
+          </button>
+          <button 
+            onClick={() => setFilter('biomarkers')}
+            style={{
+              padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
+              backgroundColor: filter === 'biomarkers' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+              color: filter === 'biomarkers' ? '#000' : 'var(--text-primary)',
+              border: filter === 'biomarkers' ? '1px solid var(--primary)' : '1px solid var(--border)',
+              transition: 'all 0.2s ease',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            🧪 Has Biomarkers
           </button>
           <button 
             onClick={() => setFilter('milestones')}
