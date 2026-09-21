@@ -390,6 +390,42 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                             })}
                           </div>
                         )}
+                        {/* BIOMARKERS LIST */}
+                        {item.data.biomarkers && item.data.biomarkers.length > 0 && (
+                          <div style={{ marginTop: '1.5rem' }}>
+                            <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                              Extracted Biomarkers
+                            </h4>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              {item.data.biomarkers.map((b: any, idx: number) => (
+                                <div key={idx} style={{ 
+                                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                  padding: '12px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '12px',
+                                  border: `1px solid ${b.isAbnormal ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255,255,255,0.05)'}`
+                                }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <BiomarkerIcon name={b.rawName} />
+                                    <span style={{ color: 'var(--text-primary)', fontSize: '0.95rem', fontWeight: 500 }}>{b.rawName}</span>
+                                  </div>
+                                  <div style={{ textAlign: 'right' }}>
+                                    <span style={{ 
+                                      color: b.isAbnormal ? '#ef4444' : 'var(--primary)', 
+                                      fontWeight: 'bold', fontSize: '1.1rem' 
+                                    }}>
+                                      {b.resultType === 'numeric' ? b.valueNumeric : b.valueText}
+                                    </span>
+                                    {b.rawUnit && (
+                                      <span style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', marginLeft: '4px' }}>
+                                        {b.rawUnit}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
 
                       </div>
                     </div>

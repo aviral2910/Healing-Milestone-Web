@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SnapshotTimeline from "./SnapshotTimeline";
-import BiomarkerTrends from "./BiomarkerTrends";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -129,9 +128,7 @@ export default async function ViewSnapshotPage({ params }: Props) {
       </div>
 
       <main className="story-container">
-        {viewData.biomarkerTrends && viewData.biomarkerTrends.length > 0 && (
-          <BiomarkerTrends trends={viewData.biomarkerTrends} />
-        )}
+
         <SnapshotTimeline timeline={timeline} expiresAt={expiresAt} />
       </main>
     </>
