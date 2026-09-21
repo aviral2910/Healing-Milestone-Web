@@ -60,12 +60,17 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
       if (filter === 'medical_records' && item.type !== 'report') return false;
       if (filter === 'reports' && (item.type !== 'report' || item.category === 'prescription')) return false;
       if (filter === 'prescriptions' && (item.type !== 'report' || item.category !== 'prescription')) return false;
+      if (filter === 'biomarkers' && (!item.biomarkers || item.biomarkers.length === 0)) return false;
       if (searchQuery.trim() !== '') {
         const query = searchQuery.toLowerCase();
         const textMatch = item.text?.toLowerCase().includes(query);
         const titleMatch = item.title?.toLowerCase().includes(query);
         const tagMatch = item.tags?.some((t: string) => t.toLowerCase().includes(query));
-        if (!textMatch && !titleMatch && !tagMatch) return false;
+        const biomarkerMatch = item.biomarkers?.some((b: any) => 
+            b.rawName?.toLowerCase().includes(query) || 
+            b.valueText?.toLowerCase().includes(query)
+        );
+        if (!textMatch && !titleMatch && !tagMatch && !biomarkerMatch) return false;
       }
       return true;
     });
@@ -428,13 +433,13 @@ export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: an
                           </div>
                         )}
                         {/* BIOMARKERS LIST */}
-                        {item.data.biomarkers && item.data.biomarkers.length > 0 && (
+                        {item.biomarkers && item.biomarkers.length > 0 && (
                           <div style={{ marginTop: '1.5rem' }}>
                             <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                               Extracted Biomarkers
                             </h4>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                              {item.data.biomarkers.map((b: any, idx: number) => (
+                              {item.biomarkers.map((b: any, idx: number) => (
                                 <div key={idx} style={{ 
                                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                                   padding: '12px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '12px',
