@@ -3,6 +3,30 @@ import { safeUtcDate } from '@/utils/dateUtils';
 
 import { useState, useMemo, useEffect } from 'react';
 
+
+function BiomarkerIcon({ name }: { name: string }) {
+  const n = name.toLowerCase();
+  let icon = '🧪';
+  if (n.includes('blood') || n.includes('hemoglobin') || n.includes('rbc') || n.includes('wbc')) icon = '🩸';
+  else if (n.includes('glucose') || n.includes('sugar') || n.includes('a1c')) icon = '🍬';
+  else if (n.includes('heart') || n.includes('pulse') || n.includes('bp') || n.includes('pressure')) icon = '❤️';
+  else if (n.includes('weight') || n.includes('bmi')) icon = '⚖️';
+  else if (n.includes('lipid') || n.includes('cholesterol') || n.includes('triglyceride')) icon = '🥓';
+  else if (n.includes('liver') || n.includes('sgot') || n.includes('sgpt') || n.includes('alt') || n.includes('ast')) icon = '🔬';
+  else if (n.includes('kidney') || n.includes('creatinine') || n.includes('urea') || n.includes('egfr')) icon = '💧';
+  else if (n.includes('thyroid') || n.includes('tsh') || n.includes('t3') || n.includes('t4')) icon = '🦋';
+
+  return (
+    <div style={{
+      width: '32px', height: '32px', borderRadius: '8px',
+      backgroundColor: 'rgba(255, 255, 255, 0.05)', display: 'flex',
+      alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0
+    }}>
+      {icon}
+    </div>
+  );
+}
+
 export default function SnapshotTimeline({ timeline, expiresAt }: { timeline: any[], expiresAt: string }) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'milestones' | 'medical_records' | 'reports' | 'prescriptions'>('all');
