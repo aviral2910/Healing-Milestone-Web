@@ -220,6 +220,7 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
       const [filter, setFilter] = useState<'all' | 'milestones' | 'medical_records' | 'reports' | 'prescriptions' | 'biomarkers'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
+  const [expandedBiomarkerLists, setExpandedBiomarkerLists] = useState<Record<string, boolean>>({});
 
   const openLightbox = (url: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -627,7 +628,7 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
                               Extracted Biomarkers
                             </h4>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                              {item.biomarkers.map((b: any, idx: number) => (
+                              {(expandedBiomarkerLists[item.id] ? item.biomarkers : item.biomarkers.slice(0, 4)).map((b: any, idx: number) => (
                                 <InlineBiomarkerCard 
                                   key={idx} 
                                   biomarker={b} 
@@ -638,6 +639,33 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
                                 />
                               ))}
                             </div>
+                            {item.biomarkers.length > 4 && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setExpandedBiomarkerLists(prev => ({ ...prev, [item.id]: !prev[item.id] }));
+                                }}
+                                style={{
+                                  marginTop: '12px',
+                                  width: '100%',
+                                  padding: '12px',
+                                  background: 'rgba(218, 165, 32, 0.05)',
+                                  border: '1px solid rgba(218, 165, 32, 0.2)',
+                                  borderRadius: '8px',
+                                  color: 'var(--primary)',
+                                  fontSize: '0.9rem',
+                                  fontWeight: '500',
+                                  cursor: 'pointer',
+                                  transition: 'background-color 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(218, 165, 32, 0.1)'}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(218, 165, 32, 0.05)'}
+                              >
+                                {expandedBiomarkerLists[item.id] 
+                                  ? 'Show fewer metrics' 
+                                  : `View all ${item.biomarkers.length} metrics`}
+                              </button>
+                            )}
                           </div>
                         )}
 
