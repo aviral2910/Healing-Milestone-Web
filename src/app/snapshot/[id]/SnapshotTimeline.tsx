@@ -41,7 +41,7 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
       displayDate: new Date(dp.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       value: dp.value,
       isAbnormal: dp.isAbnormal,
-      range: (dp.rangeLow != null && dp.rangeHigh != null) ? [dp.rangeLow, dp.rangeHigh] : null
+      range: (dp.rangeLow != null || dp.rangeHigh != null) ? [dp.rangeLow ?? 0, dp.rangeHigh ?? (dp.rangeLow ? dp.rangeLow * 2 : 100)] : null
     })).sort((a: any, b: any) => a.rawDate.getTime() - b.rawDate.getTime());
   }
 
@@ -109,6 +109,9 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
                         labelStyle={{ color: 'var(--text-secondary)', marginBottom: '4px' }}
                         formatter={(value: any, name: any) => {
                           if (name === 'range' && Array.isArray(value)) {
+                             if (value[0] === 0) {
+                               return [`< ${value[1]}`, 'Normal Range'];
+                             }
                              return [`${value[0]} - ${value[1]}`, 'Normal Range'];
                           }
                           return [value, 'Result'];
