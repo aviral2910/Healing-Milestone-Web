@@ -13,13 +13,19 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
   
   const [comparing, setComparing] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [draggedItem, setDraggedItem] = useState<string | null>(null);
 
   useEffect(() => {
     const base = searchParams.get('base');
     if (base && comparing.length === 0) {
-      setComparing([base]);
+      const actualTrend = biomarkerTrends.find((t: any) => t.name === base || (t.rawNames && t.rawNames.includes(base)));
+      if (actualTrend) {
+        setComparing([actualTrend.name]);
+      } else {
+        setComparing([base]);
+      }
     }
-  }, [searchParams]);
+  }, [searchParams, biomarkerTrends, comparing.length]);
 
   const filteredTrends = biomarkerTrends.filter((t: any) => 
     t.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -139,12 +145,49 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
                 const color = COLORS[idx % COLORS.length];
 
                 return (
-                  <div key={tName} style={{ 
-                    backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', 
-                    borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column' 
+                  <div 
+                    key={tName} 
+                    draggable
+                    onDragStart={(e) => {
+                      setDraggedItem(tName);
+                      e.dataTransfer.effectAllowed = 'move';
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = 'move';
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (!draggedItem || draggedItem === tName) return;
+                      const newComparing = [...comparing];
+                      const draggedIdx = newComparing.indexOf(draggedItem);
+                      const targetIdx = newComparing.indexOf(tName);
+                      newComparing.splice(draggedIdx, 1);
+                      newComparing.splice(targetIdx, 0, draggedItem);
+                      setComparing(newComparing);
+                      setDraggedItem(null);
+                    }}
+                    onDragEnd={() => setDraggedItem(null)}
+                    style={{ 
+                    backgroundColor: draggedItem === tName ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)', 
+                    border: '1px solid rgba(255,255,255,0.05)', 
+                    borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column',
+                    cursor: 'grab', opacity: draggedItem === tName ? 0.5 : 1, transition: 'opacity 0.2s'
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                      <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-primary)' }}>{tName}</h3>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ cursor: 'grab', color: 'var(--text-secondary)' }}>
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                          </svg>
+                        </div>
+                        <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-primary)' }}>{tName}</h3>
+                      </div>
                       <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: color }}>
                         {data[data.length - 1].value} {trend.unit}
                       </div>
