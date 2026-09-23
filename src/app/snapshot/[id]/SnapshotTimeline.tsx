@@ -45,6 +45,23 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
     })).sort((a: any, b: any) => a.rawDate.getTime() - b.rawDate.getTime());
   }
 
+  let minVal = Infinity;
+  let maxVal = -Infinity;
+  if (data && data.length > 0) {
+    data.forEach((d: any) => {
+      if (d.value < minVal) minVal = d.value;
+      if (d.value > maxVal) maxVal = d.value;
+      if (d.range) {
+        if (d.range[0] < minVal) minVal = d.range[0];
+        if (d.range[1] > maxVal) maxVal = d.range[1];
+      }
+    });
+    if (minVal === Infinity) { minVal = 0; maxVal = 100; }
+    const padding = (maxVal - minVal) * 0.1;
+    minVal = Math.max(0, minVal - padding);
+    maxVal = maxVal + padding;
+  }
+
   const primaryColor = '#eab308';
 
   return (
@@ -102,7 +119,7 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <XAxis dataKey="displayDate" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 10 }} minTickGap={20} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 10 }} domain={['auto', 'auto']} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 10 }} domain={[minVal, maxVal]} />
                 <Tooltip 
                         contentStyle={{ backgroundColor: '#1e1e1e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'var(--text-primary)' }} 
                         itemStyle={{ color: primaryColor, fontWeight: 'bold' }}
