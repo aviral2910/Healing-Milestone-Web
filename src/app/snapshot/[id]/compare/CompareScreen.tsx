@@ -95,7 +95,24 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
           </div>
         </aside>
 
-        <main style={{ flex: 1, overflowY: 'auto', padding: '24px', backgroundColor: '#09090b' }}>
+        <main 
+        id="compare-scroll-container"
+        onDragOver={(e) => {
+          e.preventDefault();
+          if (!draggedItem) return;
+          const container = e.currentTarget;
+          const threshold = 150;
+          const rect = container.getBoundingClientRect();
+          const y = e.clientY - rect.top;
+          
+          if (y < threshold) {
+            container.scrollTop -= (threshold - y) / 5;
+          } else if (y > rect.height - threshold) {
+            container.scrollTop += (y - (rect.height - threshold)) / 5;
+          }
+        }}
+        style={{ flex: 1, overflowY: 'auto', padding: '24px', backgroundColor: '#09090b' }}
+      >
           {comparing.length === 0 ? (
             <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)' }}>
               Select biomarkers from the left panel to compare them.
