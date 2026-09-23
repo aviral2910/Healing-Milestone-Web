@@ -34,7 +34,7 @@ const COLORS = ['#eab308', '#3b82f6', '#10b981', '#a855f7', '#ec4899', '#f97316'
 function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, trend: any, onCompare: () => void }) {
   const [expanded, setExpanded] = useState(false);
 
-  let data = [];
+  let data: any[] = [];
   if (trend) {
     let defaultLow: number | null = null;
     let defaultHigh: number | null = null;
