@@ -201,11 +201,13 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
   );
 }
 
+import { useParams, useRouter } from 'next/navigation';
+
 export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends }: { timeline: any[], expiresAt: string, biomarkerTrends: any[] }) {
+  const params = useParams();
+  const router = useRouter();
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [comparing, setComparing] = useState<string[]>([]);
-  const [showCompareModal, setShowCompareModal] = useState(false);
-  const [filter, setFilter] = useState<'all' | 'milestones' | 'medical_records' | 'reports' | 'prescriptions' | 'biomarkers'>('all');
+      const [filter, setFilter] = useState<'all' | 'milestones' | 'medical_records' | 'reports' | 'prescriptions' | 'biomarkers'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
@@ -621,8 +623,7 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
                                   biomarker={b} 
                                   trend={biomarkerTrends.find(t => t.name === b.rawName || (t.rawNames && t.rawNames.includes(b.rawName)))}
                                   onCompare={() => {
-                                    setComparing([b.rawName]);
-                                    setShowCompareModal(true);
+                                    router.push(`/snapshot/${params.id}/compare?base=${encodeURIComponent(b.rawName)}`);
                                   }}
                                 />
                               ))}
@@ -652,125 +653,7 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
         </p>
       </div>
 
-      {/* COMPARE MODAL */}
-      {showCompareModal && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.9)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem'
-        }}>
-          <div style={{
-            backgroundColor: 'var(--background)', width: '100%', maxWidth: '800px', height: '80vh',
-            borderRadius: '24px', display: 'flex', flexDirection: 'column', overflow: 'hidden',
-            border: '1px solid var(--border)'
-          }}>
-            <div style={{ padding: '20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-primary)' }}>Compare Biomarkers</h2>
-              <button onClick={() => setShowCompareModal(false)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '24px', cursor: 'pointer' }}>&times;</button>
-            </div>
             
-            <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-              <div style={{ width: '250px', borderRight: '1px solid var(--border)', overflowY: 'auto', padding: '10px' }}>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '10px', padding: '0 10px', textTransform: 'uppercase' }}>Select to Compare</div>
-                {biomarkerTrends.map(t => (
-                  <div 
-                    key={t.name}
-                    onClick={() => {
-                      if (comparing.includes(t.name)) {
-                        setComparing(comparing.filter(n => n !== t.name));
-                      } else {
-                        setComparing([...comparing, t.name]);
-                      }
-                    }}
-                    style={{
-                      padding: '10px', cursor: 'pointer', borderRadius: '8px',
-                      backgroundColor: comparing.includes(t.name) ? 'rgba(var(--primary-rgb, 218, 165, 32), 0.15)' : 'transparent',
-                      border: `1px solid ${comparing.includes(t.name) ? 'var(--primary)' : 'transparent'}`,
-                      display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px'
-                    }}
-                  >
-                    <div style={{ width: '16px', height: '16px', borderRadius: '4px', border: '1px solid var(--text-secondary)', backgroundColor: comparing.includes(t.name) ? 'var(--primary)' : 'transparent' }} />
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.name}</span>
-                  </div>
-                ))}
-              </div>
-              
-              <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column' }}>
-                {(() => {
-                  if (comparing.length === 0) {
-                    return (
-                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)' }}>
-                        Select biomarkers from the left to compare
-                      </div>
-                    );
-                  }
-                  
-                  const dataMap: { [date: string]: any } = {};
-                  comparing.forEach(tName => {
-                    const t = biomarkerTrends.find(x => x.name === tName);
-                    if (t) {
-                      t.dataPoints.forEach((dp: any) => {
-                        const dateStr = new Date(dp.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                        const rawDate = new Date(dp.date).getTime();
-                        if (!dataMap[dateStr]) dataMap[dateStr] = { displayDate: dateStr, rawDate };
-                        dataMap[dateStr][tName] = dp.value;
-                      });
-                    }
-                  });
-                  const compiledCompareData = Object.values(dataMap).sort((a, b) => a.rawDate - b.rawDate);
-                  
-                  return (
-                    <div style={{ flex: 1, minHeight: '300px' }}>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={compiledCompareData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                          <XAxis dataKey="displayDate" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 11 }} minTickGap={30} />
-                          <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 11 }} />
-                          <Tooltip contentStyle={{ backgroundColor: '#1e1e1e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'var(--text-primary)' }} />
-                          <Legend />
-                          {comparing.map((tName, i) => (
-                            <Line 
-                              key={tName} 
-                              type="monotone" 
-                              dataKey={tName} 
-                              name={tName}
-                              stroke={COLORS[i % COLORS.length]} 
-                              strokeWidth={3}
-                              dot={{ fill: 'var(--surface)', stroke: COLORS[i % COLORS.length], strokeWidth: 2, r: 4 }}
-                              activeDot={{ r: 6 }}
-                              connectNulls
-                            />
-                          ))}
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  );
-                })()}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* LIGHTBOX MODAL */}
-      {selectedFile && (
-        <div 
-          onClick={closeLightbox}
-          style={{
-            position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.9)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            padding: '2rem', cursor: 'zoom-out'
-          }}
-        >
-          <div 
-            onClick={closeLightbox}
-            style={{ position: 'absolute', top: '1rem', right: '2rem', color: 'white', cursor: 'pointer', fontSize: '2.5rem', zIndex: 10000 }}
-          >
-            &times;
-          </div>
-          
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img onClick={e => e.stopPropagation()} src={selectedFile} alt="Fullscreen Document" style={{ maxWidth: '100%', maxHeight: '85vh', objectFit: 'contain', cursor: 'default' }} />
-        </div>
-      )}
     </div>
   );
 }
