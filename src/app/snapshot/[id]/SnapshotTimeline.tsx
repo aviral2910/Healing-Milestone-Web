@@ -537,7 +537,7 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
                                 <InlineBiomarkerCard 
                                   key={idx} 
                                   biomarker={b} 
-                                  trend={biomarkerTrends.find(t => t.name === b.rawName)}
+                                  trend={biomarkerTrends.find(t => t.name === b.rawName || (t.rawNames && t.rawNames.includes(b.rawName)))}
                                   onCompare={() => {
                                     setComparing([b.rawName]);
                                     setShowCompareModal(true);
