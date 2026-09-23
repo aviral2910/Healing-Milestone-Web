@@ -34,10 +34,12 @@ const COLORS = ['#eab308', '#3b82f6', '#10b981', '#a855f7', '#ec4899', '#f97316'
 function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, trend: any, onCompare: () => void }) {
   const [expanded, setExpanded] = useState(false);
 
+
+  let defaultLow: number | null = null;
+  let defaultHigh: number | null = null;
+
   let data: any[] = [];
   if (trend) {
-    let defaultLow: number | null = null;
-    let defaultHigh: number | null = null;
     const pts = [...trend.dataPoints].sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
     
     for (let i = pts.length - 1; i >= 0; i--) {
@@ -149,7 +151,12 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
                           return [value, 'Result'];
                         }}
                       />
-                <Line type="monotone" dataKey="value" stroke={primaryColor} strokeWidth={3} dot={{ fill: 'var(--surface)', stroke: primaryColor, strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
+                <Line type="monotone" dataKey="value" stroke={primaryColor} strokeWidth={3} dot={(props: any) => {
+                        const { cx, cy, payload } = props;
+                        return (
+                          <circle key={`dot-${cx}-${cy}`} cx={cx} cy={cy} r={4} fill="var(--surface)" stroke={payload.isAbnormal ? '#ef4444' : primaryColor} strokeWidth={payload.isAbnormal ? 3 : 2} />
+                        );
+                      }} activeDot={{ r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
