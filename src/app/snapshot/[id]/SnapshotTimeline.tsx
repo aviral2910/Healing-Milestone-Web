@@ -2,7 +2,7 @@
 import { safeUtcDate } from '@/utils/dateUtils';
 
 import { useState, useMemo, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, Legend } from 'recharts';
+import { ComposedChart, LineChart, Line, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, Legend } from 'recharts';
 
 
 function BiomarkerIcon({ name }: { name: string }) {
@@ -40,7 +40,8 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
       rawDate: new Date(dp.date),
       displayDate: new Date(dp.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       value: dp.value,
-      isAbnormal: dp.isAbnormal
+      isAbnormal: dp.isAbnormal,
+      range: (dp.rangeLow != null && dp.rangeHigh != null) ? [dp.rangeLow, dp.rangeHigh] : null
     })).sort((a: any, b: any) => a.rawDate.getTime() - b.rawDate.getTime());
   }
 
@@ -102,7 +103,17 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
               <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <XAxis dataKey="displayDate" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 10 }} minTickGap={20} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 10 }} domain={['auto', 'auto']} />
-                <Tooltip contentStyle={{ backgroundColor: '#1e1e1e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'var(--text-primary)' }} itemStyle={{ color: primaryColor, fontWeight: 'bold' }} />
+                <Tooltip 
+                        contentStyle={{ backgroundColor: '#1e1e1e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'var(--text-primary)' }} 
+                        itemStyle={{ color: primaryColor, fontWeight: 'bold' }}
+                        labelStyle={{ color: 'var(--text-secondary)', marginBottom: '4px' }}
+                        formatter={(value: any, name: any) => {
+                          if (name === 'range' && Array.isArray(value)) {
+                             return [`${value[0]} - ${value[1]}`, 'Normal Range'];
+                          }
+                          return [value, 'Result'];
+                        }}
+                      />
                 <Line type="monotone" dataKey="value" stroke={primaryColor} strokeWidth={3} dot={{ fill: 'var(--surface)', stroke: primaryColor, strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
