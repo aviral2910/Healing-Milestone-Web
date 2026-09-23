@@ -213,8 +213,36 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
                         </div>
                         <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-primary)' }}>{tName}</h3>
                       </div>
-                      <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: color }}>
-                        {data[data.length - 1].value} {trend.unit}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: color }}>
+                          {data[data.length - 1].value} {trend.unit}
+                        </div>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setComparing(comparing.filter(n => n !== tName));
+                          }}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'var(--text-secondary)',
+                            cursor: 'pointer',
+                            padding: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '50%',
+                            transition: 'background-color 0.2s, color 0.2s',
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'; e.currentTarget.style.color = '#ef4444'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+                          title="Remove from comparison"
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                          </svg>
+                        </button>
                       </div>
                     </div>
                     
