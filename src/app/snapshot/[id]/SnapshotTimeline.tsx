@@ -2,7 +2,7 @@
 import { safeUtcDate } from '@/utils/dateUtils';
 
 import { useState, useMemo, useEffect } from 'react';
-import { ComposedChart, LineChart, Line, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, Legend } from 'recharts';
+import { ComposedChart, LineChart, Line, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, ReferenceArea, Legend } from 'recharts';
 
 
 function BiomarkerIcon({ name }: { name: string }) {
@@ -36,13 +36,29 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
 
   let data = [];
   if (trend) {
-    data = trend.dataPoints.map((dp: any) => ({
-      rawDate: new Date(dp.date),
-      displayDate: new Date(dp.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      value: dp.value,
-      isAbnormal: dp.isAbnormal,
-      range: (dp.rangeLow != null || dp.rangeHigh != null) ? [dp.rangeLow ?? 0, dp.rangeHigh ?? (dp.rangeLow ? dp.rangeLow * 2 : 100)] : null
-    })).sort((a: any, b: any) => a.rawDate.getTime() - b.rawDate.getTime());
+    let defaultLow: number | null = null;
+    let defaultHigh: number | null = null;
+    const pts = [...trend.dataPoints].sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+    for (let i = pts.length - 1; i >= 0; i--) {
+      if (pts[i].rangeHigh != null && defaultHigh == null) defaultHigh = pts[i].rangeHigh;
+      if (pts[i].rangeLow != null && defaultLow == null) defaultLow = pts[i].rangeLow;
+    }
+
+    data = pts.map((dp: any) => {
+      const rHigh = dp.rangeHigh ?? defaultHigh ?? dp.value;
+      const rLow = dp.rangeLow ?? defaultLow ?? dp.value;
+      
+      return {
+        rawDate: new Date(dp.date),
+        displayDate: new Date(dp.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        value: dp.value,
+        isAbnormal: dp.isAbnormal,
+        range: [rLow, rHigh],
+        rangeLow: rLow,
+        rangeHigh: rHigh
+      };
+    });
   }
 
   let minVal = Infinity;
@@ -51,15 +67,17 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
     data.forEach((d: any) => {
       if (d.value < minVal) minVal = d.value;
       if (d.value > maxVal) maxVal = d.value;
-      if (d.range) {
-        if (d.range[0] < minVal) minVal = d.range[0];
-        if (d.range[1] > maxVal) maxVal = d.range[1];
-      }
+      if (d.rangeLow < minVal) minVal = d.rangeLow;
+      if (d.rangeHigh > maxVal) maxVal = d.rangeHigh;
     });
     if (minVal === Infinity) { minVal = 0; maxVal = 100; }
-    const padding = (maxVal - minVal) * 0.1;
-    minVal = Math.max(0, minVal - padding);
-    maxVal = maxVal + padding;
+    const padding = (maxVal - minVal) * 0.2;
+    minVal -= padding;
+    maxVal += padding;
+    if (minVal >= maxVal) {
+      minVal -= 10;
+      maxVal += 10;
+    }
   }
 
   const primaryColor = '#eab308';
@@ -126,9 +144,6 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
                         labelStyle={{ color: 'var(--text-secondary)', marginBottom: '4px' }}
                         formatter={(value: any, name: any) => {
                           if (name === 'range' && Array.isArray(value)) {
-                             if (value[0] === 0) {
-                               return [`< ${value[1]}`, 'Normal Range'];
-                             }
                              return [`${value[0]} - ${value[1]}`, 'Normal Range'];
                           }
                           return [value, 'Result'];
