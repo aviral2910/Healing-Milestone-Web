@@ -14,6 +14,7 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
   const [comparing, setComparing] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
     const base = searchParams.get('base');
@@ -34,8 +35,15 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
   return (
     <div style={{ height: '100vh', backgroundColor: 'var(--background)', color: 'var(--text-primary)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <header style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '16px', backgroundColor: '#09090b' }}>
-        <button onClick={() => router.push(`/snapshot/${snapshotId}`)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <button 
+          onClick={() => { setIsNavigating(true); router.push(`/snapshot/${snapshotId}`); }} 
+          style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', opacity: isNavigating ? 0.5 : 1, pointerEvents: isNavigating ? 'none' : 'auto' }}
+        >
+          {isNavigating ? (
+            <div style={{ width: '20px', height: '20px', border: '2px solid rgba(255,255,255,0.1)', borderTop: '2px solid var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+          ) : (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          )}
         </button>
         <div>
           <h1 style={{ fontSize: '1.2rem', margin: 0 }}>Compare Biomarkers</h1>

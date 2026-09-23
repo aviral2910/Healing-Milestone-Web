@@ -33,6 +33,7 @@ const COLORS = ['#eab308', '#3b82f6', '#10b981', '#a855f7', '#ec4899', '#f97316'
 
 function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, trend: any, onCompare: () => void }) {
   const [expanded, setExpanded] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
 
   let defaultLow: number | null = null;
@@ -120,19 +121,28 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
         <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '10px' }}>
             <button 
-              onClick={(e) => { e.stopPropagation(); onCompare(); }}
+              onClick={(e) => { 
+                e.stopPropagation(); 
+                setIsNavigating(true);
+                onCompare(); 
+              }}
               style={{ 
                 background: 'rgba(218, 165, 32, 0.1)', border: '1px solid rgba(218, 165, 32, 0.3)', color: 'var(--primary)', 
                 fontSize: '0.8rem', padding: '6px 12px', cursor: 'pointer', borderRadius: '8px',
-                display: 'flex', alignItems: 'center', gap: '6px'
+                display: 'flex', alignItems: 'center', gap: '6px',
+                opacity: isNavigating ? 0.6 : 1, pointerEvents: isNavigating ? 'none' : 'auto'
               }}
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="20" x2="18" y2="10"></line>
-                <line x1="12" y1="20" x2="12" y2="4"></line>
-                <line x1="6" y1="20" x2="6" y2="14"></line>
-              </svg>
-              Compare
+              {isNavigating ? (
+                <div style={{ width: '12px', height: '12px', border: '2px solid rgba(218, 165, 32, 0.2)', borderTop: '2px solid var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+              ) : (
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              )}
+              {isNavigating ? 'Loading...' : 'Compare'}
             </button>
           </div>
           <div style={{ height: '200px', width: '100%' }}>
