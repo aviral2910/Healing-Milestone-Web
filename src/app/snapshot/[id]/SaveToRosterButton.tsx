@@ -1,17 +1,45 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Check, Loader2 } from 'lucide-react';
 
 export default function SaveToRosterButton({ mixViewId, viewName }: { mixViewId: string, viewName: string }) {
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [checking, setChecking] = useState(true);
   const router = useRouter();
 
-  if (loading || !user) return null; // Only show to logged in users
+  useEffect(() => {
+    async function checkRoster() {
+      if (!user) {
+        setChecking(false);
+        return;
+      }
+      try {
+        const token = await user.getIdToken();
+        const res = await fetch('https://healing-milestones-api.onrender.com/api/connect/roster', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          const roster = await res.json();
+          const isSaved = roster.some((item: any) => item.mix_view_id === mixViewId);
+          setSaved(isSaved);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setChecking(false);
+      }
+    }
+    checkRoster();
+  }, [user, mixViewId]);
+
+  if (authLoading || !user || checking) return null; // Only show to logged in users, wait for check
 
   const handleSave = async () => {
     try {
