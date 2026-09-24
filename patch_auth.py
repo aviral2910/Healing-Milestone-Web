@@ -1,4 +1,5 @@
-'use client';
+with open('src/contexts/AuthContext.tsx', 'w') as f:
+    f.write("""'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, onAuthStateChanged, signOut, signInWithPopup } from 'firebase/auth';
@@ -57,7 +58,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const requiresOnboarding = !data.username;
         setNeedsOnboarding(requiresOnboarding);
         
-
+        // Auto-redirect to onboarding if trying to access secure routes
+        if (requiresOnboarding && pathname && !pathname.startsWith('/onboarding') && (pathname.startsWith('/connect') || pathname.startsWith('/snapshot'))) {
+          router.push('/onboarding');
+        }
       }
     } catch (e) {
       console.error(e);
@@ -76,16 +80,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(false);
     });
     return unsubscribe;
-  }, []); // Only run once on mount
-
-  // Watch for route changes to enforce onboarding
-  useEffect(() => {
-    if (!loading && user && needsOnboarding) {
-      if (pathname && !pathname.startsWith('/onboarding') && (pathname.startsWith('/connect') || pathname.startsWith('/snapshot'))) {
-        router.push('/onboarding');
-      }
-    }
-  }, [loading, user, needsOnboarding, pathname, router]);
+  }, [pathname, router]);
 
   const refreshProfile = async () => {
     if (auth.currentUser) {
@@ -119,3 +114,4 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+""")
