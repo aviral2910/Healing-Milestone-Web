@@ -42,7 +42,7 @@ export default function LoginPage() {
         <img src="/icon.png" alt="Healing Milestones" style={{ width: '72px', height: '72px', borderRadius: '16px', marginBottom: '24px' }} />
         
         <h1 style={{ fontSize: '1.75rem', color: 'var(--text-primary)', marginBottom: '12px', fontFamily: "'Oswald', sans-serif" }}>
-          HM Connect
+          Healing Milestones Connect
         </h1>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '32px', fontSize: '1.05rem', lineHeight: '1.5' }}>
           Securely manage your patient roster and track healing milestones in one place.

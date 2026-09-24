@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MonitorSmartphone, ExternalLink } from "lucide-react";
+import { MonitorSmartphone, ExternalLink, Users } from "lucide-react";
 import StoryCard from "@/components/StoryCard";
 import StoriesCarousel from "@/components/StoriesCarousel";
 
@@ -46,10 +46,16 @@ export default async function Home() {
             </div>
           </Link>
         </div>
-        <Link href="/web" className="download-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem' }}>
-          <MonitorSmartphone size={16} />
-          Web Sync
-        </Link>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <Link href="/connect" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem', color: 'var(--primary)', fontWeight: 'bold' }}>
+            <Users size={16} />
+            HM Connect
+          </Link>
+          <Link href="/web" className="download-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem' }}>
+            <MonitorSmartphone size={16} />
+            Web Sync
+          </Link>
+        </div>
       </header>
 
       {/* 2. Hero Section */}
@@ -117,6 +123,24 @@ export default async function Home() {
       </section>
 
       {/* 5. Community Section */}
+      {/* HM Connect Section */}
+      <section className="share-journey-section" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+          <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(250, 204, 21, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto', color: 'var(--primary)' }}>
+            <Users size={32} />
+          </div>
+          <h2 className="section-title">Healing Milestones <span className="text-gold">Connect</span></h2>
+          <p className="section-subtitle">
+            Securely manage your patient roster and track healing milestones in one place. HM Connect is built for healthcare professionals, caregivers, and family members to stay updated on a patient's health snapshots.
+          </p>
+          <div style={{ marginTop: '2.5rem' }}>
+            <Link href="/connect" className="share-journey-cta" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+              Open HM Connect <ExternalLink size={18} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Web Sync Section */}
       <section className="share-journey-section" style={{ backgroundColor: '#0f0f11', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
@@ -181,6 +205,7 @@ export default async function Home() {
             <p className="footer-tagline">Nurturing hope and positivity, one milestone at a time.</p>
           </div>
           <div className="footer-links">
+            <Link href="/connect" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>HM Connect</Link>
             <Link href="/web" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>Web Sync</Link>
             <Link href="/privacy">Privacy Policy</Link>
             <Link href="/terms">Terms of Service</Link>
