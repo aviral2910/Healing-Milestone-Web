@@ -8,16 +8,20 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function LoginPage() {
-  const { user, loading, loginWithGoogle } = useAuth();
+  const { user, loading, needsOnboarding, loginWithGoogle } = useAuth();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   useEffect(() => {
     if (!loading && user) {
-      router.push('/connect');
+      if (needsOnboarding) {
+        router.push('/onboarding');
+      } else {
+        router.push('/connect');
+      }
     }
-  }, [user, loading, router]);
+  }, [user, loading, needsOnboarding, router]);
 
   const handleGoogleLogin = async () => {
     try {

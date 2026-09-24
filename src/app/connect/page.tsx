@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function ConnectDashboard() {
-  const { user, loading, logout } = useAuth();
+  const { user, loading, needsOnboarding, logout } = useAuth();
   const router = useRouter();
   const [roster, setRoster] = useState<any[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -61,7 +61,7 @@ export default function ConnectDashboard() {
     }
   };
 
-  if (loading || !user) {
+  if (loading || !user || needsOnboarding) {
     return (
       <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
         <div className="spinner"></div>
