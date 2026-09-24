@@ -4,6 +4,10 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SnapshotTimeline from "./SnapshotTimeline";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
 type Props = {
   params: Promise<{ id: string }>;
 };
