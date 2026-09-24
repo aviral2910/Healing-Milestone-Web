@@ -610,51 +610,59 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
                         )}
                         {/* BIOMARKERS LIST */}
                         {item.biomarkers && item.biomarkers.length > 0 && (
-                          <div style={{ marginTop: '1.5rem' }}>
-                            <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                              Extracted Biomarkers
-                            </h4>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                              {(expandedBiomarkerLists[item.id] ? item.biomarkers : item.biomarkers.slice(0, 4)).map((b: any, idx: number) => (
-                                <InlineBiomarkerCard 
-                                  key={idx} 
-                                  biomarker={b}
-                                  date={item.date} 
-                                  trend={biomarkerTrends.find(t => t.name === b.rawName || (t.rawNames && t.rawNames.includes(b.rawName)))}
-                                  onCompare={() => {
-                                    router.push(`/snapshot/${params.id}/compare?base=${encodeURIComponent(b.rawName)}`);
-                                  }}
-                                />
-                              ))}
-                            </div>
-                            {item.biomarkers.length > 4 && (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setExpandedBiomarkerLists(prev => ({ ...prev, [item.id]: !prev[item.id] }));
-                                }}
-                                style={{
-                                  marginTop: '12px',
-                                  width: '100%',
-                                  padding: '12px',
-                                  background: 'rgba(218, 165, 32, 0.05)',
-                                  border: '1px solid rgba(218, 165, 32, 0.2)',
-                                  borderRadius: '8px',
-                                  color: 'var(--primary)',
-                                  fontSize: '0.9rem',
-                                  fontWeight: '500',
-                                  cursor: 'pointer',
-                                  transition: 'background-color 0.2s'
-                                }}
-                              >
-                                {expandedBiomarkerLists[item.id] 
-                                  ? 'Show fewer metrics' 
-                                  : `View all ${item.biomarkers.length} metrics`}
-                              </button>
-                            )}
-                          </div>
-                        )}
+                          (() => {
+                            const displayBiomarkers = filter === 'abnormal' ? item.biomarkers.filter((b: any) => b.isAbnormal) : item.biomarkers;
+                            if (displayBiomarkers.length === 0) return null;
+                            const isExpanded = expandedBiomarkerLists[item.id];
+                            const visibleBiomarkers = isExpanded ? displayBiomarkers : displayBiomarkers.slice(0, 4);
 
+                            return (
+                              <div style={{ marginTop: '1.5rem' }}>
+                                <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                  {filter === 'abnormal' ? 'Abnormal Biomarkers' : 'Extracted Biomarkers'}
+                                </h4>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                  {visibleBiomarkers.map((b: any, idx: number) => (
+                                    <InlineBiomarkerCard 
+                                      key={idx} 
+                                      biomarker={b}
+                                      date={item.date} 
+                                      trend={biomarkerTrends.find((t: any) => t.name === b.rawName || (t.rawNames && t.rawNames.includes(b.rawName)))}
+                                      onCompare={() => {
+                                        router.push(`/snapshot/${params.id}/compare?base=${encodeURIComponent(b.rawName)}`);
+                                      }}
+                                    />
+                                  ))}
+                                </div>
+                                {displayBiomarkers.length > 4 && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setExpandedBiomarkerLists(prev => ({ ...prev, [item.id]: !prev[item.id] }));
+                                    }}
+                                    style={{
+                                      marginTop: '12px',
+                                      width: '100%',
+                                      padding: '12px',
+                                      background: 'rgba(218, 165, 32, 0.05)',
+                                      border: '1px solid rgba(218, 165, 32, 0.2)',
+                                      borderRadius: '8px',
+                                      color: 'var(--primary)',
+                                      fontSize: '0.9rem',
+                                      fontWeight: '500',
+                                      cursor: 'pointer',
+                                      transition: 'background-color 0.2s'
+                                    }}
+                                  >
+                                    {isExpanded 
+                                      ? 'Show fewer metrics' 
+                                      : `View all ${displayBiomarkers.length} metrics`}
+                                  </button>
+                                )}
+                              </div>
+                            );
+                          })()
+                        )}
 
                       </div>
                     </div>
