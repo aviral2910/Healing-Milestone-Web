@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SnapshotTimeline from "./SnapshotTimeline";
+import SaveToRosterButton from "./SaveToRosterButton";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -111,7 +112,7 @@ export default async function ViewSnapshotPage({ params }: Props) {
       
       {/* Dashboard Summary Header */}
       <div className="dashboard-top-header" style={{ backgroundColor: '#121214', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-        <div className="dashboard-header-content" style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div className="dashboard-header-content" style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <div style={{ color: 'var(--primary)', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '8px', textTransform: 'uppercase', fontSize: '0.75rem' }}>
               Dashboard
@@ -129,6 +130,9 @@ export default async function ViewSnapshotPage({ params }: Props) {
               <span className="meta-dot" style={{ opacity: 0.5 }}>•</span>
               <span style={{ whiteSpace: 'nowrap' }}>{timeline.length} Records</span>
             </div>
+          </div>
+          <div style={{ alignSelf: 'center' }}>
+            <SaveToRosterButton mixViewId={id} viewName={viewData.viewName} />
           </div>
         </div>
       </div>
