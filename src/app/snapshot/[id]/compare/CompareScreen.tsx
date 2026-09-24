@@ -307,7 +307,7 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
                       <ResponsiveContainer width="100%" height="100%">
                         <ComposedChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                           <XAxis dataKey="displayDate" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 10 }} minTickGap={20} />
-                          <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 10 }} domain={[minVal, maxVal]} />
+                          <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 10 }} domain={[minVal, maxVal]} tickFormatter={(val: number) => Number(val).toFixed(1).replace(/\.0$/, '')} />
                           <Tooltip 
                             content={({ active, payload, label }: any) => {
                               if (active && payload && payload.length) {

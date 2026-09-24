@@ -3,33 +3,55 @@ import re
 with open("src/app/snapshot/[id]/SnapshotTimeline.tsx", "r") as f:
     content = f.read()
 
-# 1. Add useParams import if missing
-if "useParams" not in content:
-    content = content.replace("import { useRouter } from 'next/navigation';", "import { useRouter, useParams } from 'next/navigation';")
-    if "import { useParams } " not in content and "useParams" not in content:
-        content = content.replace("import { useState } from 'react';", "import { useState } from 'react';\nimport { useParams } from 'next/navigation';")
+# 1. Update signature
+content = content.replace(
+    "function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, trend: any, onCompare: () => void }) {",
+    "function InlineBiomarkerCard({ biomarker, date, trend, onCompare }: { biomarker: any, date?: string, trend: any, onCompare: () => void }) {"
+)
 
-# 2. Get params in SnapshotTimeline
-if "const params = useParams();" not in content:
-    content = content.replace("export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends }: { timeline: any[], expiresAt: string, biomarkerTrends: any[] }) {", 
-                              "export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends }: { timeline: any[], expiresAt: string, biomarkerTrends: any[] }) {\n  const params = useParams();")
+# 2. Update logic
+old_logic = """  let data: any[] = [];
+  if (trend) {
+    const pts = [...trend.dataPoints].sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+    for (let i = pts.length - 1; i >= 0; i--) {"""
 
-# 3. Modify InlineBiomarkerCard props to include snapshotId
-if "snapshotId: string" not in content:
-    content = content.replace("function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, trend: any, onCompare: () => void }) {",
-                              "function InlineBiomarkerCard({ biomarker, trend, onCompare, snapshotId }: { biomarker: any, trend: any, onCompare: () => void, snapshotId: string }) {")
+new_logic = """  let data: any[] = [];
+  let pts = trend && trend.dataPoints ? [...trend.dataPoints] : [];
+  
+  if (biomarker.resultType === 'numeric' && biomarker.valueNumeric != null && date) {
+    const exists = pts.some(p => 
+      new Date(p.date).getTime() === new Date(date).getTime() && 
+      p.value === biomarker.valueNumeric
+    );
+    if (!exists) {
+      pts.push({
+        date: date,
+        value: biomarker.valueNumeric,
+        isAbnormal: biomarker.isAbnormal,
+        rangeLow: null,
+        rangeHigh: null
+      });
+    }
+  }
 
-    # In SnapshotTimeline, pass snapshotId to InlineBiomarkerCard
-    content = content.replace("trend={biomarkerTrends.find(t => t.name === b.rawName || (t.rawNames && t.rawNames.includes(b.rawName)))}",
-                              "trend={biomarkerTrends.find(t => t.name === b.rawName || (t.rawNames && t.rawNames.includes(b.rawName)))}\n                                  snapshotId={params.id as string}")
+  if (pts.length > 0) {
+    pts.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+    for (let i = pts.length - 1; i >= 0; i--) {"""
 
-# 4. Modify the onCompare click handler inside SnapshotTimeline
-old_compare = """onCompare={() => {
-                                    setComparing([b.rawName]);
-                                    setShowCompareModal(true);
-                                  }}"""
-new_compare = """onCompare={() => {
-                                    const router = require('next/navigation').useRouter;
-                                    // this is dirty inside a loop, better to handle it properly
-                                  }}"""
-# Let's just fix it properly below.
+content = content.replace(old_logic, new_logic)
+
+# We need to close the `if (pts.length > 0) {` block where `if (trend) {` used to close.
+old_close = """        rangeHigh: rHigh
+      };
+    });
+  }"""
+new_close = """        rangeHigh: rHigh
+      };
+    });
+  }"""
+
+# Actually, the string replacement is risky. Let's just do it directly.
+with open("src/app/snapshot/[id]/SnapshotTimeline.tsx", "w") as f:
+    f.write(content)
