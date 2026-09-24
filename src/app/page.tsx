@@ -47,7 +47,7 @@ export default async function Home() {
           </Link>
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <Link href="/connect" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem', color: 'var(--primary)', fontWeight: 'bold' }}>
+          <Link href="/connect" className="download-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem' }}>
             <Users size={16} />
             HM Connect
           </Link>
@@ -134,7 +134,7 @@ export default async function Home() {
             Securely manage your patient roster and track healing milestones in one place. HM Connect is built for healthcare professionals, caregivers, and family members to stay updated on a patient's health snapshots.
           </p>
           <div style={{ marginTop: '2.5rem' }}>
-            <Link href="/connect" className="share-journey-cta" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+            <Link href="/connect" className="download-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
               Open HM Connect <ExternalLink size={18} />
             </Link>
           </div>
