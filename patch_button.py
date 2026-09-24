@@ -1,4 +1,5 @@
-'use client';
+with open('src/app/snapshot/[id]/SaveToRosterButton.tsx', 'w') as f:
+    f.write("""'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
@@ -110,3 +111,4 @@ export default function SaveToRosterButton({ mixViewId, viewName }: { mixViewId:
     </button>
   );
 }
+""")
