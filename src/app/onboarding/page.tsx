@@ -81,6 +81,16 @@ export default function OnboardingPage() {
     return () => clearTimeout(timeoutId);
   }, [username]);
 
+  const isFormValid = () => {
+    if (usernameStatus !== 'available') return false;
+    if (!displayName.trim()) return false;
+    if (role !== 'member') {
+      if (!specialty.trim()) return false;
+      if (applyVerification && !licenseNumber.trim()) return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (usernameStatus !== 'available' || !displayName.trim()) return;
@@ -262,10 +272,11 @@ export default function OnboardingPage() {
                       type="text" 
                       value={licenseNumber}
                       onChange={e => setLicenseNumber(e.target.value)}
-                      placeholder=""
+                      placeholder={applyVerification ? "Required for verification" : ""}
+                      required={applyVerification}
                       style={{ 
                         width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', 
-                        backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                        backgroundColor: 'rgba(255,255,255,0.05)', border: `1px solid ${applyVerification && !licenseNumber.trim() ? '#ef4444' : 'rgba(255,255,255,0.1)'}`,
                         color: 'var(--text-primary)', fontSize: '1rem'
                       }}
                     />
@@ -302,21 +313,21 @@ export default function OnboardingPage() {
                 </>
               )}
 
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '1.5rem' }}>
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting || !isFormValid()}
+                  className="share-journey-cta" 
+                  style={{ width: '100%', display: 'flex', justifyContent: 'center', padding: '1rem', opacity: (isSubmitting || !isFormValid()) ? 0.5 : 1, transition: 'opacity 0.2s' }}
+                >
+                  {isSubmitting ? <Loader2 className="animate-spin" /> : 'Complete Setup'}
+                </button>
                 <button 
                   type="button" 
                   onClick={() => setStep(1)}
-                  style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '1rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', padding: '0.75rem', cursor: 'pointer', fontWeight: 500, fontSize: '0.95rem' }}
                 >
-                  Back
-                </button>
-                <button 
-                  type="submit" 
-                  disabled={isSubmitting || usernameStatus !== 'available' || !displayName.trim() || (role !== 'member' && !specialty.trim()) || (applyVerification && !licenseNumber.trim())}
-                  className="share-journey-cta" 
-                  style={{ flex: 2, display: 'flex', justifyContent: 'center', padding: '1rem', opacity: (isSubmitting || usernameStatus !== 'available') ? 0.5 : 1 }}
-                >
-                  {isSubmitting ? <Loader2 className="animate-spin" /> : 'Complete Setup'}
+                  Cancel & Go Back
                 </button>
               </div>
             </form>
