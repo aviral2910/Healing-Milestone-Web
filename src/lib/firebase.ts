@@ -5,6 +5,7 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 const firebaseConfig = {
   apiKey: "AIzaSyDblAVFfarIEkqtJTkiZqaIZYfY1vKeH20",
   projectId: "healingmilestones-6d4ef",
+  authDomain: "healingmilestones-6d4ef.firebaseapp.com",
   storageBucket: "healingmilestones-6d4ef.firebasestorage.app",
   appId: "1:507010116072:android:3de0d8fcb92512de5cdc5d",
 };

@@ -105,9 +105,12 @@ export default async function ViewSnapshotPage({ params }: Props) {
             </div>
           </Link>
         </div>
-        <a href="https://healingmilestones.in" target="_blank" rel="noopener noreferrer">
-          <button className="download-btn">Download the App</button>
-        </a>
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <Link href="/connect" style={{ color: 'var(--primary)', fontWeight: 'bold', textDecoration: 'none', fontSize: '0.95rem', letterSpacing: '0.5px' }}>HM Connect</Link>
+          <a href="https://healingmilestones.in" target="_blank" rel="noopener noreferrer">
+            <button className="download-btn">Download the App</button>
+          </a>
+        </div>
       </div>
       
       {/* Dashboard Summary Header */}
