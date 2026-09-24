@@ -238,7 +238,7 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
   const params = useParams();
   const router = useRouter();
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-      const [filter, setFilter] = useState<'all' | 'milestones' | 'medical_records' | 'reports' | 'prescriptions' | 'biomarkers'>('all');
+      const [filter, setFilter] = useState<'all' | 'milestones' | 'reports' | 'prescriptions' | 'abnormal'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [expandedBiomarkerLists, setExpandedBiomarkerLists] = useState<Record<string, boolean>>({});
@@ -263,15 +263,14 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
   }, [selectedFile]);
 
   // Memoize heavy calculations to prevent re-rendering flicker when opening lightbox
-  const { groupedArray, countMilestones, countMedicalRecords, countReports, countPrescriptions } = useMemo(() => {
+  const { groupedArray, countMilestones, countReports, countPrescriptions, countAbnormal } = useMemo(() => {
     // 1. Filter
     const filtered = timeline.filter(item => {
       if (filter === 'milestones' && item.type !== 'milestone') return false;
-      if (filter === 'medical_records' && item.type !== 'report') return false;
-      if (filter === 'reports' && (item.type !== 'report' || item.category === 'prescription')) return false;
+            if (filter === 'reports' && (item.type !== 'report' || item.category === 'prescription')) return false;
       if (filter === 'prescriptions' && (item.type !== 'report' || item.category !== 'prescription')) return false;
-      if (filter === 'biomarkers' && (!item.biomarkers || item.biomarkers.length === 0)) return false;
-      if (searchQuery.trim() !== '') {
+      if (filter === 'abnormal' && (!item.biomarkers || item.biomarkers.length === 0 || !item.biomarkers.some((b: any) => b.isAbnormal))) return false;
+            if (searchQuery.trim() !== '') {
         const query = searchQuery.toLowerCase();
         const textMatch = item.text?.toLowerCase().includes(query);
         const titleMatch = item.title?.toLowerCase().includes(query);
@@ -311,7 +310,8 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
       countMilestones: timeline.filter(i => i.type === 'milestone').length,
       countMedicalRecords: timeline.filter(i => i.type === 'report').length,
       countReports: timeline.filter(i => i.type === 'report' && i.category !== 'prescription').length,
-      countPrescriptions: timeline.filter(i => i.type === 'report' && i.category === 'prescription').length
+      countPrescriptions: timeline.filter(i => i.type === 'report' && i.category === 'prescription').length,
+      countAbnormal: timeline.filter(i => i.biomarkers && i.biomarkers.some((b: any) => b.isAbnormal)).length
     };
   }, [timeline, filter, searchQuery, sortOrder]);
 
@@ -327,6 +327,7 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
               { id: 'reports', label: `Lab Reports (${countReports})`, icon: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></> },
               { id: 'prescriptions', label: `Prescriptions (${countPrescriptions})`, icon: <><circle cx="7" cy="7" r="5"></circle><circle cx="17" cy="17" r="5"></circle><line x1="12" y1="17" x2="12" y2="17"></line></> },
               { id: 'milestones', label: `Journey (${countMilestones})`, icon: <><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></> },
+              { id: 'abnormal', label: `Abnormal Results (${countAbnormal})`, icon: <><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></> },
             ].map(f => (
               <button 
                 key={f.id}
