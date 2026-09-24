@@ -256,7 +256,7 @@ export default function OnboardingPage() {
 
                   <div>
                     <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                      Medical License / Registration Number <span style={{ opacity: 0.5 }}>(Optional)</span>
+                      Medical License / Registration Number {applyVerification ? <span style={{ color: '#ef4444' }}>*</span> : <span style={{ opacity: 0.5 }}>(Optional)</span>}
                     </label>
                     <input 
                       type="text" 
@@ -312,7 +312,7 @@ export default function OnboardingPage() {
                 </button>
                 <button 
                   type="submit" 
-                  disabled={isSubmitting || usernameStatus !== 'available' || !displayName.trim() || (role !== 'member' && !specialty.trim())}
+                  disabled={isSubmitting || usernameStatus !== 'available' || !displayName.trim() || (role !== 'member' && !specialty.trim()) || (applyVerification && !licenseNumber.trim())}
                   className="share-journey-cta" 
                   style={{ flex: 2, display: 'flex', justifyContent: 'center', padding: '1rem', opacity: (isSubmitting || usernameStatus !== 'available') ? 0.5 : 1 }}
                 >
