@@ -348,7 +348,7 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
           <div style={{ flex: 1, position: 'relative' }}>
             <input 
               type="text" 
-              placeholder="Search symptoms, reports, tags..." 
+              placeholder="Search biomarkers, reports, notes..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{ 
