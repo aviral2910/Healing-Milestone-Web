@@ -105,29 +105,31 @@ export default async function ViewSnapshotPage({ params }: Props) {
         </a>
       </div>
       
-      {/* Immersive Hero Section */}
-      <div className="story-hero-section" style={{ minHeight: '35vh' }}>
-        <div className="hero-bg-blur" style={{ backgroundColor: '#1a1a1a' }}></div>
-        <div className="hero-overlay" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, #09090b 100%)' }}></div>
-        <div className="hero-content" style={{ bottom: '20px' }}>
-          <div style={{ color: 'var(--primary)', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '8px', textTransform: 'uppercase', fontSize: '0.85rem' }}>
-            Health Snapshot
-          </div>
-          <h1 className="hero-title">{viewData.viewName}</h1>
-          <div className="hero-meta">
-            <div className="author-badge">
-              <div className="author-avatar-small placeholder">
-                {authorName.charAt(0).toUpperCase()}
-              </div>
-              <span className="author-name">{authorName}</span>
+      {/* Dashboard Summary Header */}
+      <div className="dashboard-top-header" style={{ backgroundColor: '#121214', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="dashboard-header-content" style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <div style={{ color: 'var(--primary)', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '8px', textTransform: 'uppercase', fontSize: '0.75rem' }}>
+              Dashboard
             </div>
-            <span className="meta-dot">•</span>
-            <span className="meta-date" style={{ color: '#ef4444' }}>Expires: {expiresAt}</span>
+            <h1 style={{ fontSize: '1.8rem', margin: '0 0 12px 0', color: 'var(--text-primary)' }}>{viewData.viewName}</h1>
+            <div className="dashboard-meta-row" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 16px', color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '24px', height: '24px', flexShrink: 0, borderRadius: '50%', backgroundColor: 'var(--primary)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.7rem' }}>
+                  {authorName.charAt(0).toUpperCase()}
+                </div>
+                <span style={{ fontWeight: '500', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{authorName}</span>
+              </div>
+              <span className="meta-dot" style={{ opacity: 0.5 }}>•</span>
+              <span style={{ color: '#ef4444', whiteSpace: 'nowrap' }}>Expires: {expiresAt}</span>
+              <span className="meta-dot" style={{ opacity: 0.5 }}>•</span>
+              <span style={{ whiteSpace: 'nowrap' }}>{timeline.length} Records</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <main className="story-container">
+      <main className="dashboard-main-container" style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', zIndex: 10 }}>
 
         
         <SnapshotTimeline timeline={timeline} expiresAt={expiresAt} biomarkerTrends={viewData.biomarkerTrends || []} />

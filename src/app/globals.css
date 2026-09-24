@@ -1159,3 +1159,120 @@ a {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Snapshot Dashboard Layout - Mobile Responsive */
+@media (max-width: 900px) {
+  .dashboard-layout {
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+  
+  .dashboard-sidebar {
+    width: 100% !important;
+    position: static !important;
+    z-index: 1 !important;
+  }
+
+  .dashboard-sidebar > div {
+    padding: 16px !important;
+  }
+  
+  .category-buttons {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding-bottom: 8px !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+
+  .dashboard-cat-btn {
+    white-space: nowrap;
+    padding: 10px 16px !important;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Fix the search and sort row wrapping on tiny screens */
+  .search-input-wrapper {
+    width: 100%;
+  }
+  .dashboard-layout > div:last-child > div:first-child {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+}
+
+/* Dashboard Header Responsive Padding */
+.dashboard-top-header {
+  padding: 24px 32px;
+}
+@media (max-width: 600px) {
+  .dashboard-top-header {
+    padding: 24px 16px;
+  }
+}
+
+.dashboard-main-container {
+  padding: 32px;
+}
+@media (max-width: 600px) {
+  .dashboard-main-container {
+    padding: 16px;
+  }
+}
+
+
+/* Compare Biomarkers Responsive Layout */
+.mobile-only-btn {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-only-btn {
+    display: block !important;
+  }
+  .compare-layout {
+    position: relative;
+    flex-direction: row !important;
+  }
+  .compare-sidebar {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px !important;
+    max-width: 85% !important;
+    height: 100% !important;
+    z-index: 100 !important;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    border-right: 1px solid rgba(255,255,255,0.1) !important;
+  }
+  .compare-sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.8);
+  }
+  .compare-main {
+    padding: 16px !important;
+    width: 100%;
+  }
+}
+
+/* Hide scrim on desktop */
+.mobile-scrim {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-scrim {
+    display: block !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop-only-btn {
+    display: none !important;
+  }
+}

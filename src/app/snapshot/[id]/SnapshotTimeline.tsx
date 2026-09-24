@@ -295,7 +295,52 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
   }, [timeline, filter, searchQuery, sortOrder]);
 
   return (
-    <div className="milestones-timeline" style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="dashboard-layout" style={{ display: 'flex', gap: '40px', alignItems: 'flex-start', marginTop: '1.5rem' }}>
+      {/* LEFT SIDEBAR (Sticky) */}
+      <div className="dashboard-sidebar" style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '32px', zIndex: 50 }}>
+        <div style={{ backgroundColor: '#121214', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', padding: '24px' }}>
+          <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>Category Filter</h3>
+          <div className="category-buttons hide-scrollbar" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {[
+              { id: 'all', label: `All Records (${timeline.length})`, icon: <><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></> },
+              { id: 'medical_records', label: `Medical Records (${countMedicalRecords})`, icon: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></> },
+              { id: 'reports', label: `Lab Reports (${countReports})`, icon: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></> },
+              { id: 'prescriptions', label: `Prescriptions (${countPrescriptions})`, icon: <><circle cx="7" cy="7" r="5"></circle><circle cx="17" cy="17" r="5"></circle><line x1="12" y1="17" x2="12" y2="17"></line></> },
+              { id: 'biomarkers', label: 'Has Biomarkers', icon: <><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></> },
+              { id: 'milestones', label: `Clinical Notes (${countMilestones})`, icon: <><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></> },
+            ].map(f => (
+              <button 
+                key={f.id}
+                onClick={() => setFilter(f.id as any)}
+                className={`dashboard-cat-btn ${filter === f.id ? 'active' : ''}`}
+                style={{
+                  backgroundColor: filter === f.id ? 'var(--primary)' : 'transparent',
+                  color: filter === f.id ? '#000' : 'var(--text-primary)',
+                  border: filter === f.id ? '1px solid var(--primary)' : '1px solid transparent',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: filter === f.id ? 600 : 400,
+                  transition: 'all 0.2s ease',
+                  opacity: filter === f.id ? 1 : 0.8
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ pointerEvents: 'none' }}>
+                  {f.icon}
+                </svg>
+                <span style={{ pointerEvents: 'none' }}>{f.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* RIGHT MAIN CONTENT */}
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
       {/* HEADER CONTROLS (Search, Sort, Filters) */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem', marginBottom: '0.5rem' }}>
@@ -338,85 +383,7 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
           </button>
         </div>
 
-        {/* Quick Filters Row */}
-        <div className="hide-scrollbar" style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-          <button 
-            onClick={() => setFilter('all')}
-            style={{
-              padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
-              backgroundColor: filter === 'all' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-              color: filter === 'all' ? '#000' : 'var(--text-primary)',
-              border: filter === 'all' ? '1px solid var(--primary)' : '1px solid var(--border)',
-              transition: 'all 0.2s', whiteSpace: 'nowrap'
-            }}
-          >
-            All ({timeline.length})
-          </button>
-          <button 
-            onClick={() => setFilter('medical_records')}
-            style={{
-              padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
-              backgroundColor: filter === 'medical_records' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-              color: filter === 'medical_records' ? '#000' : 'var(--text-primary)',
-              border: filter === 'medical_records' ? '1px solid var(--primary)' : '1px solid var(--border)',
-              transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px'
-            }}
-          >
-            📁 Medical Records ({countMedicalRecords})
-          </button>
-          <button 
-            onClick={() => setFilter('reports')}
-            style={{
-              padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
-              backgroundColor: filter === 'reports' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-              color: filter === 'reports' ? '#000' : 'var(--text-primary)',
-              border: filter === 'reports' ? '1px solid var(--primary)' : '1px solid var(--border)',
-              transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px'
-            }}
-          >
-            📄 Reports ({countReports})
-          </button>
-          <button 
-            onClick={() => setFilter('prescriptions')}
-            style={{
-              padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
-              backgroundColor: filter === 'prescriptions' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-              color: filter === 'prescriptions' ? '#000' : 'var(--text-primary)',
-              border: filter === 'prescriptions' ? '1px solid var(--primary)' : '1px solid var(--border)',
-              transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px'
-            }}
-          >
-            💊 Prescriptions ({countPrescriptions})
-          </button>
-          <button 
-            onClick={() => setFilter('biomarkers')}
-            style={{
-              padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
-              backgroundColor: filter === 'biomarkers' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-              color: filter === 'biomarkers' ? '#000' : 'var(--text-primary)',
-              border: filter === 'biomarkers' ? '1px solid var(--primary)' : '1px solid var(--border)',
-              transition: 'all 0.2s ease',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            🧪 Has Biomarkers
-          </button>
-          <button 
-            onClick={() => setFilter('milestones')}
-            style={{
-              padding: '8px 16px', borderRadius: '20px', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer',
-              backgroundColor: filter === 'milestones' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-              color: filter === 'milestones' ? '#000' : 'var(--text-primary)',
-              border: filter === 'milestones' ? '1px solid var(--primary)' : '1px solid var(--border)',
-              transition: 'all 0.2s', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px'
-            }}
-          >
-            📝 Journals ({countMilestones})
-          </button>
-        </div>
-
       </div>
-      
       {groupedArray.length > 0 ? (
         <div className="timeline-container" style={{ position: 'relative', paddingLeft: '2.5rem' }}>
           
@@ -658,8 +625,6 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
                                   cursor: 'pointer',
                                   transition: 'background-color 0.2s'
                                 }}
-                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(218, 165, 32, 0.1)'}
-                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(218, 165, 32, 0.05)'}
                               >
                                 {expandedBiomarkerLists[item.id] 
                                   ? 'Show fewer metrics' 
@@ -691,7 +656,7 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
         </p>
       </div>
 
-            
+      </div>
     </div>
   );
 }

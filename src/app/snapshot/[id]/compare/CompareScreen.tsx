@@ -15,6 +15,7 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
   const [searchQuery, setSearchQuery] = useState('');
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
   useEffect(() => {
     const base = searchParams.get('base');
@@ -49,10 +50,30 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
           <h1 style={{ fontSize: '1.2rem', margin: 0 }}>Compare Biomarkers</h1>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{viewData.viewName}</div>
         </div>
+        <button 
+          className="mobile-only-btn"
+          onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+          style={{ marginLeft: 'auto', padding: '8px 12px', backgroundColor: 'var(--primary)', color: '#000', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.8rem', border: 'none', cursor: 'pointer' }}
+        >
+          {showMobileSidebar ? 'Close' : 'Select Metrics'}
+        </button>
       </header>
 
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-        <aside style={{ width: '300px', borderRight: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', backgroundColor: '#121214' }}>
+      <div className="compare-layout" style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        {showMobileSidebar && (
+          <div 
+            className="mobile-scrim"
+            onClick={() => setShowMobileSidebar(false)}
+            style={{
+              position: 'absolute',
+              top: 0, left: 0, right: 0, bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              zIndex: 90,
+              cursor: 'pointer'
+            }}
+          />
+        )}
+        <aside className={`compare-sidebar ${showMobileSidebar ? 'open' : ''}`} style={{ width: '300px', borderRight: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', backgroundColor: '#121214' }}>
           <div style={{ padding: '16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             <input 
               type="text" 
@@ -201,7 +222,7 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{ cursor: 'grab', color: 'var(--text-secondary)' }}>
+                        <div className="desktop-only-btn" style={{ cursor: 'grab', color: 'var(--text-secondary)' }}>
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="8" y1="6" x2="21" y2="6"></line>
                             <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -210,6 +231,42 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
                             <line x1="3" y1="12" x2="3.01" y2="12"></line>
                             <line x1="3" y1="18" x2="3.01" y2="18"></line>
                           </svg>
+                        </div>
+                        <div className="mobile-only-btn" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                          <button
+                            disabled={idx === 0}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (idx === 0) return;
+                              const newComparing = [...comparing];
+                              const temp = newComparing[idx];
+                              newComparing[idx] = newComparing[idx - 1];
+                              newComparing[idx - 1] = temp;
+                              setComparing(newComparing);
+                            }}
+                            style={{ 
+                              background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', borderRadius: '4px', 
+                              width: '24px', height: '20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              opacity: idx === 0 ? 0.2 : 1 
+                            }}
+                          >▲</button>
+                          <button
+                            disabled={idx === comparing.length - 1}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (idx === comparing.length - 1) return;
+                              const newComparing = [...comparing];
+                              const temp = newComparing[idx];
+                              newComparing[idx] = newComparing[idx + 1];
+                              newComparing[idx + 1] = temp;
+                              setComparing(newComparing);
+                            }}
+                            style={{ 
+                              background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', borderRadius: '4px', 
+                              width: '24px', height: '20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              opacity: idx === comparing.length - 1 ? 0.2 : 1 
+                            }}
+                          >▼</button>
                         </div>
                         <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-primary)' }}>{tName}</h3>
                       </div>
