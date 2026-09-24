@@ -31,7 +31,7 @@ function BiomarkerIcon({ name }: { name: string }) {
 
 const COLORS = ['#eab308', '#3b82f6', '#10b981', '#a855f7', '#ec4899', '#f97316', '#06b6d4'];
 
-function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, trend: any, onCompare: () => void }) {
+function InlineBiomarkerCard({ biomarker, date, trend, onCompare }: { biomarker: any, date?: string, trend: any, onCompare: () => void }) {
   const [expanded, setExpanded] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
 
@@ -40,8 +40,26 @@ function InlineBiomarkerCard({ biomarker, trend, onCompare }: { biomarker: any, 
   let defaultHigh: number | null = null;
 
   let data: any[] = [];
-  if (trend) {
-    const pts = [...trend.dataPoints].sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  let pts = trend && trend.dataPoints ? [...trend.dataPoints] : [];
+  
+  if (biomarker.resultType === 'numeric' && biomarker.valueNumeric != null && date) {
+    const exists = pts.some(p => 
+      new Date(p.date).getTime() === new Date(date).getTime() && 
+      p.value === biomarker.valueNumeric
+    );
+    if (!exists) {
+      pts.push({
+        date: date,
+        value: biomarker.valueNumeric,
+        isAbnormal: biomarker.isAbnormal,
+        rangeLow: null,
+        rangeHigh: null
+      });
+    }
+  }
+
+  if (pts.length > 0) {
+    pts.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
     
     for (let i = pts.length - 1; i >= 0; i--) {
       if (pts[i].rangeHigh != null && defaultHigh == null) defaultHigh = pts[i].rangeHigh;
@@ -596,7 +614,8 @@ export default function SnapshotTimeline({ timeline, expiresAt, biomarkerTrends 
                               {(expandedBiomarkerLists[item.id] ? item.biomarkers : item.biomarkers.slice(0, 4)).map((b: any, idx: number) => (
                                 <InlineBiomarkerCard 
                                   key={idx} 
-                                  biomarker={b} 
+                                  biomarker={b}
+                                  date={item.date} 
                                   trend={biomarkerTrends.find(t => t.name === b.rawName || (t.rawNames && t.rawNames.includes(b.rawName)))}
                                   onCompare={() => {
                                     router.push(`/snapshot/${params.id}/compare?base=${encodeURIComponent(b.rawName)}`);
