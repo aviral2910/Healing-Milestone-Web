@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { User, Clock, Calendar, Trash2, Eye, FileText, Loader2 } from 'lucide-react';
+import { UserBadge } from '@/components/UserBadge';
 
 export default function ConnectDashboard() {
   const { user, profile, loading, needsOnboarding, logout } = useAuth();
@@ -83,7 +84,7 @@ export default function ConnectDashboard() {
             </h1>
             <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center' }}>
               Welcome, {profile?.role === 'healthcareProfessional' ? 'Dr. ' : ''}{profile?.displayName || user.displayName}
-              {(profile?.isVerified || (profile as any)?.is_verified) && <span className="verified-badge" title="Verified">✓</span>}
+              <UserBadge role={profile?.role} isVerified={profile?.isVerified || (profile as any)?.is_verified} size={18} />
             </div>
           </div>
         </div>

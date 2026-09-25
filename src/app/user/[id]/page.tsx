@@ -1,3 +1,4 @@
+import { UserBadge } from '@/components/UserBadge';
 import { Metadata } from "next";
 import Link from "next/link";
 import StoriesCarousel from "@/components/StoriesCarousel";
@@ -124,9 +125,7 @@ export default async function UserProfile({ params }: Props) {
           
           <h1 className="profile-name">
             {user.displayName}
-            {user.isVerified && (
-              <span className="verified-badge" title="Verified">✓</span>
-            )}
+            <UserBadge role={user.role} isVerified={user.isVerified} size={24} style={{ marginLeft: '12px' }} />
           </h1>
           
           <div className="profile-stats">
