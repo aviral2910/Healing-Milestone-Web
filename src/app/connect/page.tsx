@@ -112,7 +112,7 @@ export default function ConnectDashboard() {
             </p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
             {roster.map((item) => {
               const patientName = item.patient_alias || item.mix_view?.name || 'Unknown Patient';
               const initial = patientName.charAt(0).toUpperCase();
@@ -130,7 +130,7 @@ export default function ConnectDashboard() {
                         </h3>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                           <User size={14} />
-                          {item.mix_view?.author?.display_name || item.mix_view?.user?.display_name || 'Patient Snapshot'}
+                          {item.mix_view?.author_name || 'Patient Snapshot'}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                           <Calendar size={14} />
