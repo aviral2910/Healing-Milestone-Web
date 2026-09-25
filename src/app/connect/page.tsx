@@ -82,8 +82,8 @@ export default function ConnectDashboard() {
               HM Connect
             </h1>
             <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center' }}>
-              Welcome, {profile?.role === 'doctor' ? 'Dr. ' : ''}{profile?.displayName || user.displayName}
-              {profile?.isVerified && <BadgeCheck size={16} color="#3b82f6" style={{ marginLeft: '6px' }} />}
+              Welcome, {profile?.role === 'healthcareProfessional' ? 'Dr. ' : ''}{profile?.displayName || user.displayName}
+              {(profile?.isVerified || (profile as any)?.is_verified) && <BadgeCheck size={16} color="#3b82f6" style={{ marginLeft: '6px' }} />}
             </div>
           </div>
         </div>
