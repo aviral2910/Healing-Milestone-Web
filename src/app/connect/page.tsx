@@ -6,13 +6,14 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { User, Clock, Calendar, Trash2, Eye, FileText } from 'lucide-react';
+import { User, Clock, Calendar, Trash2, Eye, FileText, Loader2 } from 'lucide-react';
 
 export default function ConnectDashboard() {
   const { user, loading, needsOnboarding, logout } = useAuth();
   const router = useRouter();
   const [roster, setRoster] = useState<any[]>([]);
   const [fetching, setFetching] = useState(true);
+  const [loadingSnapshotId, setLoadingSnapshotId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -119,8 +120,8 @@ export default function ConnectDashboard() {
               return (
                 <div 
                   key={item.id} 
-                  onClick={() => router.push(`/snapshot/${item.mix_view_id}`)}
-                  style={{ background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', transition: 'all 0.2s ease', cursor: 'pointer' }}
+                  onClick={() => { setLoadingSnapshotId(item.mix_view_id); router.push(`/snapshot/${item.mix_view_id}`); }}
+                  style={{ position: 'relative', background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', transition: 'all 0.2s ease', cursor: 'pointer' }}
                   onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)'; }}
                   onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
                 >
@@ -170,8 +171,12 @@ export default function ConnectDashboard() {
                   </div>
 
                   {item.notes && <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', margin: 0 }}>{item.notes}</p>}
-
-
+                  
+                  {loadingSnapshotId === item.mix_view_id && (
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(2px)', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '16px', zIndex: 10 }}>
+                      <Loader2 size={32} color="var(--primary)" className="animate-spin" />
+                    </div>
+                  )}
                 </div>
               );
             })}
