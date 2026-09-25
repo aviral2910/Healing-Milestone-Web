@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { User, Clock, Calendar, Trash2, Eye, FileText, Loader2 } from 'lucide-react';
+import { User, Clock, Calendar, Trash2, Eye, FileText, Loader2, BadgeCheck } from 'lucide-react';
 
 export default function ConnectDashboard() {
-  const { user, loading, needsOnboarding, logout } = useAuth();
+  const { user, profile, loading, needsOnboarding, logout } = useAuth();
   const router = useRouter();
   const [roster, setRoster] = useState<any[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -81,8 +81,9 @@ export default function ConnectDashboard() {
             <h1 style={{ margin: 0, fontSize: '1.4rem', fontFamily: "'Oswald', sans-serif", color: 'var(--primary)' }}>
               HM Connect
             </h1>
-            <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-              Welcome, {user.displayName}
+            <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center' }}>
+              Welcome, {profile?.role === 'doctor' ? 'Dr. ' : ''}{profile?.displayName || user.displayName}
+              {profile?.isVerified && <BadgeCheck size={16} color="#3b82f6" style={{ marginLeft: '6px' }} />}
             </div>
           </div>
         </div>
