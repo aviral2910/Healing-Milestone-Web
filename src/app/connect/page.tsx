@@ -59,6 +59,14 @@ export default function ConnectDashboard() {
     }
   }, [user, search, page]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(1);
@@ -123,8 +131,8 @@ export default function ConnectDashboard() {
             </div>
           </div>
           
-          <form onSubmit={handleSearch} style={{ marginTop: '24px', display: 'flex', gap: '12px' }}>
-            <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
+          <div style={{ marginTop: '24px', display: 'flex', gap: '12px' }}>
+            <div style={{ position: 'relative', flex: 1, maxWidth: '500px' }}>
               <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}>
                 <Search size={18} />
               </div>
@@ -137,29 +145,18 @@ export default function ConnectDashboard() {
                   width: '100%',
                   padding: '12px 16px 12px 44px',
                   borderRadius: '12px',
+                  backgroundColor: 'rgba(255,255,255,0.03)',
                   border: '1px solid var(--border)',
-                  background: 'var(--surface)',
                   color: 'var(--text-primary)',
-                  fontSize: '0.95rem'
+                  fontSize: '0.95rem',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease'
                 }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+                onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
               />
             </div>
-            <button 
-              type="submit"
-              style={{ padding: '12px 24px', borderRadius: '12px', background: 'var(--primary)', color: 'var(--background)', fontWeight: 600, border: 'none', cursor: 'pointer' }}
-            >
-              Search
-            </button>
-            {search && (
-              <button 
-                type="button"
-                onClick={() => { setSearchInput(''); setSearch(''); setPage(1); }}
-                style={{ padding: '12px 24px', borderRadius: '12px', background: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border)', cursor: 'pointer' }}
-              >
-                Clear
-              </button>
-            )}
-          </form>
+          </div>
         </div>
 
         {fetching ? (
