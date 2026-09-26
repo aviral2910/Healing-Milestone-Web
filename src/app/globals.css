@@ -1290,3 +1290,7 @@ a {
   border-radius: 50%;
   margin-left: 6px;
 }
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
