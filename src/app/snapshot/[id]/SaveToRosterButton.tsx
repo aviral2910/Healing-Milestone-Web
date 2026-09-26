@@ -20,14 +20,15 @@ export default function SaveToRosterButton({ mixViewId, viewName }: { mixViewId:
       }
       try {
         const token = await user.getIdToken();
-        const res = await fetch('https://healing-milestones-api.onrender.com/api/connect/roster', {
+        const res = await fetch('https://healing-milestones-api.onrender.com/api/connect/roster?limit=100', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         if (res.ok) {
-          const roster = await res.json();
-          const savedItem = roster.find((item: any) => item.mix_view_id === mixViewId);
+          const rosterData = await res.json();
+          const items = rosterData.items || rosterData;
+          const savedItem = items.find((item: any) => item.mix_view_id === mixViewId);
           if (savedItem) {
             setSaved(true);
             setRosterId(savedItem.id);
@@ -79,13 +80,8 @@ export default function SaveToRosterButton({ mixViewId, viewName }: { mixViewId:
         });
 
         if (res.ok) {
-          // Re-fetch to get the ID
-          const rosterRes = await fetch('https://healing-milestones-api.onrender.com/api/connect/roster', { headers: { 'Authorization': `Bearer ${token}` }});
-          if (rosterRes.ok) {
-             const roster = await rosterRes.json();
-             const savedItem = roster.find((item: any) => item.mix_view_id === mixViewId);
-             if (savedItem) setRosterId(savedItem.id);
-          }
+          const newItem = await res.json();
+          setRosterId(newItem.id);
           setSaved(true);
         } else {
           alert("Failed to save patient.");
