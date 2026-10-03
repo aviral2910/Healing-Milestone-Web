@@ -101,13 +101,15 @@ export default function ConnectDashboard() {
     <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--text-primary)', padding: '0' }}>
       {/* Header */}
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 40px', background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <img src="/icon.png" alt="Logo" style={{ width: '40px', height: '40px', borderRadius: '8px' }} />
-          <div>
-            <h1 style={{ margin: 0, fontSize: '1.4rem', fontFamily: "'Oswald', sans-serif", color: 'var(--text-primary)' }}>
-              HM Connect
-            </h1>
-          </div>
+        <div className="banner-brand">
+          <Link href="/connect" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Logo" className="banner-logo" />
+            <div className="banner-title">
+              <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
+              <div style={{ letterSpacing: '0.2px' }}>MILESTONES <span style={{ color: 'var(--primary)' }}>CONNECT</span></div>
+            </div>
+          </Link>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <Link href="/web" className="nav-btn">
