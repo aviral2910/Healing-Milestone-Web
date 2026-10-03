@@ -31,7 +31,13 @@ export default function CompareScreen({ viewData, snapshotId }: { viewData: any,
 
   const filteredTrends = biomarkerTrends.filter((t: any) => 
     t.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  ).sort((a: any, b: any) => {
+    const aSelected = comparing.includes(a.name);
+    const bSelected = comparing.includes(b.name);
+    if (aSelected && !bSelected) return -1;
+    if (!aSelected && bSelected) return 1;
+    return 0;
+  });
 
   return (
     <div style={{ height: '100vh', backgroundColor: 'var(--background)', color: 'var(--text-primary)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
