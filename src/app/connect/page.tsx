@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { User, Clock, Calendar, Trash2, Eye, FileText, Loader2, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { User, Clock, Calendar, Trash2, Eye, FileText, Loader2, Search, ChevronLeft, ChevronRight, MonitorSmartphone } from 'lucide-react';
 import { UserBadge } from '@/components/UserBadge';
 
 export default function ConnectDashboard() {
@@ -109,12 +109,18 @@ export default function ConnectDashboard() {
             </h1>
           </div>
         </div>
-        <button 
-          onClick={logout}
-          style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-secondary)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}
-        >
-          Sign Out
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <Link href="/web" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', border: '1px solid var(--primary)', color: 'var(--primary)', borderRadius: '8px', textDecoration: 'none', fontWeight: '500', fontSize: '0.9rem' }}>
+            <MonitorSmartphone size={16} />
+            Web Sync
+          </Link>
+          <button 
+            onClick={logout}
+            style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-secondary)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}
+          >
+            Sign Out
+          </button>
+        </div>
       </header>
 
       {/* Main Dashboard */}

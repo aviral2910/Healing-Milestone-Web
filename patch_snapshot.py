@@ -1,26 +1,31 @@
+import re
+
 with open('src/app/snapshot/[id]/page.tsx', 'r') as f:
     content = f.read()
 
-content = content.replace(
-    'import SnapshotTimeline from "./SnapshotTimeline";',
-    'import SnapshotTimeline from "./SnapshotTimeline";\nimport SaveToRosterButton from "./SaveToRosterButton";'
-)
+# Add import
+if "import { MonitorSmartphone }" not in content:
+    content = content.replace('import Link from "next/link";', 
+                              'import Link from "next/link";\nimport { MonitorSmartphone } from "lucide-react";')
 
-content = content.replace(
-    '<div className="dashboard-header-content" style={{ maxWidth: \'1400px\', margin: \'0 auto\', display: \'flex\', justifyContent: \'space-between\', alignItems: \'flex-start\' }}>',
-    '<div className="dashboard-header-content" style={{ maxWidth: \'1400px\', margin: \'0 auto\', display: \'flex\', justifyContent: \'space-between\', alignItems: \'flex-start\', flexWrap: \'wrap\', gap: \'16px\' }}>'
-)
+old_banner = """        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <Link href="/connect" className="download-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem' }}>HM Connect</Link>
+          <a href="https://healingmilestones.in" target="_blank" rel="noopener noreferrer">
+            <button className="download-btn">Download the App</button>
+          </a>
+        </div>"""
 
-header_end_target = """</div>
-        </div>
-      </div>"""
-header_end_replacement = """</div>
-          <div style={{ alignSelf: 'center' }}>
-            <SaveToRosterButton mixViewId={id} viewName={viewData.viewName} />
-          </div>
-        </div>
-      </div>"""
-content = content.replace(header_end_target, header_end_replacement)
+new_banner = """        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <Link href="/web" className="download-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem', backgroundColor: 'transparent', border: '1px solid var(--primary)', color: 'var(--primary)' }}>
+            <MonitorSmartphone size={16} /> Web Sync
+          </Link>
+          <Link href="/connect" className="download-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem' }}>HM Connect</Link>
+          <a href="https://healingmilestones.in" target="_blank" rel="noopener noreferrer">
+            <button className="download-btn">Download the App</button>
+          </a>
+        </div>"""
+
+content = content.replace(old_banner, new_banner)
 
 with open('src/app/snapshot/[id]/page.tsx', 'w') as f:
     f.write(content)

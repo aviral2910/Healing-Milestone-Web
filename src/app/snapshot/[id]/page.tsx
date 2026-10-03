@@ -1,5 +1,6 @@
 import { safeUtcDate } from '@/utils/dateUtils';
 import Link from "next/link";
+import { MonitorSmartphone } from "lucide-react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SnapshotTimeline from "./SnapshotTimeline";
@@ -106,6 +107,9 @@ export default async function ViewSnapshotPage({ params }: Props) {
           </Link>
         </div>
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <Link href="/web" className="download-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem', backgroundColor: 'transparent', border: '1px solid var(--primary)', color: 'var(--primary)' }}>
+            <MonitorSmartphone size={16} /> Web Sync
+          </Link>
           <Link href="/connect" className="download-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem' }}>HM Connect</Link>
           <a href="https://healingmilestones.in" target="_blank" rel="noopener noreferrer">
             <button className="download-btn">Download the App</button>
