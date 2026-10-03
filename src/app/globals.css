@@ -558,27 +558,6 @@ a {
   flex-wrap: wrap;
 }
 
-.download-btn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  color: var(--text-primary);
-  backdrop-filter: blur(10px);
-}
-
-.download-btn.disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.download-btn:not(.disabled):hover {
-  border-color: var(--primary);
-  background: rgba(212, 175, 55, 0.1);
-}
 
 .btn-icon {
   font-size: 1.8rem;
@@ -1293,4 +1272,33 @@ a {
 
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+/* Modular Navigation Button */
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  border-color: var(--primary);
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--primary);
+}
+
+.nav-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }

@@ -47,11 +47,11 @@ export default async function Home() {
           </Link>
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <Link href="/connect" className="download-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem' }}>
+          <Link href="/connect" className="nav-btn">
             <Users size={16} />
             HM Connect
           </Link>
-          <Link href="/web" className="download-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', textDecoration: 'none', fontSize: '0.9rem' }}>
+          <Link href="/web" className="nav-btn">
             <MonitorSmartphone size={16} />
             Web Sync
           </Link>
@@ -72,14 +72,14 @@ export default async function Home() {
           </p>
           
           <div className="app-buttons">
-            <button className="download-btn disabled" disabled>
+            <button className="nav-btn disabled" disabled>
               <div className="btn-icon">🍏</div>
               <div className="btn-text">
                 <span className="small">Coming Soon</span>
                 <span className="large">App Store</span>
               </div>
             </button>
-            <button className="download-btn disabled" disabled>
+            <button className="nav-btn disabled" disabled>
               <div className="btn-icon">🤖</div>
               <div className="btn-text">
                 <span className="small">Coming Soon</span>
