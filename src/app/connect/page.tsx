@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { User, Clock, Calendar, Trash2, Eye, FileText, Loader2, Search, ChevronLeft, ChevronRight, MonitorSmartphone } from 'lucide-react';
 import { UserBadge } from '@/components/UserBadge';
@@ -23,6 +23,18 @@ export default function ConnectDashboard() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+
+  const pathname = usePathname();
+  
+  useEffect(() => {
+    // Clear loading state when pathname changes (e.g., when returning to this page via back button)
+    setLoadingSnapshotId(null);
+    
+    // Also clear on pageshow for BFCache
+    const handlePageShow = () => setLoadingSnapshotId(null);
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, [pathname]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -191,7 +203,18 @@ export default function ConnectDashboard() {
                   {/* Card Header */}
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                      <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.02) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', fontWeight: 'bold', fontSize: '1.2rem', border: '1px solid rgba(212, 175, 55, 0.2)' }}>
+                      <div 
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          if (item.mix_view?.author_id) {
+                            router.push(`/user/${item.mix_view.author_id}`);
+                          }
+                        }}
+                        style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.02) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', fontWeight: 'bold', fontSize: '1.2rem', border: '1px solid rgba(212, 175, 55, 0.2)', cursor: item.mix_view?.author_id ? 'pointer' : 'default', transition: 'all 0.2s' }}
+                        onMouseOver={(e) => { if (item.mix_view?.author_id) { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(212, 175, 55, 0.2)'; } }}
+                        onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; }}
+                        title={item.mix_view?.author_id ? "View Profile" : undefined}
+                      >
                         {initial}
                       </div>
                       <div>
