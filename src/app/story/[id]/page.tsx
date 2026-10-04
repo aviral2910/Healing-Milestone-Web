@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import AuthAwareLogo from '@/components/AuthAwareLogo';
+import BookmarkButton from '@/components/BookmarkButton';
 
 
 type Props = {
@@ -123,19 +124,36 @@ export default async function StoryPage({ params }: Props) {
         <div className="hero-content">
           <h1 className="hero-title">{story.heading}</h1>
           <div className="hero-meta">
-            <div className="author-badge">
-              {authorPicture ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img src={authorPicture} alt={authorName} className="author-avatar-small" />
-              ) : (
-                <div className="author-avatar-small placeholder">
-                  {story.displayAuthorName && authorName ? authorName.charAt(0).toUpperCase() : "?"}
-                </div>
-              )}
-              <span className="author-name">By {story.displayAuthorName ? authorName : "Anonymous"}</span>
-            </div>
+            {story.author_id && story.displayAuthorName ? (
+              <Link href={`/user/${story.author_id}`} className="author-badge hover-opacity" style={{ textDecoration: 'none', transition: 'opacity 0.2s' }}>
+                {authorPicture ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={authorPicture} alt={authorName} className="author-avatar-small" />
+                ) : (
+                  <div className="author-avatar-small placeholder">
+                    {authorName ? authorName.charAt(0).toUpperCase() : "?"}
+                  </div>
+                )}
+                <span className="author-name">By {authorName}</span>
+              </Link>
+            ) : (
+              <div className="author-badge">
+                {authorPicture ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={authorPicture} alt={authorName} className="author-avatar-small" />
+                ) : (
+                  <div className="author-avatar-small placeholder">
+                    {story.displayAuthorName && authorName ? authorName.charAt(0).toUpperCase() : "?"}
+                  </div>
+                )}
+                <span className="author-name">By {story.displayAuthorName ? authorName : "Anonymous"}</span>
+              </div>
+            )}
             <span className="meta-dot">•</span>
             <span className="meta-date">{dateStr}</span>
+          </div>
+          <div style={{ marginTop: '16px' }}>
+            <BookmarkButton storyId={id} />
           </div>
         </div>
       </div>

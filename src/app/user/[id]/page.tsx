@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import StoriesCarousel from "@/components/StoriesCarousel";
 import ProfileTabs from "./ProfileTabs";
+import FollowButton from "@/components/FollowButton";
 import "./user-profile.css";
 import AuthAwareLogo from '@/components/AuthAwareLogo';
  
@@ -121,6 +122,7 @@ export default async function UserProfile({ params }: Props) {
             {user.displayName}
             <UserBadge role={user.role} isVerified={user.isVerified} size={24} style={{ marginLeft: '12px' }} />
           </h1>
+          <FollowButton targetUserId={user.userId || id} />
           
           <div className="profile-stats">
             <div className="stat-item">
