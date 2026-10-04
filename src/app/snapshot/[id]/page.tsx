@@ -102,7 +102,10 @@ export default async function ViewSnapshotPage({ params }: Props) {
             <img src="/logo.png" alt="Logo" className="banner-logo" />
             <div className="banner-title">
               <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
-              <div style={{ letterSpacing: '0.2px' }}>MILESTONES</div>
+              <div style={{ letterSpacing: '0.2px' }}>
+                MILESTONES 
+                <span id="snapshot-connect-badge" style={{ color: 'var(--primary)', display: 'none' }}> CONNECT</span>
+              </div>
             </div>
           </Link>
         </div>
