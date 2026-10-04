@@ -62,11 +62,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${user.displayName}'s Profile | Healing Milestones`,
-    description: user.bio || `Check out ${user.displayName}'s profile and stories on Healing Milestones.`,
+    title: `${user.displayName || "User"}'s Profile | Healing Milestones`,
+    description: user.bio || `Check out ${user.displayName || "User"}'s profile and stories on Healing Milestones.`,
     openGraph: {
-      title: `${user.displayName}'s Profile | Healing Milestones`,
-      description: user.bio || `Check out ${user.displayName}'s profile and stories on Healing Milestones.`,
+      title: `${user.displayName || "User"}'s Profile | Healing Milestones`,
+      description: user.bio || `Check out ${user.displayName || "User"}'s profile and stories on Healing Milestones.`,
       images: [user.profilePicture || "https://healingmilestones.in/logo.png"],
     },
   };
@@ -112,14 +112,14 @@ export default async function UserProfile({ params }: Props) {
           <div className="profile-avatar">
             {user.profilePicture ? (
                // eslint-disable-next-line @next/next/no-img-element
-              <img src={user.profilePicture} alt={user.displayName} />
+              <img src={user.profilePicture} alt={user.displayName || "User"} />
             ) : (
-              <div className="avatar-placeholder">{user.displayName.charAt(0)}</div>
+              <div className="avatar-placeholder">{(user.displayName || "?").charAt(0).toUpperCase()}</div>
             )}
           </div>
           
           <h1 className="profile-name">
-            {user.displayName}
+            {user.displayName || "Unknown"}
             <UserBadge role={user.role} isVerified={user.isVerified} size={24} style={{ marginLeft: '12px' }} />
           </h1>
           <FollowButton targetUserId={user.userId || id} />
@@ -142,7 +142,7 @@ export default async function UserProfile({ params }: Props) {
       {/* Tabbed Profile Sections (Client Component for Auth) */}
       <ProfileTabs 
         userId={user.userId || id} 
-        authorName={user.displayName}
+        authorName={user.displayName || "Unknown"}
         initialStories={userStories.map((story: any) => ({
           id: story.id,
           mainImage: story.mainImage || null,
