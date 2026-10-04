@@ -3,6 +3,8 @@ import MilestoneCard from "./MilestoneCard";
 import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
+import AuthAwareLogo from '@/components/AuthAwareLogo';
+
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -104,16 +106,7 @@ export default async function JourneyPage({ params }: Props) {
   return (
     <>
       <div className="banner">
-        <div className="banner-brand">
-          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Logo" className="banner-logo" />
-            <div className="banner-title">
-              <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
-              <div style={{ letterSpacing: '0.2px' }}>MILESTONES</div>
-            </div>
-          </Link>
-        </div>
+        <AuthAwareLogo />
         <a href="https://healingmilestones.in" target="_blank" rel="noopener noreferrer">
           <button className="download-btn">Download the App</button>
         </a>

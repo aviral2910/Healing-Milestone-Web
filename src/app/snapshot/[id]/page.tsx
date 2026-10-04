@@ -5,6 +5,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SnapshotTimeline from "./SnapshotTimeline";
 import SaveToRosterButton from "./SaveToRosterButton";
+import AuthAwareLogo from '@/components/AuthAwareLogo';
+
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -96,19 +98,7 @@ export default async function ViewSnapshotPage({ params }: Props) {
   return (
     <>
       <div className="banner">
-        <div className="banner-brand">
-          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Logo" className="banner-logo" />
-            <div className="banner-title">
-              <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
-              <div style={{ letterSpacing: '0.2px' }}>
-                MILESTONES 
-                <span id="snapshot-connect-badge" style={{ color: 'var(--primary)', display: 'none' }}> CONNECT</span>
-              </div>
-            </div>
-          </Link>
-        </div>
+        <AuthAwareLogo />
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
           <Link href="/web" className="nav-btn">
             <MonitorSmartphone size={16} /> Web Sync

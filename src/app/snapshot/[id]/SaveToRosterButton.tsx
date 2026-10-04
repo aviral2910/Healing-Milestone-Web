@@ -32,9 +32,7 @@ export default function SaveToRosterButton({ mixViewId, viewName }: { mixViewId:
           if (savedItem) {
             setSaved(true);
             setRosterId(savedItem.id);
-            const badge = document.getElementById('snapshot-connect-badge');
-            if (badge) badge.style.display = 'inline';
-          }
+                      }
         }
       } catch (e) {
         console.error(e);
@@ -64,9 +62,7 @@ export default function SaveToRosterButton({ mixViewId, viewName }: { mixViewId:
         if (res.ok) {
           setSaved(false);
           setRosterId(null);
-          const badge = document.getElementById('snapshot-connect-badge');
-          if (badge) badge.style.display = 'none';
-        } else {
+                  } else {
           alert("Failed to remove from roster.");
         }
       } else {

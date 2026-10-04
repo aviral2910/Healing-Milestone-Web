@@ -2,7 +2,9 @@ import { UserBadge } from '@/components/UserBadge';
 import { Metadata } from "next";
 import Link from "next/link";
 import StoriesCarousel from "@/components/StoriesCarousel";
-import "./user-profile.css"; 
+import "./user-profile.css";
+import AuthAwareLogo from '@/components/AuthAwareLogo';
+ 
 
 export const dynamic = 'force-dynamic';
 
@@ -99,16 +101,7 @@ export default async function UserProfile({ params }: Props) {
       </div>
 
       <header className="banner" style={{ position: 'relative', top: 0 }}>
-        <div className="banner-brand">
-          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Logo" className="banner-logo" />
-            <div className="banner-title">
-              <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
-              <div style={{ letterSpacing: '0.2px' }}>MILESTONES</div>
-            </div>
-          </Link>
-        </div>
+        <AuthAwareLogo />
       </header>
 
       <main className="profile-main" style={{ paddingBottom: '20px' }}>

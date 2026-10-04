@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { User, Clock, Calendar, Trash2, Eye, FileText, Loader2, Search, ChevronLeft, ChevronRight, MonitorSmartphone } from 'lucide-react';
 import { UserBadge } from '@/components/UserBadge';
+import AuthAwareLogo from '@/components/AuthAwareLogo';
+
 
 export default function ConnectDashboard() {
   const { user, profile, loading, needsOnboarding, logout } = useAuth();
@@ -101,16 +103,7 @@ export default function ConnectDashboard() {
     <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--text-primary)', padding: '0' }}>
       {/* Header */}
       <header className="banner">
-        <div className="banner-brand">
-          <Link href="/connect" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Logo" className="banner-logo" />
-            <div className="banner-title">
-              <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
-              <div style={{ letterSpacing: '0.2px' }}>MILESTONES <span style={{ color: 'var(--primary)' }}>CONNECT</span></div>
-            </div>
-          </Link>
-        </div>
+        <AuthAwareLogo href="/connect" />
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <Link href="/web" className="nav-btn">
             <MonitorSmartphone size={16} />
