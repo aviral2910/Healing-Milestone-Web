@@ -124,7 +124,7 @@ export default async function Home() {
           </div>
           <h2 className="section-title">Healing Milestones <span className="text-gold">Connect</span></h2>
           <p className="section-subtitle">
-            Securely manage your patient roster and track healing milestones in one place. HM Connect is built for healthcare professionals, caregivers, and family members to stay updated on a patient's health snapshots.
+            Your secure portal for managing and tracking health journeys. Whether you're tracking your own milestones, staying updated on a loved one, or managing a patient roster, HM Connect brings it all together in one place.
           </p>
           <div style={{ marginTop: '2.5rem' }}>
             <Link href="/connect" className="download-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
