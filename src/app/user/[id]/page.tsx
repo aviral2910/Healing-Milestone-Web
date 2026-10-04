@@ -2,6 +2,7 @@ import { UserBadge } from '@/components/UserBadge';
 import { Metadata } from "next";
 import Link from "next/link";
 import StoriesCarousel from "@/components/StoriesCarousel";
+import ProfileTabs from "./ProfileTabs";
 import "./user-profile.css";
 import AuthAwareLogo from '@/components/AuthAwareLogo';
  
@@ -136,25 +137,17 @@ export default async function UserProfile({ params }: Props) {
         </div>
       </main>
 
-      {/* Stories Section outside of max-width container */}
-      <section className="featured-stories-section" style={{ paddingBottom: '120px' }}>
-        <h2 className="section-title">Stories by {user.displayName}</h2>
-        
-        {userStories.length > 0 ? (
-          <StoriesCarousel 
-            stories={userStories.map((story: any) => ({
-              id: story.id,
-              mainImage: story.mainImage || null,
-              heading: story.heading || null,
-              description: story.description || null
-            }))} 
-          />
-        ) : (
-          <div className="empty-state glass-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <p>This user hasn't published any stories yet.</p>
-          </div>
-        )}
-      </section>
+      {/* Tabbed Profile Sections (Client Component for Auth) */}
+      <ProfileTabs 
+        userId={user.userId || id} 
+        authorName={user.displayName}
+        initialStories={userStories.map((story: any) => ({
+          id: story.id,
+          mainImage: story.mainImage || null,
+          heading: story.heading || null,
+          description: story.description || null
+        }))} 
+      />
     </div>
   );
 }
