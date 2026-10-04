@@ -100,7 +100,7 @@ export default function ConnectDashboard() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--text-primary)', padding: '0' }}>
       {/* Header */}
-      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 40px', background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
+      <header className="banner">
         <div className="banner-brand">
           <Link href="/connect" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}

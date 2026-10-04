@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function TermsOfService() {
   return (
     <div className="legal-page">
-      <header className="home-header" style={{ position: 'relative', top: 0 }}>
+      <header className="banner" style={{ position: 'relative', top: 0 }}>
         <div className="banner-brand">
           <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}

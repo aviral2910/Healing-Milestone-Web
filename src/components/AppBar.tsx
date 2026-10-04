@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function AppBar() {
   return (
-    <header className="home-header">
+    <header className="banner">
       <div className="banner-brand">
         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}

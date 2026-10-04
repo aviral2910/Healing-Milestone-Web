@@ -35,7 +35,7 @@ export default async function Home() {
   return (
     <div className="home-wrapper">
       {/* 1. Header / Navbar */}
-      <header className="home-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '24px' }}>
+      <header className="banner">
         <div className="banner-brand">
           <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}

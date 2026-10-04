@@ -259,7 +259,7 @@
 }
 
 /* Override home-header for profile page */
-.profile-page-wrapper .home-header {
+.profile-page-wrapper .banner {
   position: static; /* Not sticky, banner is sticky */
   background: transparent;
   border-bottom: 1px solid rgba(var(--primary-rgb), 0.1);
