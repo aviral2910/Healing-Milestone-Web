@@ -83,6 +83,7 @@ export default async function ViewSnapshotPage({ params }: Props) {
   }
 
   const authorName = viewData.journeys?.[0]?.authorName || "Patient";
+  const authorId = viewData.journeys?.[0]?.authorId;
   const expiresAt = viewData.expiresAt ? safeUtcDate(viewData.expiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : "Unknown";
 
   // Merge and sort timeline
@@ -119,12 +120,21 @@ export default async function ViewSnapshotPage({ params }: Props) {
             </div>
             <h1 style={{ fontSize: '1.8rem', margin: '0 0 12px 0', color: 'var(--text-primary)' }}>{viewData.viewName}</h1>
             <div className="dashboard-meta-row" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 16px', color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{ width: '24px', height: '24px', flexShrink: 0, borderRadius: '50%', backgroundColor: 'var(--primary)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.7rem' }}>
-                  {authorName.charAt(0).toUpperCase()}
+              {authorId ? (
+                <Link href={`/user/${authorId}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', cursor: 'pointer', transition: 'opacity 0.2s' }} className="hover-opacity">
+                  <div style={{ width: '24px', height: '24px', flexShrink: 0, borderRadius: '50%', backgroundColor: 'var(--primary)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.7rem' }}>
+                    {authorName.charAt(0).toUpperCase()}
+                  </div>
+                  <span style={{ fontWeight: '500', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{authorName}</span>
+                </Link>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ width: '24px', height: '24px', flexShrink: 0, borderRadius: '50%', backgroundColor: 'var(--primary)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.7rem' }}>
+                    {authorName.charAt(0).toUpperCase()}
+                  </div>
+                  <span style={{ fontWeight: '500', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{authorName}</span>
                 </div>
-                <span style={{ fontWeight: '500', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{authorName}</span>
-              </div>
+              )}
               <span className="meta-dot" style={{ opacity: 0.5 }}>•</span>
               <span style={{ color: '#ef4444', whiteSpace: 'nowrap' }}>Expires: {expiresAt}</span>
               <span className="meta-dot" style={{ opacity: 0.5 }}>•</span>

@@ -1294,3 +1294,11 @@ a {
   cursor: not-allowed;
   pointer-events: none;
 }
+
+.hover-opacity {
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+.hover-opacity:hover {
+  opacity: 0.8;
+}
