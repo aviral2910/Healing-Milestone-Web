@@ -22,21 +22,7 @@ export default function ProfileTabs({
   const [loadingBookmarks, setLoadingBookmarks] = useState(false);
   const [fetchedBookmarks, setFetchedBookmarks] = useState(false);
 
-  // If not owner, just return the stories carousel as before
-  if (!isOwner) {
-    return (
-      <section className="featured-stories-section" style={{ paddingBottom: '120px' }}>
-        <h2 className="section-title">Stories by {authorName}</h2>
-        {initialStories.length > 0 ? (
-          <StoriesCarousel stories={initialStories} />
-        ) : (
-          <div className="empty-state glass-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <p>This user hasn't published any stories yet.</p>
-          </div>
-        )}
-      </section>
-    );
-  }
+
 
   // Fetch bookmarked stories if tab is clicked
   useEffect(() => {
@@ -86,6 +72,22 @@ export default function ProfileTabs({
       fetchBookmarks();
     }
   }, [activeTab, fetchedBookmarks, user, userId]);
+
+  // If not owner, just return the stories carousel as before
+  if (!isOwner) {
+    return (
+      <section className="featured-stories-section" style={{ paddingBottom: '120px' }}>
+        <h2 className="section-title">Stories by {authorName}</h2>
+        {initialStories.length > 0 ? (
+          <StoriesCarousel stories={initialStories} />
+        ) : (
+          <div className="empty-state glass-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <p>This user hasn't published any stories yet.</p>
+          </div>
+        )}
+      </section>
+    );
+  }
 
   return (
     <section className="featured-stories-section" style={{ paddingBottom: '120px' }}>
