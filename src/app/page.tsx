@@ -38,7 +38,7 @@ export default async function Home() {
     <div className="home-wrapper">
       {/* 1. Header / Navbar */}
       <header className="banner">
-        <AuthAwareLogo />
+        <AuthAwareLogo showConnect={false} />
         <div style={{ display: 'flex', gap: '12px' }}>
           <Link href="/connect" className="nav-btn">
             <Users size={16} />

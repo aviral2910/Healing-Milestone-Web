@@ -5,7 +5,7 @@ import AuthAwareLogo from '@/components/AuthAwareLogo';
 export default function AppBar() {
   return (
     <header className="banner">
-      <AuthAwareLogo />
+      <AuthAwareLogo showConnect={false} />
     </header>
   );
 }

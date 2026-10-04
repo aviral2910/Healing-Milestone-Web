@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 
-export default function AuthAwareLogo({ href = "/" }: { href?: string }) {
+export default function AuthAwareLogo({ href = "/", showConnect = true }: { href?: string, showConnect?: boolean }) {
   const { user } = useAuth();
   
   return (
@@ -15,7 +15,7 @@ export default function AuthAwareLogo({ href = "/" }: { href?: string }) {
           <div style={{ letterSpacing: '0.7px' }}>HEALING</div>
           <div style={{ letterSpacing: '0.2px' }}>
             MILESTONES 
-            {user && <span style={{ color: 'var(--primary)' }}> CONNECT</span>}
+            {showConnect && user && <span style={{ color: 'var(--primary)' }}> CONNECT</span>}
           </div>
         </div>
       </Link>

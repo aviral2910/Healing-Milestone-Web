@@ -12,7 +12,7 @@ export default function TermsOfService() {
   return (
     <div className="legal-page">
       <header className="banner" style={{ position: 'relative', top: 0 }}>
-        <AuthAwareLogo />
+        <AuthAwareLogo showConnect={false} />
       </header>
 
       <main className="legal-main">
