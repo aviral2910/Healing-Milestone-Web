@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { Scanner } from '@yudiel/react-qr-scanner';
 
 export default function StepPage() {
   const router = useRouter();
@@ -17,7 +18,24 @@ export default function StepPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [riddleText, setRiddleText] = useState<string | null>(null);
-  const [totalRiddles, setTotalRiddles] = useState<number>(10);
+  const [totalRiddles, setTotalRiddles] = useState<number>(8); // Default to 8
+  const [showScanner, setShowScanner] = useState(false);
+
+  const handleScan = (text: string) => {
+    if (text) {
+      setShowScanner(false);
+      try {
+        const url = new URL(text);
+        if (url.pathname.startsWith('/q/')) {
+          router.push(url.pathname + url.search);
+        } else {
+          alert('Invalid QR code scanned. Make sure it is a Wedding Quest code!');
+        }
+      } catch (e) {
+        alert('Invalid QR code scanned.');
+      }
+    }
+  };
 
   useEffect(() => {
     const validateScan = async () => {
@@ -115,6 +133,26 @@ export default function StepPage() {
 
   return (
     <div style={{ padding: '2rem', textAlign: 'center' }}>
+      
+      {showScanner && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.95)', zIndex: 9999,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <div style={{ width: '100%', maxWidth: '400px', padding: '1rem' }}>
+            <h3 style={{ color: '#fff', marginBottom: '1rem' }}>Scan the next Clue</h3>
+            <Scanner onScan={(result) => handleScan(result[0].rawValue)} />
+            <button 
+              onClick={() => setShowScanner(false)}
+              style={{ marginTop: '2rem', padding: '1rem', width: '100%', backgroundColor: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold' }}
+            >
+              Cancel Scanning
+            </button>
+          </div>
+        </div>
+      )}
+
       <div style={{ fontSize: '3rem', marginBottom: '1rem', color: themeHex }}>✓</div>
       
       <div style={{ 
@@ -158,8 +196,29 @@ export default function StepPage() {
       </div>
 
       <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-        🔒 Go find the next QR code to unlock Clue {step + 1}!
+        🔒 Go find the next location and scan its code!
       </p>
+
+      {step < totalRiddles && (
+        <button 
+          onClick={() => setShowScanner(true)}
+          style={{
+            marginTop: '2rem',
+            width: '100%',
+            backgroundColor: 'transparent',
+            color: themeHex,
+            border: `2px solid ${themeHex}`,
+            fontWeight: 700,
+            padding: '1rem',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            textTransform: 'uppercase',
+            letterSpacing: '1px'
+          }}
+        >
+          📷 Scan In-App
+        </button>
+      )}
 
       {step === totalRiddles && (
         <button 
