@@ -28,12 +28,21 @@ export default function QuestLayout({ children }: { children: React.ReactNode })
         textAlign: 'center',
         padding: '2rem 1rem',
         borderTop: '1px solid var(--border)',
-        marginTop: 'auto'
+        marginTop: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '8px'
       }}>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '4px' }}>
+        <img 
+          src="/logo.png" 
+          alt="Healing Milestones Logo" 
+          style={{ width: '40px', height: '40px', objectFit: 'contain' }} 
+        />
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
           Celebrate love, celebrate health.
         </p>
-        <p style={{ color: 'var(--primary)', fontSize: '0.8rem', letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <p style={{ color: 'var(--primary)', fontSize: '0.8rem', letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 600, margin: 0 }}>
           Powered by Healing Milestones
         </p>
       </footer>
