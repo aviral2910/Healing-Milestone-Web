@@ -84,27 +84,26 @@ export default function StartPage() {
         {/* Brand Lockup: Line 1 = Appbar Logo & Typography, Line 2 = White Presents */}
         <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem' }}>
           
-          {/* 1st Line: Logo + HEALING MILESTONES in ONE horizontal line */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-            <img 
-              src="/logo.png" 
-              alt="Healing Milestones" 
-              style={{ width: '36px', height: '36px', objectFit: 'contain' }} 
-            />
-            <span style={{ 
-              fontFamily: "'Oswald', sans-serif", 
-              fontWeight: 500, 
-              fontSize: '1.45rem', 
-              color: '#ffffff', 
-              letterSpacing: '1px',
-              textTransform: 'uppercase',
-              lineHeight: 1
-            }}>
-              HEALING MILESTONES
-            </span>
+          {/* Logo placed ABOVE the brand name */}
+          <img 
+            src="/logo.png" 
+            alt="Healing Milestones" 
+            style={{ width: '48px', height: '48px', objectFit: 'contain', marginBottom: '8px' }} 
+          />
+
+          <div style={{ 
+            fontFamily: "'Oswald', sans-serif", 
+            fontWeight: 500, 
+            fontSize: '1.5rem', 
+            color: '#ffffff', 
+            letterSpacing: '1.5px',
+            textTransform: 'uppercase',
+            lineHeight: 1.2
+          }}>
+            HEALING MILESTONES
           </div>
 
-          {/* 2nd Line: PRESENTS in golden yellow */}
+          {/* PRESENTS in golden yellow */}
           <div style={{ 
             color: 'var(--primary)', 
             fontSize: '0.8rem', 
