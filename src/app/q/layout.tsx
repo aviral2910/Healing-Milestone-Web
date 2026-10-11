@@ -10,47 +10,7 @@ export default function QuestLayout({ children }: { children: React.ReactNode })
       flexDirection: 'column',
       alignItems: 'center'
     }}>
-      {/* Sticky Top App Bar */}
-      <header style={{
-        width: '100%',
-        maxWidth: '480px',
-        padding: '0.75rem 1rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        borderBottom: '1px solid var(--border)',
-        backgroundColor: 'var(--surface)',
-        position: 'sticky',
-        top: 0,
-        zIndex: 50
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <img 
-            src="/logo.png" 
-            alt="Healing Milestones" 
-            style={{ width: '26px', height: '26px', objectFit: 'contain' }} 
-          />
-          <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '0.5px' }}>
-            Healing Milestones
-          </span>
-        </div>
-        <div style={{ 
-          fontSize: '0.75rem', 
-          fontWeight: 700, 
-          color: 'var(--text-primary)',
-          backgroundColor: 'var(--background)',
-          padding: '4px 10px',
-          borderRadius: '20px',
-          border: '1px solid var(--border)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '4px'
-        }}>
-          <span>✨</span> Ankita & Harshit
-        </div>
-      </header>
-
-      <main style={{ flexGrow: 1, width: '100%', maxWidth: '450px', padding: '1.5rem 1rem', display: 'flex', flexDirection: 'column' }}>
+      <main style={{ flexGrow: 1, width: '100%', maxWidth: '450px', padding: '2rem 1rem', display: 'flex', flexDirection: 'column' }}>
         <div style={{
           backgroundColor: 'var(--surface)',
           border: '1px solid var(--border)',
