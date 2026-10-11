@@ -96,11 +96,15 @@ export default function StepPage() {
         }
 
         if (currentStep === step - 1) {
-          await updateDoc(playerRef, {
+          const updatePayload: any = {
             current_step: step,
             active_round: color,
             last_scanned_at: new Date()
-          });
+          };
+          if (step >= maxSteps && !playerData.completed_at) {
+            updatePayload.completed_at = new Date();
+          }
+          await updateDoc(playerRef, updatePayload);
           setRiddleText(riddleData.riddleText);
         } else if (currentStep >= step) {
           setRiddleText(riddleData.riddleText);

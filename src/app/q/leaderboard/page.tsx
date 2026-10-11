@@ -13,6 +13,7 @@ interface Player {
   current_step: number;
   active_round: string | null;
   last_scanned_at?: any;
+  completed_at?: any;
 }
 
 export default function LeaderboardPage() {
@@ -49,8 +50,22 @@ export default function LeaderboardPage() {
         pData.push({ id: doc.id, ...doc.data() } as Player);
       });
 
-      // Sort client-side
+      // Sort: Winners first (by earliest completion time), then active players by level desc
       pData.sort((a, b) => {
+        const maxA = a.active_round ? (roundSteps[a.active_round] || 8) : 8;
+        const maxB = b.active_round ? (roundSteps[b.active_round] || 8) : 8;
+        const aWon = Boolean(a.active_round && a.current_step >= maxA);
+        const bWon = Boolean(b.active_round && b.current_step >= maxB);
+
+        if (aWon && !bWon) return -1;
+        if (!aWon && bWon) return 1;
+
+        if (aWon && bWon) {
+          const timeA = a.completed_at?.seconds || a.last_scanned_at?.seconds || 0;
+          const timeB = b.completed_at?.seconds || b.last_scanned_at?.seconds || 0;
+          return timeA - timeB;
+        }
+
         if ((b.current_step || 0) !== (a.current_step || 0)) {
           return (b.current_step || 0) - (a.current_step || 0);
         }
@@ -63,7 +78,7 @@ export default function LeaderboardPage() {
     });
 
     return () => unsubPlayers();
-  }, []);
+  }, [roundSteps]);
 
   const roundColors: Record<string, string> = {
     yellow: '#eab308',
@@ -203,7 +218,7 @@ export default function LeaderboardPage() {
                       {player.name}
                       {hasWon && (
                         <span style={{ 
-                          fontSize: '0.65rem', 
+                          fontSize: '0.7rem', 
                           padding: '2px 8px', 
                           backgroundColor: '#eab308', 
                           color: '#000', 
@@ -211,12 +226,17 @@ export default function LeaderboardPage() {
                           fontWeight: 800,
                           textTransform: 'uppercase'
                         }}>
-                          WINNER
+                          {index === 0 ? '🥇 1ST PLACE' : index === 1 ? '🥈 2ND PLACE' : index === 2 ? '🥉 3RD PLACE' : '🏆 FINISHED'}
                         </span>
                       )}
                     </h2>
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
                       {player.relation}
+                      {hasWon && (player.completed_at || player.last_scanned_at) && (
+                        <span style={{ marginLeft: '8px', color: '#eab308', fontWeight: 600 }}>
+                          • Finished at {new Date((player.completed_at?.seconds || player.last_scanned_at?.seconds) * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                        </span>
+                      )}
                     </p>
                   </div>
                 </div>

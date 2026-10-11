@@ -15,6 +15,7 @@ interface Player {
   active_round: string | null;
   started_at?: any;
   last_scanned_at?: any;
+  completed_at?: any;
 }
 
 export default function AdminPage() {
@@ -52,8 +53,22 @@ export default function AdminPage() {
         pList.push({ id: d.id, ...d.data() } as Player);
       });
 
-      // Sort client-side by current step desc, then last activity
+      // Sort client-side: Winners first (sorted by earliest completion timestamp), then active players by level
       pList.sort((a, b) => {
+        const maxA = a.active_round ? (roundSteps[a.active_round] || 8) : 8;
+        const maxB = b.active_round ? (roundSteps[b.active_round] || 8) : 8;
+        const aWon = Boolean(a.active_round && a.current_step >= maxA);
+        const bWon = Boolean(b.active_round && b.current_step >= maxB);
+
+        if (aWon && !bWon) return -1;
+        if (!aWon && bWon) return 1;
+
+        if (aWon && bWon) {
+          const timeA = a.completed_at?.seconds || a.last_scanned_at?.seconds || 0;
+          const timeB = b.completed_at?.seconds || b.last_scanned_at?.seconds || 0;
+          return timeA - timeB;
+        }
+
         if ((b.current_step || 0) !== (a.current_step || 0)) {
           return (b.current_step || 0) - (a.current_step || 0);
         }
@@ -65,7 +80,7 @@ export default function AdminPage() {
       setPlayers(pList);
     });
     return () => unsub();
-  }, []);
+  }, [roundSteps]);
 
   const changeRound = async (color: RoundColor | null) => {
     try {
@@ -411,12 +426,21 @@ export default function AdminPage() {
                     <div>
                       <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         {player.name}
-                        {hasWon && <span style={{ fontSize: '0.7rem', padding: '2px 6px', backgroundColor: '#eab308', color: '#000', borderRadius: '4px', fontWeight: 800 }}>WINNER</span>}
+                        {hasWon && (
+                          <span style={{ fontSize: '0.7rem', padding: '2px 8px', backgroundColor: '#eab308', color: '#000', borderRadius: '4px', fontWeight: 800 }}>
+                            {idx === 0 ? '🥇 1ST PLACE' : idx === 1 ? '🥈 2ND PLACE' : idx === 2 ? '🥉 3RD PLACE' : '🏆 FINISHED'}
+                          </span>
+                        )}
                       </div>
                       
                       <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '2px' }}>
                         <span>👔 {player.relation}</span>
                         {player.phone && <span>📞 <a href={`tel:${player.phone}`} style={{ color: 'var(--primary)', textDecoration: 'none' }}>{player.phone}</a></span>}
+                        {hasWon && (player.completed_at || player.last_scanned_at) && (
+                          <span style={{ color: '#eab308', fontWeight: 600 }}>
+                            ⏱️ Finished at: {new Date((player.completed_at?.seconds || player.last_scanned_at?.seconds) * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
