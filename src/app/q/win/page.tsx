@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import confetti from 'canvas-confetti';
 
 export default function WinPage() {
   const router = useRouter();
@@ -67,6 +68,34 @@ export default function WinPage() {
         console.error("Error fetching winner stats:", e);
       } finally {
         setLoading(false);
+
+        // 🎉 BIG CONFETTI CELEBRATION!
+        confetti({
+          particleCount: 120,
+          spread: 100,
+          origin: { y: 0.4 }
+        });
+
+        const end = Date.now() + 3000;
+        const frame = () => {
+          confetti({
+            particleCount: 3,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0, y: 0.7 }
+          });
+          confetti({
+            particleCount: 3,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1, y: 0.7 }
+          });
+
+          if (Date.now() < end) {
+            requestAnimationFrame(frame);
+          }
+        };
+        frame();
       }
     };
 

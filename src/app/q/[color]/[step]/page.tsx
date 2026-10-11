@@ -5,6 +5,7 @@ import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Scanner } from '@yudiel/react-qr-scanner';
+import confetti from 'canvas-confetti';
 
 export default function StepPage() {
   const router = useRouter();
@@ -106,6 +107,13 @@ export default function StepPage() {
           }
           await updateDoc(playerRef, updatePayload);
           setRiddleText(riddleData.riddleText);
+
+          // Small celebratory confetti burst for solving the previous clue and finding this one!
+          confetti({
+            particleCount: 45,
+            spread: 60,
+            origin: { y: 0.6 }
+          });
         } else if (currentStep >= step) {
           setRiddleText(riddleData.riddleText);
         } else {
@@ -127,10 +135,67 @@ export default function StepPage() {
 
   if (error) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚠️</div>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#ef4444', marginBottom: '0.5rem' }}>Oops!</h2>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>{error}</p>
+      <div style={{ padding: '2.5rem 1.5rem', textAlign: 'center' }}>
+        {showScanner && (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.95)', zIndex: 9999,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
+          }}>
+            <div style={{ width: '100%', maxWidth: '400px', padding: '1rem' }}>
+              <h3 style={{ color: '#fff', marginBottom: '1rem' }}>Scan another QR Code</h3>
+              <Scanner onScan={(result) => handleScan(result[0].rawValue)} />
+              <button 
+                onClick={() => setShowScanner(false)}
+                style={{ marginTop: '2rem', padding: '1rem', width: '100%', backgroundColor: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold' }}
+              >
+                Cancel Scanning
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>⚠️</div>
+        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#ef4444', marginBottom: '0.5rem' }}>Oops!</h2>
+        <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '2rem', fontSize: '0.95rem' }}>{error}</p>
+
+        <button 
+          onClick={() => setShowScanner(true)}
+          style={{
+            width: '100%',
+            padding: '1.1rem',
+            backgroundColor: 'var(--primary)',
+            color: '#000',
+            border: 'none',
+            borderRadius: '10px',
+            fontWeight: 800,
+            fontSize: '1rem',
+            cursor: 'pointer',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            boxShadow: '0 0 20px var(--glow)',
+            marginBottom: '1rem'
+          }}
+        >
+          📷 Scan Another QR Code
+        </button>
+
+        <button 
+          onClick={() => router.push('/q/start')}
+          style={{
+            width: '100%',
+            padding: '0.85rem',
+            backgroundColor: 'transparent',
+            color: 'var(--text-secondary)',
+            border: '1px solid var(--border)',
+            borderRadius: '8px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            fontSize: '0.85rem'
+          }}
+        >
+          Restart Game / Home
+        </button>
       </div>
     );
   }
