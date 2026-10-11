@@ -35,28 +35,26 @@ export default function QuestLayout({ children }: { children: React.ReactNode })
         alignItems: 'center',
         gap: '8px'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+        {/* Brand in ONE line */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
           <img 
             src="/logo.png" 
             alt="Healing Milestones Logo" 
-            style={{ width: '32px', height: '32px', objectFit: 'contain' }} 
+            style={{ width: '24px', height: '24px', objectFit: 'contain' }} 
           />
-          <div style={{ 
+          <span style={{ 
             fontFamily: "'Oswald', sans-serif", 
             fontWeight: 500, 
             fontSize: '1.05rem', 
             color: '#ffffff', 
-            lineHeight: 1.1,
-            textAlign: 'left',
-            display: 'flex',
-            flexDirection: 'column'
+            letterSpacing: '0.8px',
+            textTransform: 'uppercase'
           }}>
-            <span style={{ letterSpacing: '0.7px' }}>HEALING</span>
-            <span style={{ letterSpacing: '0.2px' }}>MILESTONES</span>
-          </div>
+            HEALING MILESTONES
+          </span>
         </div>
 
-        <p style={{ color: 'var(--text-primary)', fontSize: '0.85rem', fontWeight: 700, margin: 0 }}>
+        <p style={{ color: 'var(--primary)', fontSize: '0.85rem', fontWeight: 700, margin: 0 }}>
           Celebrate Love • Track Your Health
         </p>
 

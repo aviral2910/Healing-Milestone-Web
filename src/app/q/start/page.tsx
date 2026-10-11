@@ -84,38 +84,36 @@ export default function StartPage() {
         {/* Brand Lockup: Line 1 = Appbar Logo & Typography, Line 2 = White Presents */}
         <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem' }}>
           
-          {/* 1st Line: Official Appbar Brand Lockup */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+          {/* 1st Line: Logo + HEALING MILESTONES in ONE horizontal line */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
             <img 
               src="/logo.png" 
               alt="Healing Milestones" 
-              style={{ width: '44px', height: '44px', objectFit: 'contain' }} 
+              style={{ width: '36px', height: '36px', objectFit: 'contain' }} 
             />
-            <div style={{ 
+            <span style={{ 
               fontFamily: "'Oswald', sans-serif", 
               fontWeight: 500, 
-              fontSize: '1.35rem', 
+              fontSize: '1.45rem', 
               color: '#ffffff', 
-              lineHeight: 1.1,
-              textAlign: 'left',
-              display: 'flex',
-              flexDirection: 'column'
+              letterSpacing: '1px',
+              textTransform: 'uppercase',
+              lineHeight: 1
             }}>
-              <span style={{ letterSpacing: '0.7px' }}>HEALING</span>
-              <span style={{ letterSpacing: '0.2px' }}>MILESTONES</span>
-            </div>
+              HEALING MILESTONES
+            </span>
           </div>
 
-          {/* 2nd Line: PRESENTS in crisp white */}
+          {/* 2nd Line: PRESENTS in golden yellow */}
           <div style={{ 
-            color: '#ffffff', 
-            fontSize: '0.75rem', 
-            letterSpacing: '5px', 
+            color: 'var(--primary)', 
+            fontSize: '0.8rem', 
+            letterSpacing: '6px', 
             textTransform: 'uppercase', 
-            fontWeight: 400,
-            marginTop: '10px',
-            opacity: 0.9,
-            fontFamily: "'Oswald', sans-serif"
+            fontWeight: 600,
+            marginTop: '8px',
+            fontFamily: "'Oswald', sans-serif",
+            textShadow: '0 0 10px rgba(212, 175, 55, 0.3)'
           }}>
             PRESENTS
           </div>
