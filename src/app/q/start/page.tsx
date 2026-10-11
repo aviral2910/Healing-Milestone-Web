@@ -79,26 +79,50 @@ export default function StartPage() {
       )}
 
       {/* BRAND & COUPLE GREETING HERO */}
-      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '0.8rem' }}>
-          <img 
-            src="/logo.png" 
-            alt="Healing Milestones" 
-            style={{ width: '28px', height: '28px', objectFit: 'contain' }} 
-          />
-          <span style={{ 
+      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+        
+        {/* Brand Lockup: Line 1 = Appbar Logo & Typography, Line 2 = White Presents */}
+        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem' }}>
+          
+          {/* 1st Line: Official Appbar Brand Lockup */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+            <img 
+              src="/logo.png" 
+              alt="Healing Milestones" 
+              style={{ width: '44px', height: '44px', objectFit: 'contain' }} 
+            />
+            <div style={{ 
+              fontFamily: "'Oswald', sans-serif", 
+              fontWeight: 500, 
+              fontSize: '1.35rem', 
+              color: '#ffffff', 
+              lineHeight: 1.1,
+              textAlign: 'left',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <span style={{ letterSpacing: '0.7px' }}>HEALING</span>
+              <span style={{ letterSpacing: '0.2px' }}>MILESTONES</span>
+            </div>
+          </div>
+
+          {/* 2nd Line: PRESENTS in crisp white */}
+          <div style={{ 
+            color: '#ffffff', 
             fontSize: '0.75rem', 
-            fontWeight: 800, 
-            letterSpacing: '2px', 
+            letterSpacing: '5px', 
             textTransform: 'uppercase', 
-            color: 'var(--primary)' 
+            fontWeight: 400,
+            marginTop: '10px',
+            opacity: 0.9,
+            fontFamily: "'Oswald', sans-serif"
           }}>
-            Healing Milestones Presents
-          </span>
+            PRESENTS
+          </div>
         </div>
 
         <div style={{
-          padding: '1.2rem 1rem',
+          padding: '1.3rem 1rem',
           backgroundColor: 'var(--background)',
           borderRadius: '16px',
           border: '1px solid var(--border)',
@@ -109,7 +133,7 @@ export default function StartPage() {
             Celebrating The Wedding Of
           </div>
           <h1 style={{ 
-            fontSize: '1.9rem', 
+            fontSize: '2rem', 
             fontWeight: 900, 
             color: 'var(--primary)', 
             margin: '0 0 6px 0',

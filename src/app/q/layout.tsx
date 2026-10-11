@@ -35,15 +35,25 @@ export default function QuestLayout({ children }: { children: React.ReactNode })
         alignItems: 'center',
         gap: '8px'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
           <img 
             src="/logo.png" 
             alt="Healing Milestones Logo" 
-            style={{ width: '24px', height: '24px', objectFit: 'contain' }} 
+            style={{ width: '32px', height: '32px', objectFit: 'contain' }} 
           />
-          <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '0.5px' }}>
-            Healing Milestones
-          </span>
+          <div style={{ 
+            fontFamily: "'Oswald', sans-serif", 
+            fontWeight: 500, 
+            fontSize: '1.05rem', 
+            color: '#ffffff', 
+            lineHeight: 1.1,
+            textAlign: 'left',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <span style={{ letterSpacing: '0.7px' }}>HEALING</span>
+            <span style={{ letterSpacing: '0.2px' }}>MILESTONES</span>
+          </div>
         </div>
 
         <p style={{ color: 'var(--text-primary)', fontSize: '0.85rem', fontWeight: 700, margin: 0 }}>
