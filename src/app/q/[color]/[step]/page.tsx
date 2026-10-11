@@ -60,13 +60,21 @@ export default function StepPage() {
           return;
         }
 
-        if (riddleData.totalSteps) setTotalRiddles(riddleData.totalSteps);
-
         const settingsDoc = await getDoc(doc(db, 'wedding_quest_settings', 'game_state'));
-        const activeRound = settingsDoc.exists() ? settingsDoc.data().active_round : null;
+        const settingsData = settingsDoc.exists() ? settingsDoc.data() : null;
+        const activeRound = settingsData ? settingsData.active_round : null;
         
+        const maxSteps = settingsData?.round_steps?.[color] || settingsData?.max_steps || riddleData.totalSteps || 8;
+        setTotalRiddles(maxSteps);
+
         if (activeRound !== color) {
           setError(`This is a clue for the ${color} round, but the active round is currently ${activeRound || 'not started'}.`);
+          setLoading(false);
+          return;
+        }
+
+        if (step > maxSteps) {
+          setError(`This round only has ${maxSteps} clues! You've already reached the end of this round.`);
           setLoading(false);
           return;
         }
@@ -220,7 +228,7 @@ export default function StepPage() {
         </button>
       )}
 
-      {step === totalRiddles && (
+      {step >= totalRiddles && (
         <button 
           onClick={() => router.push('/q/win')}
           style={{

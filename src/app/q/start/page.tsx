@@ -8,6 +8,7 @@ import { db } from '@/lib/firebase';
 export default function StartPage() {
   const router = useRouter();
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [relation, setRelation] = useState('');
   const [loading, setLoading] = useState(false);
   const [isAppBrowser, setIsAppBrowser] = useState(false);
@@ -33,6 +34,7 @@ export default function StartPage() {
       // Save to Firebase
       await setDoc(doc(db, 'wedding_quest_players', playerId), {
         name,
+        phone: phone || '',
         relation,
         started_at: new Date(),
         current_step: 0,
@@ -88,6 +90,17 @@ export default function StartPage() {
             onChange={e => setName(e.target.value)} 
             placeholder="e.g. Rahul"
             required 
+            style={inputStyle}
+          />
+        </div>
+
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem', fontWeight: 600 }}>Phone Number (Optional)</label>
+          <input 
+            type="tel" 
+            value={phone} 
+            onChange={e => setPhone(e.target.value)} 
+            placeholder="e.g. 9876543210"
             style={inputStyle}
           />
         </div>
