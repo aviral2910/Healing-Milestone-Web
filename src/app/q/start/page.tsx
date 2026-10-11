@@ -78,8 +78,62 @@ export default function StartPage() {
         </div>
       )}
 
-      <h1 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.5rem', textAlign: 'center' }}>Wedding Quest</h1>
-      <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '2rem', textAlign: 'center' }}>Enter your details below to join the game. Solve the riddles, find the QR codes, and race to the finish!</p>
+      {/* BRAND & COUPLE GREETING HERO */}
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '0.8rem' }}>
+          <img 
+            src="/logo.png" 
+            alt="Healing Milestones" 
+            style={{ width: '28px', height: '28px', objectFit: 'contain' }} 
+          />
+          <span style={{ 
+            fontSize: '0.75rem', 
+            fontWeight: 800, 
+            letterSpacing: '2px', 
+            textTransform: 'uppercase', 
+            color: 'var(--primary)' 
+          }}>
+            Healing Milestones Presents
+          </span>
+        </div>
+
+        <div style={{
+          padding: '1.2rem 1rem',
+          backgroundColor: 'var(--background)',
+          borderRadius: '16px',
+          border: '1px solid var(--border)',
+          boxShadow: '0 0 25px var(--glow)',
+          marginBottom: '1rem'
+        }}>
+          <div style={{ fontSize: '0.75rem', letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>
+            Celebrating The Wedding Of
+          </div>
+          <h1 style={{ 
+            fontSize: '1.9rem', 
+            fontWeight: 900, 
+            color: 'var(--primary)', 
+            margin: '0 0 6px 0',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            textShadow: '0 0 15px var(--glow)'
+          }}>
+            ✨ Ankita & Harshit ✨
+          </h1>
+          <div style={{ 
+            fontSize: '0.95rem', 
+            fontWeight: 700, 
+            color: 'var(--text-primary)',
+            letterSpacing: '1px',
+            textTransform: 'uppercase'
+          }}>
+            The Wedding Scavenger Hunt
+          </div>
+        </div>
+
+        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, fontStyle: 'italic', lineHeight: '1.4' }}>
+          "Celebrating love, milestones, and new beginnings. Enter your details below to race for the clues!"
+        </p>
+      </div>
 
       <form onSubmit={startGame}>
         <div style={{ marginBottom: '1.5rem' }}>

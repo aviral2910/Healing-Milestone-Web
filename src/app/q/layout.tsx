@@ -10,7 +10,47 @@ export default function QuestLayout({ children }: { children: React.ReactNode })
       flexDirection: 'column',
       alignItems: 'center'
     }}>
-      <main style={{ flexGrow: 1, width: '100%', maxWidth: '450px', padding: '2rem 1rem', display: 'flex', flexDirection: 'column' }}>
+      {/* Sticky Top App Bar */}
+      <header style={{
+        width: '100%',
+        maxWidth: '480px',
+        padding: '0.75rem 1rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottom: '1px solid var(--border)',
+        backgroundColor: 'var(--surface)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 50
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <img 
+            src="/logo.png" 
+            alt="Healing Milestones" 
+            style={{ width: '26px', height: '26px', objectFit: 'contain' }} 
+          />
+          <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '0.5px' }}>
+            Healing Milestones
+          </span>
+        </div>
+        <div style={{ 
+          fontSize: '0.75rem', 
+          fontWeight: 700, 
+          color: 'var(--text-primary)',
+          backgroundColor: 'var(--background)',
+          padding: '4px 10px',
+          borderRadius: '20px',
+          border: '1px solid var(--border)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px'
+        }}>
+          <span>✨</span> Ankita & Harshit
+        </div>
+      </header>
+
+      <main style={{ flexGrow: 1, width: '100%', maxWidth: '450px', padding: '1.5rem 1rem', display: 'flex', flexDirection: 'column' }}>
         <div style={{
           backgroundColor: 'var(--surface)',
           border: '1px solid var(--border)',
@@ -23,6 +63,7 @@ export default function QuestLayout({ children }: { children: React.ReactNode })
         </div>
       </main>
       
+      {/* Option 4: Branding & App Companion Footer */}
       <footer style={{
         width: '100%',
         textAlign: 'center',
@@ -32,27 +73,42 @@ export default function QuestLayout({ children }: { children: React.ReactNode })
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '12px'
+        gap: '8px'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
           <img 
             src="/logo.png" 
             alt="Healing Milestones Logo" 
-            style={{ width: '36px', height: '36px', objectFit: 'contain' }} 
+            style={{ width: '24px', height: '24px', objectFit: 'contain' }} 
           />
-          <h2 style={{ 
-            fontSize: '1.25rem', 
-            fontWeight: 800, 
-            margin: 0, 
-            color: 'var(--primary)',
-            letterSpacing: '0.5px'
-          }}>
+          <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '0.5px' }}>
             Healing Milestones
-          </h2>
+          </span>
         </div>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0, fontStyle: 'italic' }}>
-          Celebrate love, celebrate health.
+
+        <p style={{ color: 'var(--text-primary)', fontSize: '0.85rem', fontWeight: 700, margin: 0 }}>
+          Celebrate Love • Track Your Health
         </p>
+
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', margin: 0, maxWidth: '320px', lineHeight: '1.4' }}>
+          Your companion for life's most meaningful health journeys.
+        </p>
+
+        <a 
+          href="https://healingmilestones.in" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{ 
+            color: 'var(--primary)', 
+            fontSize: '0.8rem', 
+            textDecoration: 'none', 
+            fontWeight: 700,
+            letterSpacing: '0.5px',
+            marginTop: '4px'
+          }}
+        >
+          healingmilestones.in ↗
+        </a>
       </footer>
     </div>
   );

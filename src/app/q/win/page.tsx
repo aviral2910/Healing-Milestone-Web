@@ -118,7 +118,7 @@ export default function WinPage() {
       </h1>
       
       <p style={{ fontSize: '1.15rem', color: 'var(--text-primary)', marginBottom: '2rem', lineHeight: '1.5' }}>
-        Incredible speed, <strong>{playerName}</strong>! You have solved all the clues and conquered the <strong>{roundName ? roundName.toUpperCase() : ''} ROUND</strong>!
+        Incredible speed, <strong>{playerName}</strong>! You have solved all the clues and conquered the <strong>{roundName ? roundName.toUpperCase() : ''} ROUND</strong> of <strong>Ankita & Harshit's Wedding Quest</strong>!
       </p>
 
       {/* WINNER CERTIFICATE CARD */}
@@ -131,6 +131,9 @@ export default function WinPage() {
         boxShadow: '0 0 30px var(--glow)',
         textAlign: 'left'
       }}>
+        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span>✨</span> Ankita & Harshit's Wedding Quest
+        </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
           <div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Winner Name</div>
