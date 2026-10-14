@@ -434,7 +434,7 @@ export default function AdminPage() {
                       </div>
                       
                       <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '2px' }}>
-                        <span>👔 {player.relation}</span>
+                        <span>{player.relation?.toLowerCase().includes('bride') ? '👰' : player.relation?.toLowerCase().includes('groom') ? '🤵' : '👔'} {player.relation}</span>
                         {player.phone && <span>📞 <a href={`tel:${player.phone}`} style={{ color: 'var(--primary)', textDecoration: 'none' }}>{player.phone}</a></span>}
                         {hasWon && (player.completed_at || player.last_scanned_at) && (
                           <span style={{ color: '#eab308', fontWeight: 600 }}>

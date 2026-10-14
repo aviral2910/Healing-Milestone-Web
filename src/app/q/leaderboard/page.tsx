@@ -240,7 +240,12 @@ export default function LeaderboardPage() {
                       )}
                     </h2>
                     <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '4px 0 0 0', wordBreak: 'break-word' }}>
-                      {player.relation}
+                      {player.relation && (
+                        <span>
+                          {player.relation.toLowerCase().includes('bride') ? '👰 ' : player.relation.toLowerCase().includes('groom') ? '🤵 ' : ''}
+                          {player.relation}
+                        </span>
+                      )}
                       {hasWon && (player.completed_at || player.last_scanned_at) && (
                         <span style={{ display: 'inline-block', marginLeft: '6px', color: '#eab308', fontWeight: 600 }}>
                           • Finished {new Date((player.completed_at?.seconds || player.last_scanned_at?.seconds) * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}

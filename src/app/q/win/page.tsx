@@ -200,9 +200,11 @@ export default function WinPage() {
           gap: '0.75rem'
         }}>
           <div style={{ minWidth: 0, flex: '1 1 140px' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Winner Name</div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', wordBreak: 'break-word' }}>{playerName}</div>
-            {playerRelation && <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '2px' }}>👔 {playerRelation}</div>}
+            {playerRelation && (
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                {playerRelation.toLowerCase().includes('bride') ? '👰' : playerRelation.toLowerCase().includes('groom') ? '🤵' : '👔'} {playerRelation}
+              </div>
+            )}
           </div>
           <div style={{ textAlign: 'right', flexShrink: 0 }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Official Rank</div>

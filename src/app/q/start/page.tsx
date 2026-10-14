@@ -9,7 +9,7 @@ export default function StartPage() {
   const router = useRouter();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [relation, setRelation] = useState('');
+  const [side, setSide] = useState<"Bride's Side" | "Groom's Side" | ''>('');
   const [loading, setLoading] = useState(false);
   const [isAppBrowser, setIsAppBrowser] = useState(false);
 
@@ -23,7 +23,14 @@ export default function StartPage() {
 
   const startGame = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !relation) return;
+    if (!name.trim()) {
+      alert("Please enter your name.");
+      return;
+    }
+    if (!side) {
+      alert("Please choose whether you are on the Bride Side or Groom Side!");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -31,11 +38,12 @@ export default function StartPage() {
         ? crypto.randomUUID() 
         : Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
       
-      // Save to Firebase
+      // Save to Firebase (setting relation to side for full backwards compatibility)
       await setDoc(doc(db, 'wedding_quest_players', playerId), {
-        name,
-        phone: phone || '',
-        relation,
+        name: name.trim(),
+        phone: phone ? phone.trim() : '',
+        relation: side,
+        side,
         started_at: new Date(),
         current_step: 0,
         active_round: null
@@ -43,13 +51,13 @@ export default function StartPage() {
 
       // Save session to device
       localStorage.setItem('quest_player_id', playerId);
-      localStorage.setItem('quest_player_name', name);
+      localStorage.setItem('quest_player_name', name.trim());
 
-      alert("Welcome to the game! Now go find the first QR code for the active round!");
-      // We don't route them anywhere yet because they need to scan a QR code.
-      // But we can clear the form and show a success message.
+      alert(`Welcome to the game, Team ${side === "Bride's Side" ? 'Ankita (Bride)' : 'Harshit (Groom)'}! Now go find the first QR code for the active round!`);
+      // Clear form after joining
       setName('');
-      setRelation('');
+      setPhone('');
+      setSide('');
     } catch (error) {
       console.error(error);
       alert("Error starting game. Please try again.");
@@ -186,15 +194,115 @@ export default function StartPage() {
         </div>
 
         <div style={{ marginBottom: '2rem' }}>
-          <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem', fontWeight: 600 }}>Relation to Couple</label>
-          <input 
-            type="text" 
-            value={relation} 
-            onChange={e => setRelation(e.target.value)} 
-            placeholder="e.g. Bride's Brother"
-            required 
-            style={inputStyle}
-          />
+          <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.75rem', fontWeight: 600 }}>
+            Choose Your Side *
+          </label>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => setSide("Bride's Side")}
+              style={{
+                padding: '1rem 0.5rem',
+                borderRadius: '10px',
+                border: side === "Bride's Side" ? '2px solid var(--primary)' : '1px solid var(--border)',
+                backgroundColor: side === "Bride's Side" ? 'rgba(212, 175, 55, 0.15)' : 'var(--background)',
+                color: side === "Bride's Side" ? 'var(--primary)' : 'var(--text-secondary)',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                transition: 'all 0.2s ease',
+                boxShadow: side === "Bride's Side" ? '0 0 15px var(--glow)' : 'none',
+                position: 'relative'
+              }}
+            >
+              <span style={{ fontSize: '1.75rem' }}>👰</span>
+              <span style={{ fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Bride Side
+              </span>
+              <span style={{ fontSize: '0.7rem', color: side === "Bride's Side" ? 'var(--text-primary)' : 'var(--text-secondary)', opacity: 0.85 }}>
+                Team Ankita
+              </span>
+              {side === "Bride's Side" && (
+                <div style={{
+                  position: 'absolute',
+                  top: '6px',
+                  right: '6px',
+                  width: '18px',
+                  height: '18px',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--primary)',
+                  color: '#000',
+                  fontSize: '0.65rem',
+                  fontWeight: 900,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  ✓
+                </div>
+              )}
+            </button>
+
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => setSide("Groom's Side")}
+              style={{
+                padding: '1rem 0.5rem',
+                borderRadius: '10px',
+                border: side === "Groom's Side" ? '2px solid var(--primary)' : '1px solid var(--border)',
+                backgroundColor: side === "Groom's Side" ? 'rgba(212, 175, 55, 0.15)' : 'var(--background)',
+                color: side === "Groom's Side" ? 'var(--primary)' : 'var(--text-secondary)',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                transition: 'all 0.2s ease',
+                boxShadow: side === "Groom's Side" ? '0 0 15px var(--glow)' : 'none',
+                position: 'relative'
+              }}
+            >
+              <span style={{ fontSize: '1.75rem' }}>🤵</span>
+              <span style={{ fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Groom Side
+              </span>
+              <span style={{ fontSize: '0.7rem', color: side === "Groom's Side" ? 'var(--text-primary)' : 'var(--text-secondary)', opacity: 0.85 }}>
+                Team Harshit
+              </span>
+              {side === "Groom's Side" && (
+                <div style={{
+                  position: 'absolute',
+                  top: '6px',
+                  right: '6px',
+                  width: '18px',
+                  height: '18px',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--primary)',
+                  color: '#000',
+                  fontSize: '0.65rem',
+                  fontWeight: 900,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  ✓
+                </div>
+              )}
+            </button>
+          </div>
+          
+          {!side && (
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.5rem', marginBottom: 0 }}>
+              * Select Bride Side or Groom Side to join the quest
+            </p>
+          )}
         </div>
 
         <button 
