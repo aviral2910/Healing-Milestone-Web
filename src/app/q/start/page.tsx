@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { QUEST_DATA, RoundColor } from '../data';
 
 export default function StartPage() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function StartPage() {
   const [side, setSide] = useState<"Bride's Side" | "Groom's Side" | ''>('');
   const [loading, setLoading] = useState(false);
   const [isAppBrowser, setIsAppBrowser] = useState(false);
+  const [existingPlayer, setExistingPlayer] = useState<{ id: string; name: string; side?: string; currentStep?: number; activeRound?: string } | null>(null);
 
   useEffect(() => {
     // Basic check for in-app browsers like IG/FB which break localStorage
@@ -19,6 +21,30 @@ export default function StartPage() {
     if ((ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1)) {
       setIsAppBrowser(true);
     }
+
+    // Check if player already registered on this device
+    const checkExisting = async () => {
+      const pid = localStorage.getItem('quest_player_id');
+      const pname = localStorage.getItem('quest_player_name');
+      if (pid && pname) {
+        try {
+          const pDoc = await getDoc(doc(db, 'wedding_quest_players', pid));
+          if (pDoc.exists()) {
+            const data = pDoc.data();
+            setExistingPlayer({
+              id: pid,
+              name: data.name || pname,
+              side: data.side || data.relation || '',
+              currentStep: data.current_step || 0,
+              activeRound: data.active_round || ''
+            });
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    checkExisting();
   }, []);
 
   const startGame = async (e: React.FormEvent) => {
@@ -52,12 +78,31 @@ export default function StartPage() {
       // Save session to device
       localStorage.setItem('quest_player_id', playerId);
       localStorage.setItem('quest_player_name', name.trim());
+      localStorage.setItem('quest_player_side', side);
 
-      alert(`Welcome to the game, Team ${side === "Bride's Side" ? 'Ankita (Bride)' : 'Harshit (Groom)'}! Now go find the first QR code for the active round!`);
-      // Clear form after joining
-      setName('');
-      setPhone('');
-      setSide('');
+      // Fetch active round from game_state settings
+      const settingsSnap = await getDoc(doc(db, 'wedding_quest_settings', 'game_state'));
+      const activeRound = (settingsSnap.exists() && settingsSnap.data().active_round) 
+        ? settingsSnap.data().active_round 
+        : 'yellow';
+
+      if (!activeRound) {
+        alert(`Welcome, ${name.trim()}! You have joined Team ${side === "Bride's Side" ? 'Ankita (Bride)' : 'Harshit (Groom)'}. The Anchor has not started a round yet. Please wait for the announcement!`);
+        setName('');
+        setPhone('');
+        setSide('');
+        return;
+      }
+
+      // Fetch secret for clue 1 of this round
+      let secret = QUEST_DATA[activeRound as RoundColor]?.riddles[0]?.secret || 'ylw1';
+      const riddleDoc = await getDoc(doc(db, 'wedding_quest_riddles', `${activeRound}_1`));
+      if (riddleDoc.exists() && riddleDoc.data()?.secret) {
+        secret = riddleDoc.data().secret;
+      }
+
+      // Navigate directly to challenge page showing first riddle!
+      router.push(`/q/${activeRound}/1?secret=${secret}`);
     } catch (error) {
       console.error(error);
       alert("Error starting game. Please try again.");
@@ -168,6 +213,70 @@ export default function StartPage() {
           "Celebrating love, milestones, and new beginnings. Enter your details below to race for the clues!"
         </p>
       </div>
+
+      {existingPlayer && (
+        <div style={{
+          padding: '1.25rem',
+          backgroundColor: 'rgba(212, 175, 55, 0.12)',
+          border: '1px solid var(--primary)',
+          borderRadius: '14px',
+          marginBottom: '2rem',
+          textAlign: 'center',
+          boxShadow: '0 0 20px var(--glow)'
+        }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: 600 }}>
+            Active Session Found
+          </div>
+          <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--primary)', margin: '4px 0 2px 0' }}>
+            {existingPlayer.name}
+          </div>
+          {existingPlayer.side && (
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+              {existingPlayer.side.toLowerCase().includes('bride') ? '👰 ' : '🤵 '}
+              {existingPlayer.side}
+            </div>
+          )}
+          <button
+            type="button"
+            disabled={loading}
+            onClick={async () => {
+              setLoading(true);
+              try {
+                const settingsSnap = await getDoc(doc(db, 'wedding_quest_settings', 'game_state'));
+                const activeRound = (settingsSnap.exists() && settingsSnap.data().active_round) 
+                  ? settingsSnap.data().active_round 
+                  : existingPlayer.activeRound || 'yellow';
+                const targetStep = existingPlayer.currentStep && existingPlayer.currentStep > 0 ? existingPlayer.currentStep : 1;
+                const riddleDoc = await getDoc(doc(db, 'wedding_quest_riddles', `${activeRound}_${targetStep}`));
+                let secret = QUEST_DATA[activeRound as RoundColor]?.riddles[targetStep - 1]?.secret || 'ylw1';
+                if (riddleDoc.exists() && riddleDoc.data()?.secret) {
+                  secret = riddleDoc.data().secret;
+                }
+                router.push(`/q/${activeRound}/${targetStep}?secret=${secret}`);
+              } catch (e) {
+                console.error(e);
+              } finally {
+                setLoading(false);
+              }
+            }}
+            style={{
+              width: '100%',
+              padding: '0.9rem',
+              backgroundColor: 'var(--primary)',
+              color: '#000',
+              fontWeight: 800,
+              borderRadius: '8px',
+              border: 'none',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontSize: '0.85rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
+            }}
+          >
+            ➡️ Resume My Active Quest {existingPlayer.currentStep && existingPlayer.currentStep > 0 ? `(Clue #${existingPlayer.currentStep})` : '(Clue #1)'}
+          </button>
+        </div>
+      )}
 
       <form onSubmit={startGame}>
         <div style={{ marginBottom: '1.5rem' }}>

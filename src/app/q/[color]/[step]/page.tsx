@@ -23,6 +23,15 @@ export default function StepPage() {
   const [showScanner, setShowScanner] = useState(false);
   const [alreadySolvedStep, setAlreadySolvedStep] = useState<number | null>(null);
   const [playerActualStep, setPlayerActualStep] = useState<number | null>(null);
+  const [playerName, setPlayerName] = useState<string>('');
+  const [playerSide, setPlayerSide] = useState<string>('');
+
+  useEffect(() => {
+    const cachedName = localStorage.getItem('quest_player_name');
+    const cachedSide = localStorage.getItem('quest_player_side');
+    if (cachedName) setPlayerName(cachedName);
+    if (cachedSide) setPlayerSide(cachedSide);
+  }, []);
 
   const handleScan = (text: string) => {
     if (text) {
@@ -91,6 +100,9 @@ export default function StepPage() {
         }
 
         const playerData = playerDoc.data();
+        if (playerData.name) setPlayerName(playerData.name);
+        if (playerData.side || playerData.relation) setPlayerSide(playerData.side || playerData.relation);
+
         let currentStep = playerData.current_step || 0;
         let playerActiveRound = playerData.active_round;
 
@@ -160,6 +172,31 @@ export default function StepPage() {
                 Cancel Scanning
               </button>
             </div>
+          </div>
+        )}
+
+        {/* Contestant Header Badge */}
+        {playerName && (
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            padding: '0.4rem 1rem',
+            backgroundColor: 'var(--background)',
+            border: '1px solid var(--border)',
+            borderRadius: '9999px',
+            marginBottom: '1rem',
+            maxWidth: '100%',
+            flexWrap: 'wrap'
+          }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Contestant:</span>
+            <strong style={{ fontSize: '0.9rem', color: 'var(--primary)' }}>{playerName}</strong>
+            {playerSide && (
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                ({playerSide.toLowerCase().includes('bride') ? '👰' : '🤵'} {playerSide})
+              </span>
+            )}
           </div>
         )}
 
@@ -239,6 +276,45 @@ export default function StepPage() {
               Cancel Scanning
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Contestant Header Badge */}
+      {playerName && (
+        <div style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          padding: '0.45rem 1.1rem',
+          backgroundColor: 'var(--background)',
+          border: '1px solid var(--border)',
+          borderRadius: '9999px',
+          marginBottom: '1.25rem',
+          boxShadow: '0 2px 12px rgba(0, 0, 0, 0.4)',
+          maxWidth: '100%',
+          flexWrap: 'wrap'
+        }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>
+            Contestant:
+          </span>
+          <strong style={{ fontSize: '0.95rem', color: 'var(--primary)', fontWeight: 800 }}>
+            {playerName}
+          </strong>
+          {playerSide && (
+            <span style={{
+              fontSize: '0.75rem',
+              padding: '2px 8px',
+              borderRadius: '9999px',
+              backgroundColor: playerSide.toLowerCase().includes('bride') ? 'rgba(236, 72, 153, 0.15)' : 'rgba(59, 130, 246, 0.15)',
+              color: playerSide.toLowerCase().includes('bride') ? '#f472b6' : '#60a5fa',
+              border: `1px solid ${playerSide.toLowerCase().includes('bride') ? '#f472b644' : '#60a5fa44'}`,
+              fontWeight: 700
+            }}>
+              {playerSide.toLowerCase().includes('bride') ? '👰 ' : '🤵 '}
+              {playerSide}
+            </span>
+          )}
         </div>
       )}
 
