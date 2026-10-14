@@ -188,7 +188,7 @@ export default function StepPage() {
             padding: '0.4rem 1rem',
             backgroundColor: 'var(--background)',
             border: '1px solid var(--border)',
-            borderRadius: '9999px',
+            borderRadius: '10px',
             marginBottom: '1rem',
             maxWidth: '100%',
             flexWrap: 'wrap'
@@ -196,8 +196,17 @@ export default function StepPage() {
             <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Contestant:</span>
             <strong style={{ fontSize: '0.9rem', color: 'var(--primary)' }}>{playerName}</strong>
             {playerSide && (
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                ({playerSide.toLowerCase().includes('bride') ? '👰' : '🤵'} {playerSide})
+              <span style={{
+                fontSize: '0.75rem',
+                padding: '2px 8px',
+                borderRadius: '6px',
+                backgroundColor: playerSide.toLowerCase().includes('bride') ? 'rgba(236, 72, 153, 0.15)' : 'rgba(59, 130, 246, 0.15)',
+                color: playerSide.toLowerCase().includes('bride') ? '#f472b6' : '#60a5fa',
+                border: `1px solid ${playerSide.toLowerCase().includes('bride') ? '#f472b644' : '#60a5fa44'}`,
+                fontWeight: 700
+              }}>
+                {playerSide.toLowerCase().includes('bride') ? '👰 ' : '🤵 '}
+                {playerSide}
               </span>
             )}
           </div>
@@ -292,7 +301,7 @@ export default function StepPage() {
           padding: '0.45rem 1.1rem',
           backgroundColor: 'var(--background)',
           border: '1px solid var(--border)',
-          borderRadius: '9999px',
+          borderRadius: '10px',
           marginBottom: '1.25rem',
           boxShadow: '0 2px 12px rgba(0, 0, 0, 0.4)',
           maxWidth: '100%',
@@ -308,7 +317,7 @@ export default function StepPage() {
             <span style={{
               fontSize: '0.75rem',
               padding: '2px 8px',
-              borderRadius: '9999px',
+              borderRadius: '6px',
               backgroundColor: playerSide.toLowerCase().includes('bride') ? 'rgba(236, 72, 153, 0.15)' : 'rgba(59, 130, 246, 0.15)',
               color: playerSide.toLowerCase().includes('bride') ? '#f472b6' : '#60a5fa',
               border: `1px solid ${playerSide.toLowerCase().includes('bride') ? '#f472b644' : '#60a5fa44'}`,
