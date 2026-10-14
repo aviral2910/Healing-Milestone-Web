@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { doc, getDoc, setDoc, updateDoc, collection, onSnapshot, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { RoundColor, QUEST_DATA } from '../data';
+import { RoundColor } from '../data';
 import Link from 'next/link';
 
 interface Player {
@@ -124,30 +124,6 @@ export default function AdminPage() {
       await deleteDoc(doc(db, 'wedding_quest_players', id));
     } catch (e: any) {
       alert("Error deleting player: " + e.message);
-    }
-  };
-
-  const seedDatabase = async () => {
-    if (!confirm("This will overwrite all riddles in Firebase with the 32 riddles from the code. Continue?")) return;
-    setLoading(true);
-    try {
-      for (const [color, data] of Object.entries(QUEST_DATA)) {
-        for (const riddle of data.riddles) {
-          const docRef = doc(db, 'wedding_quest_riddles', `${color}_${riddle.step}`);
-          await setDoc(docRef, {
-            riddleText: riddle.riddleText,
-            secret: riddle.secret,
-            hint: riddle.hint,
-            totalSteps: roundSteps[color] || 8
-          });
-        }
-      }
-      alert("Database successfully seeded with all 32 riddles!");
-    } catch (e) {
-      console.error(e);
-      alert("Error seeding database.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -479,25 +455,6 @@ export default function AdminPage() {
             })}
           </div>
         )}
-      </div>
-
-      {/* 4. SEED DATABASE */}
-      <div style={{ paddingTop: '1rem', borderTop: '1px solid var(--border)', textAlign: 'center' }}>
-        <button 
-          onClick={seedDatabase} 
-          style={{
-            padding: '0.75rem 1.5rem', 
-            borderRadius: '8px',
-            border: '1px solid var(--primary)', 
-            backgroundColor: 'transparent',
-            color: 'var(--primary)', 
-            fontWeight: 600, 
-            cursor: 'pointer',
-            fontSize: '0.85rem'
-          }}
-        >
-          Initialize / Re-sync All 32 Riddles in Firebase
-        </button>
       </div>
 
     </div>
