@@ -123,11 +123,14 @@ export default function StepPage() {
           setRiddleText(riddleData.riddleText);
 
           // Small celebratory confetti burst for solving the previous clue and finding this one!
-          confetti({
-            particleCount: 45,
-            spread: 60,
-            origin: { y: 0.6 }
-          });
+          // Only trigger for step > 1 (when player solved a previous riddle and found the next QR)
+          if (step > 1) {
+            confetti({
+              particleCount: 45,
+              spread: 60,
+              origin: { y: 0.6 }
+            });
+          }
         } else if (currentStep === step) {
           // Player re-scanned the clue they are currently on
           setRiddleText(riddleData.riddleText);
@@ -410,7 +413,9 @@ export default function StepPage() {
         </div>
       ) : (
         <>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem', color: themeHex }}>✓</div>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem', color: themeHex }}>
+            {step === 1 ? '📜' : '✓'}
+          </div>
           
           <div style={{ 
             marginBottom: '0.5rem', 
@@ -459,7 +464,7 @@ export default function StepPage() {
           </div>
 
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span>🔒</span> Go find the next location and scan its code!
+            <span>🔒</span> {step >= totalRiddles ? 'Go find the final location or person and scan their code!' : 'Go find the next location or person and scan their code!'}
           </p>
 
           {step < totalRiddles && (
