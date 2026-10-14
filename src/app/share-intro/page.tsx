@@ -34,7 +34,7 @@ export default function ShareIntroPage() {
     <div className="share-page-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div className="share-form-container" style={{ maxWidth: '800px', width: '100%' }}>
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h1 style={{ fontSize: '3rem', color: 'var(--text-primary)', fontFamily: 'Oswald, sans-serif', marginBottom: '1rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.75rem, 6vw, 3rem)', color: 'var(--text-primary)', fontFamily: 'Oswald, sans-serif', marginBottom: '1rem', overflowWrap: 'break-word' }}>
             Your Story Can Light the Way for <span style={{ color: 'var(--primary)' }}>Someone Else</span>
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', lineHeight: '1.6' }}>

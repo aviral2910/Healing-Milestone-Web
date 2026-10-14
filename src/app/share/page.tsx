@@ -55,11 +55,11 @@ export default function ShareStoryPage() {
 
   if (success) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-        <div style={{ maxWidth: '600px', width: '100%', padding: '3rem', backgroundColor: 'var(--surface)', borderRadius: '24px', border: '1px solid var(--border)', textAlign: 'center', boxShadow: '0 8px 32px var(--glow)' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem clamp(1rem, 4vw, 2rem)' }}>
+        <div style={{ maxWidth: '600px', width: '100%', padding: 'clamp(1.5rem, 5vw, 3rem)', backgroundColor: 'var(--surface)', borderRadius: '24px', border: '1px solid var(--border)', textAlign: 'center', boxShadow: '0 8px 32px var(--glow)' }}>
           <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>💛</div>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--primary)', fontFamily: 'Oswald, sans-serif' }}>Thank You!</h1>
-          <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: '1.6' }}>
+          <h1 style={{ fontSize: 'clamp(1.8rem, 6vw, 2.5rem)', marginBottom: '1rem', color: 'var(--primary)', fontFamily: 'Oswald, sans-serif', overflowWrap: 'break-word' }}>Thank You!</h1>
+          <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: '1.6', overflowWrap: 'break-word' }}>
             Your story has been safely received. Our team will review and prepare it for publishing.
           </p>
 
@@ -119,7 +119,7 @@ export default function ShareStoryPage() {
         {!success && (
           <>
             <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-              <h1 style={{ fontSize: '3rem', color: 'var(--text-primary)', fontFamily: 'Oswald, sans-serif', marginBottom: '1rem' }}>
+              <h1 style={{ fontSize: 'clamp(1.75rem, 6vw, 3rem)', color: 'var(--text-primary)', fontFamily: 'Oswald, sans-serif', marginBottom: '1rem', overflowWrap: 'break-word' }}>
                 Share Your <span style={{ color: 'var(--primary)' }}>Journey</span>
               </h1>
               <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.6' }}>

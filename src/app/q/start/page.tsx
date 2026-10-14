@@ -71,9 +71,9 @@ export default function StartPage() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div style={{ padding: '2rem clamp(1rem, 4vw, 1.5rem)' }}>
       {isAppBrowser && (
-        <div style={{ padding: '1rem', backgroundColor: '#ef444422', border: '1px solid #ef4444', color: '#ef4444', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.85rem' }}>
+        <div style={{ padding: '1rem', backgroundColor: '#ef444422', border: '1px solid #ef4444', color: '#ef4444', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.85rem', overflowWrap: 'break-word' }}>
           <strong>⚠️ Warning:</strong> It looks like you opened this from Instagram or Facebook. Please open this page in your normal browser (Safari/Chrome) or your game progress will be lost!
         </div>
       )}
@@ -82,7 +82,7 @@ export default function StartPage() {
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         
         {/* Brand Lockup: Line 1 = Appbar Logo & Typography, Line 2 = White Presents */}
-        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem', maxWidth: '100%' }}>
           
           {/* Logo placed ABOVE the brand name */}
           <img 
@@ -94,11 +94,12 @@ export default function StartPage() {
           <div style={{ 
             fontFamily: "'Oswald', sans-serif", 
             fontWeight: 500, 
-            fontSize: '1.5rem', 
+            fontSize: 'clamp(1.2rem, 5vw, 1.5rem)', 
             color: '#ffffff', 
-            letterSpacing: '1.5px',
+            letterSpacing: '1px',
             textTransform: 'uppercase',
-            lineHeight: 1.2
+            lineHeight: 1.2,
+            overflowWrap: 'break-word'
           }}>
             HEALING MILESTONES
           </div>
@@ -106,8 +107,8 @@ export default function StartPage() {
           {/* PRESENTS in golden yellow */}
           <div style={{ 
             color: 'var(--primary)', 
-            fontSize: '0.8rem', 
-            letterSpacing: '6px', 
+            fontSize: 'clamp(0.75rem, 2.5vw, 0.8rem)', 
+            letterSpacing: 'clamp(3px, 1.2vw, 5px)', 
             textTransform: 'uppercase', 
             fontWeight: 600,
             marginTop: '8px',
@@ -119,39 +120,43 @@ export default function StartPage() {
         </div>
 
         <div style={{
-          padding: '1.3rem 1rem',
+          padding: '1.3rem clamp(0.75rem, 3vw, 1rem)',
           backgroundColor: 'var(--background)',
           borderRadius: '16px',
           border: '1px solid var(--border)',
           boxShadow: '0 0 25px var(--glow)',
-          marginBottom: '1rem'
+          marginBottom: '1rem',
+          overflowWrap: 'break-word'
         }}>
-          <div style={{ fontSize: '0.75rem', letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>
+          <div style={{ fontSize: '0.75rem', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>
             Celebrating The Wedding Of
           </div>
           <h1 style={{ 
-            fontSize: '2rem', 
+            fontSize: 'clamp(1.35rem, 5.5vw, 1.95rem)', 
             fontWeight: 900, 
             color: 'var(--primary)', 
             margin: '0 0 6px 0',
             textTransform: 'uppercase',
-            letterSpacing: '1px',
-            textShadow: '0 0 15px var(--glow)'
+            letterSpacing: '0.5px',
+            textShadow: '0 0 15px var(--glow)',
+            lineHeight: 1.25,
+            wordBreak: 'break-word',
+            overflowWrap: 'break-word'
           }}>
             ✨ Ankita & Harshit ✨
           </h1>
           <div style={{ 
-            fontSize: '0.95rem', 
+            fontSize: 'clamp(0.85rem, 3.5vw, 0.95rem)', 
             fontWeight: 700, 
             color: 'var(--text-primary)',
-            letterSpacing: '1px',
+            letterSpacing: '0.5px',
             textTransform: 'uppercase'
           }}>
             The Wedding Scavenger Hunt
           </div>
         </div>
 
-        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, fontStyle: 'italic', lineHeight: '1.4' }}>
+        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, fontStyle: 'italic', lineHeight: '1.4', overflowWrap: 'break-word' }}>
           "Celebrating love, milestones, and new beginnings. Enter your details below to race for the clues!"
         </p>
       </div>

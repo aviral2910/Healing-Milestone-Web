@@ -143,11 +143,12 @@ export default function QRSharePage() {
             margin-bottom: 2rem;
           }
           .sync-title {
-            font-size: 2.2rem;
+            font-size: clamp(1.4rem, 5vw, 2.2rem);
             font-weight: 800;
             color: #fff;
             letter-spacing: -0.5px;
             margin: 0;
+            overflow-wrap: break-word;
           }
           .icon-box {
             width: 54px;

@@ -144,13 +144,13 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px clamp(12px, 4vw, 24px)' }}>
       <div style={{ maxWidth: '600px', width: '100%' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="Logo" style={{ width: '64px', height: '64px', marginBottom: '1rem', margin: '0 auto' }} />
-          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>Complete Your Profile</h1>
-          <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Set up your HM Connect account</p>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: 'bold', color: 'var(--text-primary)', overflowWrap: 'break-word' }}>Complete Your Profile</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem', overflowWrap: 'break-word' }}>Set up your HM Connect account</p>
         </div>
 
         <div style={{ backgroundColor: 'var(--surface)', padding: '2rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>

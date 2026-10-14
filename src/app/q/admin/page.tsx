@@ -167,15 +167,15 @@ export default function AdminPage() {
     : players.filter(p => p.active_round === filterRound);
 
   return (
-    <div style={{ padding: '2rem 1.5rem', maxWidth: '850px', margin: '0 auto' }}>
+    <div style={{ padding: '1.5rem clamp(0.75rem, 3vw, 1.5rem)', maxWidth: '850px', margin: '0 auto' }}>
       
       {/* HEADER */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)', margin: 0 }}>
+          <h1 style={{ fontSize: 'clamp(1.3rem, 5vw, 1.8rem)', fontWeight: 800, color: 'var(--primary)', margin: 0, overflowWrap: 'break-word' }}>
             Anchor Control Center
           </h1>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '4px 0 0 0', overflowWrap: 'break-word' }}>
             Manage live rounds, clue limits, and track participants in real time.
           </p>
         </div>

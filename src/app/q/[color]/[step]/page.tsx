@@ -143,7 +143,7 @@ export default function StepPage() {
 
   if (error) {
     return (
-      <div style={{ padding: '2.5rem 1.5rem', textAlign: 'center' }}>
+      <div style={{ padding: '2.5rem clamp(1rem, 4vw, 1.5rem)', textAlign: 'center' }}>
         {showScanner && (
           <div style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
@@ -164,8 +164,8 @@ export default function StepPage() {
         )}
 
         <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>⚠️</div>
-        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#ef4444', marginBottom: '0.5rem' }}>Oops!</h2>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '2rem', fontSize: '0.95rem' }}>{error}</p>
+        <h2 style={{ fontSize: 'clamp(1.3rem, 5vw, 1.6rem)', fontWeight: 800, color: '#ef4444', marginBottom: '0.5rem' }}>Oops!</h2>
+        <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '2rem', fontSize: '0.95rem', overflowWrap: 'break-word', wordBreak: 'break-word' }}>{error}</p>
 
         <button 
           onClick={() => setShowScanner(true)}
@@ -177,12 +177,14 @@ export default function StepPage() {
             border: 'none',
             borderRadius: '10px',
             fontWeight: 800,
-            fontSize: '1rem',
+            fontSize: 'clamp(0.85rem, 3.5vw, 1rem)',
             cursor: 'pointer',
             textTransform: 'uppercase',
             letterSpacing: '1px',
             boxShadow: '0 0 20px var(--glow)',
-            marginBottom: '1rem'
+            marginBottom: '1rem',
+            whiteSpace: 'normal',
+            lineHeight: '1.3'
           }}
         >
           📷 Scan Another QR Code
@@ -199,7 +201,9 @@ export default function StepPage() {
             borderRadius: '8px',
             fontWeight: 600,
             cursor: 'pointer',
-            fontSize: '0.85rem'
+            fontSize: '0.85rem',
+            whiteSpace: 'normal',
+            lineHeight: '1.3'
           }}
         >
           Restart Game / Home
@@ -217,7 +221,7 @@ export default function StepPage() {
   const themeHex = themeColors[color] || 'var(--primary)';
 
   return (
-    <div style={{ padding: '2rem', textAlign: 'center' }}>
+    <div style={{ padding: '2rem clamp(1rem, 4vw, 1.5rem)', textAlign: 'center' }}>
       
       {showScanner && (
         <div style={{
@@ -240,7 +244,7 @@ export default function StepPage() {
 
       {alreadySolvedStep !== null ? (
         <div style={{
-          padding: '2rem 1.5rem',
+          padding: '1.75rem clamp(0.75rem, 3vw, 1.25rem)',
           backgroundColor: '#22c55e15',
           border: '1px solid #22c55e',
           borderRadius: '16px',
@@ -260,11 +264,11 @@ export default function StepPage() {
             The {color} Round
           </div>
 
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#22c55e', marginBottom: '0.4rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.15rem, 4.5vw, 1.4rem)', fontWeight: 800, color: '#22c55e', marginBottom: '0.4rem', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
             You Already Solved Clue #{alreadySolvedStep}!
           </h2>
           
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.5', marginBottom: '1.5rem' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.5', marginBottom: '1.5rem', overflowWrap: 'break-word' }}>
             You're already ahead! You have already conquered this clue and your active game progress is at <strong>Clue #{playerActualStep} of {totalRiddles}</strong>.
           </p>
 
@@ -279,18 +283,20 @@ export default function StepPage() {
             }}
             style={{
               width: '100%',
-              padding: '1.1rem',
+              padding: '1rem 0.75rem',
               backgroundColor: 'var(--primary)',
               color: '#000',
               fontWeight: 800,
               borderRadius: '10px',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '1rem',
+              fontSize: 'clamp(0.85rem, 3.5vw, 0.95rem)',
               textTransform: 'uppercase',
-              letterSpacing: '1px',
+              letterSpacing: '0.5px',
               boxShadow: '0 0 20px var(--glow)',
-              marginBottom: '1rem'
+              marginBottom: '1rem',
+              whiteSpace: 'normal',
+              lineHeight: '1.3'
             }}
           >
             ➡️ Resume My Active Clue (#{playerActualStep})
@@ -308,7 +314,9 @@ export default function StepPage() {
               fontWeight: 600,
               cursor: 'pointer',
               fontSize: '0.85rem',
-              marginBottom: '1.5rem'
+              marginBottom: '1.5rem',
+              whiteSpace: 'normal',
+              lineHeight: '1.3'
             }}
           >
             📷 Scan Next QR Code
@@ -319,7 +327,7 @@ export default function StepPage() {
             <summary style={{ cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: 600 }}>
               🔍 View Clue #{alreadySolvedStep} riddle again
             </summary>
-            <p style={{ marginTop: '0.5rem', fontStyle: 'italic', color: 'var(--text-primary)', fontSize: '0.95rem' }}>
+            <p style={{ marginTop: '0.5rem', fontStyle: 'italic', color: 'var(--text-primary)', fontSize: '0.95rem', overflowWrap: 'break-word' }}>
               "{riddleText}"
             </p>
           </details>
@@ -340,36 +348,42 @@ export default function StepPage() {
           </div>
           
           <h1 style={{ 
-            fontSize: '2rem', 
+            fontSize: 'clamp(1.4rem, 6vw, 2rem)', 
             fontWeight: 800, 
             marginBottom: '2rem', 
             textTransform: 'uppercase', 
             color: themeHex,
-            textShadow: `0 0 10px ${themeHex}44`
+            textShadow: `0 0 10px ${themeHex}44`,
+            overflowWrap: 'break-word',
+            wordBreak: 'break-word'
           }}>
             The {color} Round
           </h1>
 
           <div style={{ 
-            padding: '2rem', 
+            padding: 'clamp(1.2rem, 4vw, 1.75rem)', 
             borderRadius: '12px', 
             border: `1px solid ${themeHex}55`, 
             backgroundColor: `${themeHex}11`,
             marginBottom: '2rem',
-            boxShadow: `0 0 20px ${themeHex}22`
+            boxShadow: `0 0 20px ${themeHex}22`,
+            overflowWrap: 'break-word',
+            wordBreak: 'break-word'
           }}>
             <h2 style={{ 
-              fontSize: '1.25rem', 
+              fontSize: 'clamp(1.05rem, 4vw, 1.25rem)', 
               fontStyle: 'italic', 
               lineHeight: '1.6', 
-              color: 'var(--text-primary)' 
+              color: 'var(--text-primary)',
+              overflowWrap: 'break-word',
+              wordBreak: 'break-word'
             }}>
               "{riddleText}"
             </h2>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-            🔒 Go find the next location and scan its code!
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span>🔒</span> Go find the next location and scan its code!
           </p>
 
           {step < totalRiddles && (
@@ -386,7 +400,9 @@ export default function StepPage() {
                 borderRadius: '8px',
                 cursor: 'pointer',
                 textTransform: 'uppercase',
-                letterSpacing: '1px'
+                letterSpacing: '1px',
+                whiteSpace: 'normal',
+                lineHeight: '1.3'
               }}
             >
               📷 Scan In-App
@@ -407,7 +423,9 @@ export default function StepPage() {
                 border: 'none',
                 cursor: 'pointer',
                 textTransform: 'uppercase',
-                letterSpacing: '1px'
+                letterSpacing: '1px',
+                whiteSpace: 'normal',
+                lineHeight: '1.3'
               }}
             >
               I found the final clue! Finish Game

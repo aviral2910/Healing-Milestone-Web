@@ -103,18 +103,20 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div style={{ padding: '2rem 1.5rem', maxWidth: '750px', margin: '0 auto', textAlign: 'center' }}>
+    <div style={{ padding: '2rem clamp(0.75rem, 3vw, 1.5rem)', maxWidth: '750px', margin: '0 auto', textAlign: 'center' }}>
       
       {/* HEADER */}
       <div style={{ marginBottom: '2.5rem' }}>
         <h1 style={{ 
-          fontSize: '2.2rem', 
+          fontSize: 'clamp(1.4rem, 6vw, 2.2rem)', 
           fontWeight: 800, 
           color: 'var(--primary)', 
           textTransform: 'uppercase', 
-          letterSpacing: '2px',
+          letterSpacing: '1px',
           marginBottom: '0.5rem',
-          textShadow: '0 0 15px var(--glow)'
+          textShadow: '0 0 15px var(--glow)',
+          overflowWrap: 'break-word',
+          wordBreak: 'break-word'
         }}>
           Live Leaderboard
         </h1>
@@ -122,15 +124,18 @@ export default function LeaderboardPage() {
         {activeRound ? (
           <div style={{
             display: 'inline-block',
-            padding: '0.4rem 1.2rem',
+            padding: '0.4rem clamp(0.75rem, 3vw, 1.2rem)',
             borderRadius: '9999px',
             backgroundColor: `${activeColorHex}22`,
             border: `1px solid ${activeColorHex}`,
             color: activeColorHex,
             fontWeight: 700,
-            fontSize: '0.85rem',
+            fontSize: 'clamp(0.75rem, 3vw, 0.85rem)',
             textTransform: 'uppercase',
-            letterSpacing: '1px'
+            letterSpacing: '0.5px',
+            maxWidth: '100%',
+            whiteSpace: 'normal',
+            lineHeight: '1.4'
           }}>
             ● Live: {activeRound.toUpperCase()} ROUND ({roundSteps[activeRound] || 8} CLUES)
           </div>
@@ -177,21 +182,22 @@ export default function LeaderboardPage() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  padding: '1.2rem 1.5rem',
+                  padding: '1rem clamp(0.75rem, 3vw, 1.25rem)',
                   backgroundColor: isTop ? 'var(--surface)' : 'var(--background)',
                   border: isTop ? '2px solid var(--primary)' : '1px solid var(--border)',
                   borderRadius: '16px',
                   boxShadow: isTop ? '0 0 25px var(--glow)' : 'none',
                   transition: 'all 0.2s ease',
                   flexWrap: 'wrap',
-                  gap: '1rem'
+                  gap: '0.75rem'
                 }}
               >
                 {/* Left: Rank & Avatar */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', minWidth: 0, flex: '1 1 180px' }}>
                   <div style={{ 
-                    width: '42px', 
-                    height: '42px', 
+                    width: '38px', 
+                    height: '38px', 
+                    flexShrink: 0,
                     borderRadius: '50%', 
                     backgroundColor: isTop ? 'var(--primary)' : 'var(--surface)', 
                     color: isTop ? '#000' : 'var(--text-primary)',
@@ -199,42 +205,45 @@ export default function LeaderboardPage() {
                     alignItems: 'center', 
                     justifyContent: 'center', 
                     fontWeight: 800, 
-                    fontSize: '1.1rem',
+                    fontSize: '1rem',
                     boxShadow: isTop ? '0 0 10px var(--glow)' : 'none'
                   }}>
                     {hasWon ? '🏆' : isTop ? '👑' : `#${index + 1}`}
                   </div>
 
-                  <div>
+                  <div style={{ minWidth: 0, flex: 1 }}>
                     <h2 style={{ 
-                      fontSize: '1.15rem', 
+                      fontSize: 'clamp(0.95rem, 3.5vw, 1.15rem)', 
                       fontWeight: 700, 
                       margin: 0, 
                       color: isTop ? 'var(--primary)' : 'var(--text-primary)',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '8px'
+                      flexWrap: 'wrap',
+                      gap: '6px',
+                      wordBreak: 'break-word'
                     }}>
-                      {player.name}
+                      <span>{player.name}</span>
                       {hasWon && (
                         <span style={{ 
-                          fontSize: '0.7rem', 
-                          padding: '2px 8px', 
+                          fontSize: '0.65rem', 
+                          padding: '2px 7px', 
                           backgroundColor: '#eab308', 
                           color: '#000', 
                           borderRadius: '9999px',
                           fontWeight: 800,
-                          textTransform: 'uppercase'
+                          textTransform: 'uppercase',
+                          whiteSpace: 'nowrap'
                         }}>
                           {index === 0 ? '🥇 1ST PLACE' : index === 1 ? '🥈 2ND PLACE' : index === 2 ? '🥉 3RD PLACE' : '🏆 FINISHED'}
                         </span>
                       )}
                     </h2>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '4px 0 0 0', wordBreak: 'break-word' }}>
                       {player.relation}
                       {hasWon && (player.completed_at || player.last_scanned_at) && (
-                        <span style={{ marginLeft: '8px', color: '#eab308', fontWeight: 600 }}>
-                          • Finished at {new Date((player.completed_at?.seconds || player.last_scanned_at?.seconds) * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                        <span style={{ display: 'inline-block', marginLeft: '6px', color: '#eab308', fontWeight: 600 }}>
+                          • Finished {new Date((player.completed_at?.seconds || player.last_scanned_at?.seconds) * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                         </span>
                       )}
                     </p>
@@ -242,7 +251,7 @@ export default function LeaderboardPage() {
                 </div>
 
                 {/* Right: Progress & Level */}
-                <div style={{ textAlign: 'right', minWidth: '120px' }}>
+                <div style={{ textAlign: 'right', flexShrink: 0 }}>
                   <div style={{ 
                     fontSize: '1.2rem', 
                     fontWeight: 800, 

@@ -113,8 +113,8 @@ export default function WinPage() {
   const rankBadge = rank === 1 ? '🥇 1ST PLACE WINNER' : rank === 2 ? '🥈 2ND PLACE' : rank === 3 ? '🥉 3RD PLACE' : `🏆 #${rank} FINISHER`;
 
   return (
-    <div style={{ padding: '3rem 1.5rem', textAlign: 'center' }}>
-      <div style={{ fontSize: '4rem', marginBottom: '0.5rem', textShadow: '0 0 20px var(--glow)' }}>
+    <div style={{ padding: '2.5rem clamp(1rem, 4vw, 1.5rem)', textAlign: 'center' }}>
+      <div style={{ fontSize: 'clamp(3rem, 10vw, 4rem)', marginBottom: '0.5rem', textShadow: '0 0 20px var(--glow)' }}>
         {rank === 1 ? '👑' : '🎉'}
       </div>
 
@@ -126,33 +126,46 @@ export default function WinPage() {
         color: '#eab308',
         borderRadius: '9999px',
         fontWeight: 800,
-        fontSize: '0.85rem',
+        fontSize: 'clamp(0.75rem, 3vw, 0.85rem)',
         letterSpacing: '1px',
         marginBottom: '1rem',
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
+        maxWidth: '100%',
+        overflowWrap: 'break-word'
       }}>
         {rankBadge}
       </div>
 
       <h1 style={{ 
-        fontSize: '2.4rem', 
+        fontSize: 'clamp(1.4rem, 6.2vw, 2.2rem)', 
         fontWeight: 800, 
         color: 'var(--primary)', 
-        marginBottom: '0.5rem',
+        marginBottom: '0.75rem',
         textTransform: 'uppercase',
-        letterSpacing: '1px',
-        textShadow: '0 0 20px var(--glow)'
+        letterSpacing: '0.5px',
+        textShadow: '0 0 20px var(--glow)',
+        lineHeight: 1.15,
+        wordBreak: 'break-word',
+        overflowWrap: 'break-word',
+        maxWidth: '100%'
       }}>
         Congratulations!
       </h1>
       
-      <p style={{ fontSize: '1.15rem', color: 'var(--text-primary)', marginBottom: '2rem', lineHeight: '1.5' }}>
+      <p style={{ 
+        fontSize: 'clamp(0.95rem, 3.8vw, 1.15rem)', 
+        color: 'var(--text-primary)', 
+        marginBottom: '2rem', 
+        lineHeight: '1.5',
+        overflowWrap: 'break-word',
+        wordBreak: 'break-word'
+      }}>
         Incredible speed, <strong>{playerName}</strong>! You have solved all the clues and conquered the <strong>{roundName ? roundName.toUpperCase() : ''} ROUND</strong> of <strong>Ankita & Harshit's Wedding Quest</strong>!
       </p>
 
       {/* WINNER CERTIFICATE CARD */}
       <div style={{ 
-        padding: '2rem 1.5rem', 
+        padding: '1.75rem clamp(1rem, 4vw, 1.5rem)', 
         border: '2px solid var(--primary)', 
         backgroundColor: 'var(--surface)', 
         borderRadius: '16px',
@@ -160,16 +173,38 @@ export default function WinPage() {
         boxShadow: '0 0 30px var(--glow)',
         textAlign: 'left'
       }}>
-        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div style={{ 
+          fontSize: '0.75rem', 
+          fontWeight: 800, 
+          color: 'var(--primary)', 
+          letterSpacing: '1.5px', 
+          textTransform: 'uppercase', 
+          marginBottom: '1rem', 
+          borderBottom: '1px solid var(--border)', 
+          paddingBottom: '0.5rem', 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '6px',
+          flexWrap: 'wrap'
+        }}>
           <span>✨</span> Ankita & Harshit's Wedding Quest
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
-          <div>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'flex-start', 
+          borderBottom: '1px solid var(--border)', 
+          paddingBottom: '1rem', 
+          marginBottom: '1rem',
+          flexWrap: 'wrap',
+          gap: '0.75rem'
+        }}>
+          <div style={{ minWidth: 0, flex: '1 1 140px' }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Winner Name</div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)' }}>{playerName}</div>
-            {playerRelation && <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>👔 {playerRelation}</div>}
+            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', wordBreak: 'break-word' }}>{playerName}</div>
+            {playerRelation && <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '2px' }}>👔 {playerRelation}</div>}
           </div>
-          <div style={{ textAlign: 'right' }}>
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Official Rank</div>
             <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--primary)' }}>
               #{rank || 1}
@@ -178,7 +213,7 @@ export default function WinPage() {
         </div>
 
         {completedTime && (
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>⏱️ Official Completion Time:</span>
             <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--primary)' }}>{completedTime}</span>
           </div>
@@ -192,7 +227,7 @@ export default function WinPage() {
         borderRadius: '10px',
         marginBottom: '2rem'
       }}>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0, overflowWrap: 'break-word' }}>
           🎟️ <strong>CLAIM YOUR PRIZE:</strong> Show this screen to the Anchor or the Bride's Brother (Aviral) to verify your winning time!
         </p>
       </div>
