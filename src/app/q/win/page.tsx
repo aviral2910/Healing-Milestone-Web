@@ -40,12 +40,15 @@ export default function WinPage() {
             setCompletedTime(dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
           }
 
+          const settingsSnap = await getDoc(doc(db, 'wedding_quest_settings', 'game_state'));
+          const maxSteps = settingsSnap.exists() ? (settingsSnap.data().round_steps?.[round] || 8) : 8;
+
           // Calculate rank among completed players in this round
           const allPlayersSnap = await getDocs(collection(db, 'wedding_quest_players'));
           const winners: any[] = [];
           allPlayersSnap.forEach((d) => {
             const data = d.data();
-            if (data.active_round === round && (data.completed_at || data.current_step >= 5)) {
+            if (data.active_round === round && (data.completed_at || (data.current_step && data.current_step >= maxSteps))) {
               winners.push({ id: d.id, ...data });
             }
           });

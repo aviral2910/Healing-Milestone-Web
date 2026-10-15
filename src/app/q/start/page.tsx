@@ -65,6 +65,12 @@ export default function StartPage() {
         : Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
       
       // Save to Firebase (setting relation to side for full backwards compatibility)
+      // Fetch active round from game_state settings
+      const settingsSnap = await getDoc(doc(db, 'wedding_quest_settings', 'game_state'));
+      const activeRound = (settingsSnap.exists() && settingsSnap.data().active_round) 
+        ? settingsSnap.data().active_round 
+        : 'yellow';
+
       await setDoc(doc(db, 'wedding_quest_players', playerId), {
         name: name.trim(),
         phone: phone ? phone.trim() : '',
@@ -72,7 +78,7 @@ export default function StartPage() {
         side,
         started_at: new Date(),
         current_step: 0,
-        active_round: null
+        active_round: activeRound
       });
 
       // Save session to device
@@ -80,29 +86,8 @@ export default function StartPage() {
       localStorage.setItem('quest_player_name', name.trim());
       localStorage.setItem('quest_player_side', side);
 
-      // Fetch active round from game_state settings
-      const settingsSnap = await getDoc(doc(db, 'wedding_quest_settings', 'game_state'));
-      const activeRound = (settingsSnap.exists() && settingsSnap.data().active_round) 
-        ? settingsSnap.data().active_round 
-        : 'yellow';
-
-      if (!activeRound) {
-        alert(`Welcome, ${name.trim()}! You have joined Team ${side === "Bride's Side" ? 'Ankita (Bride)' : 'Harshit (Groom)'}. The Anchor has not started a round yet. Please wait for the announcement!`);
-        setName('');
-        setPhone('');
-        setSide('');
-        return;
-      }
-
-      // Fetch secret for clue 1 of this round
-      let secret = QUEST_DATA[activeRound as RoundColor]?.riddles[0]?.secret || 'ylw1';
-      const riddleDoc = await getDoc(doc(db, 'wedding_quest_riddles', `${activeRound}_1`));
-      if (riddleDoc.exists() && riddleDoc.data()?.secret) {
-        secret = riddleDoc.data().secret;
-      }
-
-      // Navigate directly to challenge page showing first riddle!
-      router.push(`/q/${activeRound}/1?secret=${secret}`);
+      // Navigate directly to active quest hub showing Riddle #1!
+      router.push('/q/play');
     } catch (error) {
       console.error(error);
       alert("Error starting game. Please try again.");
@@ -239,26 +224,7 @@ export default function StartPage() {
           <button
             type="button"
             disabled={loading}
-            onClick={async () => {
-              setLoading(true);
-              try {
-                const settingsSnap = await getDoc(doc(db, 'wedding_quest_settings', 'game_state'));
-                const activeRound = (settingsSnap.exists() && settingsSnap.data().active_round) 
-                  ? settingsSnap.data().active_round 
-                  : existingPlayer.activeRound || 'yellow';
-                const targetStep = existingPlayer.currentStep && existingPlayer.currentStep > 0 ? existingPlayer.currentStep : 1;
-                const riddleDoc = await getDoc(doc(db, 'wedding_quest_riddles', `${activeRound}_${targetStep}`));
-                let secret = QUEST_DATA[activeRound as RoundColor]?.riddles[targetStep - 1]?.secret || 'ylw1';
-                if (riddleDoc.exists() && riddleDoc.data()?.secret) {
-                  secret = riddleDoc.data().secret;
-                }
-                router.push(`/q/${activeRound}/${targetStep}?secret=${secret}`);
-              } catch (e) {
-                console.error(e);
-              } finally {
-                setLoading(false);
-              }
-            }}
+            onClick={() => router.push('/q/play')}
             style={{
               width: '100%',
               padding: '0.9rem',
@@ -273,7 +239,7 @@ export default function StartPage() {
               letterSpacing: '0.5px'
             }}
           >
-            ➡️ Resume My Active Quest {existingPlayer.currentStep && existingPlayer.currentStep > 0 ? `(Clue #${existingPlayer.currentStep})` : '(Clue #1)'}
+            ➡️ Resume My Active Quest (Clue #{((existingPlayer.currentStep || 0) + 1)})
           </button>
         </div>
       )}
