@@ -155,24 +155,43 @@ export default function AdminPage() {
             Manage live rounds, clue limits, and track participants in real time.
           </p>
         </div>
-        <Link 
-          href="/q/leaderboard"
-          target="_blank"
-          style={{
-            padding: '0.6rem 1.2rem',
-            backgroundColor: 'transparent',
-            border: '1px solid var(--primary)',
-            color: 'var(--primary)',
-            borderRadius: '8px',
-            textDecoration: 'none',
-            fontSize: '0.85rem',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: '1px'
-          }}
-        >
-          🏆 Open Big-Screen Board
-        </Link>
+        <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+          <Link 
+            href="/q/admin/answers"
+            style={{
+              padding: '0.6rem 1rem',
+              backgroundColor: 'rgba(212, 175, 55, 0.14)',
+              border: '1px solid var(--primary)',
+              color: 'var(--primary)',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.8px'
+            }}
+          >
+            🗺️ Clue Answers / Hiding Guide
+          </Link>
+          <Link 
+            href="/q/leaderboard"
+            target="_blank"
+            style={{
+              padding: '0.6rem 1rem',
+              backgroundColor: 'transparent',
+              border: '1px solid var(--primary)',
+              color: 'var(--primary)',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.8px'
+            }}
+          >
+            🏆 Open Big-Screen Board
+          </Link>
+        </div>
       </div>
 
       {/* QUICK STATS */}

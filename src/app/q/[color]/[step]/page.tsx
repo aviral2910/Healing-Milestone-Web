@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { QUEST_DATA, RoundColor } from '../../data';
+import { QuestLoader } from '../../QuestLoader';
 import confetti from 'canvas-confetti';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import Link from 'next/link';
@@ -19,7 +20,10 @@ export default function CluePage() {
   const secret = searchParams.get('secret');
 
   const [loading, setLoading] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const scanLockedRef = useRef(false);
 
   // Game state
   const [playerName, setPlayerName] = useState<string>('');
@@ -44,27 +48,58 @@ export default function CluePage() {
   }, []);
 
   const handleScan = (text: string) => {
-    if (!text) return;
-    setShowScanner(false);
+    if (!text || scanLockedRef.current) return;
+
+    let targetPath: string | null = null;
     try {
       const url = new URL(text);
       if (url.pathname.startsWith('/q/')) {
-        router.push(url.pathname + url.search);
-      } else {
-        alert('Invalid QR code scanned. Make sure it is a Wedding Quest clue card!');
+        targetPath = url.pathname + url.search;
       }
     } catch {
       if (text.includes('/q/')) {
         const idx = text.indexOf('/q/');
-        router.push(text.substring(idx));
-      } else {
-        alert('Invalid QR code scanned.');
+        targetPath = text.substring(idx);
       }
     }
+
+    if (!targetPath) {
+      setShowScanner(false);
+      alert('Invalid QR code scanned. Make sure it is a Wedding Quest clue card!');
+      return;
+    }
+
+    scanLockedRef.current = true;
+    setShowScanner(false);
+
+    const currentPath = `/q/${color}/${step}${secret ? `?secret=${secret}` : ''}`;
+    if (targetPath === currentPath) {
+      // Re-scanned the exact same clue card: re-run validation with loader
+      setRefreshKey((k) => k + 1);
+      return;
+    }
+
+    setIsNavigating(true);
+    router.push(targetPath);
   };
 
   useEffect(() => {
+    let isActive = true;
+
     const validateScan = async () => {
+      // Reset state immediately so loader is always shown when transitioning between clues
+      setLoading(true);
+      setIsNavigating(false);
+      setError(null);
+      setUnlockedStep(null);
+      setNextStep(null);
+      setNextRiddleText('');
+      setIsAlreadyUnlocked(false);
+      setIsFinishedWin(false);
+      setPastSolvedStep(null);
+      setPlayerActualTarget(null);
+      scanLockedRef.current = false;
+
       try {
         const playerId = localStorage.getItem('quest_player_id');
         if (!playerId) {
@@ -75,6 +110,7 @@ export default function CluePage() {
 
         // 1. Fetch riddle for this card to verify secret
         const riddleDoc = await getDoc(doc(db, 'wedding_quest_riddles', `${color}_${step}`));
+        if (!isActive) return;
         if (!riddleDoc.exists()) {
           setError("Clue not found in database.");
           setLoading(false);
@@ -90,6 +126,7 @@ export default function CluePage() {
 
         // 2. Fetch game settings
         const settingsDoc = await getDoc(doc(db, 'wedding_quest_settings', 'game_state'));
+        if (!isActive) return;
         const settingsData = settingsDoc.exists() ? settingsDoc.data() : null;
         const activeRound = settingsData ? settingsData.active_round : null;
         
@@ -111,6 +148,7 @@ export default function CluePage() {
         // 3. Fetch player data
         const playerRef = doc(db, 'wedding_quest_players', playerId);
         const playerDoc = await getDoc(playerRef);
+        if (!isActive) return;
         
         if (!playerDoc.exists()) {
           router.push('/q/start');
@@ -208,23 +246,21 @@ export default function CluePage() {
 
       } catch (err) {
         console.error("Error validating scan:", err);
-        setError("An error occurred connecting to the database.");
+        if (isActive) {
+          setError("An error occurred connecting to the database.");
+        }
       } finally {
-        setLoading(false);
+        if (isActive) {
+          setLoading(false);
+        }
       }
     };
 
     validateScan();
-  }, [color, step, secret, router]);
-
-  if (loading) {
-    return (
-      <div style={{ padding: '4rem 1.5rem', textAlign: 'center', color: 'var(--primary)' }}>
-        <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>✦</div>
-        <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>Decrypting clue card...</div>
-      </div>
-    );
-  }
+    return () => {
+      isActive = false;
+    };
+  }, [color, step, secret, refreshKey, router]);
 
   const roundColors: Record<string, string> = {
     yellow: '#eab308',
@@ -233,6 +269,71 @@ export default function CluePage() {
     red: '#ef4444',
   };
   const themeHex = roundColors[color] || 'var(--primary)';
+
+  const scannerTargetLabel = nextStep ?? playerActualTarget ?? step + 1;
+
+  const sharedOverlays = (
+    <>
+      {isNavigating && (
+        <QuestLoader
+          fullScreen
+          title="QR Scanned! Unlocking Clue..."
+          subtitle="Verifying your clue card and loading the next page..."
+          accentColor={themeHex}
+        />
+      )}
+
+      {showScanner && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.96)', zIndex: 9999,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <div style={{ width: '100%', maxWidth: '400px', padding: '1rem', textAlign: 'center' }}>
+            <h3 style={{ color: '#fff', marginBottom: '0.5rem', fontSize: '1.2rem' }}>
+              Scan Clue #{scannerTargetLabel} QR Code
+            </h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
+              Point your camera at the physical card
+            </p>
+            <div style={{ borderRadius: '16px', overflow: 'hidden', border: `2px solid ${themeHex}` }}>
+              <Scanner onScan={(result) => handleScan(result[0]?.rawValue)} />
+            </div>
+            <button 
+              onClick={() => setShowScanner(false)}
+              style={{
+                marginTop: '1.5rem',
+                padding: '0.9rem',
+                width: '100%',
+                backgroundColor: '#ef4444',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                fontWeight: 700,
+                fontSize: '0.9rem',
+                cursor: 'pointer'
+              }}
+            >
+              Cancel Scanning
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+
+  if (loading) {
+    return (
+      <>
+        {sharedOverlays}
+        <QuestLoader
+          title={`Decrypting Clue Card #${Number.isNaN(step) ? '' : step}...`}
+          subtitle="Checking your scan and unlocking the next riddle..."
+          accentColor={themeHex}
+        />
+      </>
+    );
+  }
 
   // ERROR SCREEN (Skipped ahead, wrong round, invalid secret, etc.)
   if (error) {
@@ -291,6 +392,7 @@ export default function CluePage() {
   if (pastSolvedStep !== null) {
     return (
       <div style={{ padding: '2.5rem clamp(1rem, 4vw, 1.5rem)', maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
+        {sharedOverlays}
         <div style={{ fontSize: '3.5rem', marginBottom: '0.5rem' }}>✅</div>
         <div style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.75rem', fontWeight: 700, color: themeHex, marginBottom: '0.5rem' }}>
           The {color} Round
@@ -324,7 +426,11 @@ export default function CluePage() {
         </button>
 
         <button
-          onClick={() => setShowScanner(true)}
+          onClick={() => {
+            scanLockedRef.current = false;
+            setShowScanner(true);
+          }}
+          disabled={isNavigating}
           style={{
             width: '100%',
             padding: '0.85rem',
@@ -384,43 +490,7 @@ export default function CluePage() {
   return (
     <div style={{ padding: '2rem clamp(1rem, 4vw, 1.5rem)', maxWidth: '650px', margin: '0 auto', textAlign: 'center' }}>
       
-      {/* In-App Camera Scanner Modal */}
-      {showScanner && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.96)', zIndex: 9999,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
-        }}>
-          <div style={{ width: '100%', maxWidth: '400px', padding: '1rem', textAlign: 'center' }}>
-            <h3 style={{ color: '#fff', marginBottom: '0.5rem', fontSize: '1.2rem' }}>
-              Scan Clue #{nextStep} QR Code
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-              Point your camera at the physical card
-            </p>
-            <div style={{ borderRadius: '16px', overflow: 'hidden', border: `2px solid ${themeHex}` }}>
-              <Scanner onScan={(result) => handleScan(result[0]?.rawValue)} />
-            </div>
-            <button 
-              onClick={() => setShowScanner(false)}
-              style={{
-                marginTop: '1.5rem',
-                padding: '0.9rem',
-                width: '100%',
-                backgroundColor: '#ef4444',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '8px',
-                fontWeight: 700,
-                fontSize: '0.9rem',
-                cursor: 'pointer'
-              }}
-            >
-              Cancel Scanning
-            </button>
-          </div>
-        </div>
-      )}
+      {sharedOverlays}
 
       {/* Contestant Header Badge */}
       {playerName && (
@@ -569,7 +639,11 @@ export default function CluePage() {
       {/* Actions */}
       {nextStep && (
         <button 
-          onClick={() => setShowScanner(true)}
+          onClick={() => {
+            scanLockedRef.current = false;
+            setShowScanner(true);
+          }}
+          disabled={isNavigating}
           style={{
             width: '100%',
             backgroundColor: themeHex,

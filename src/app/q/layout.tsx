@@ -1,4 +1,5 @@
 import React from 'react';
+import './quest.css';
 
 export default function QuestLayout({ children }: { children: React.ReactNode }) {
   return (

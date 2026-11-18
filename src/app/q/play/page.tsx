@@ -1,17 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { QUEST_DATA, RoundColor } from '../data';
+import { QuestLoader } from '../QuestLoader';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import Link from 'next/link';
 
 export default function PlayPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const scanLockedRef = useRef(false);
 
   const [playerName, setPlayerName] = useState<string>('');
   const [playerSide, setPlayerSide] = useState<string>('');
@@ -89,29 +92,40 @@ export default function PlayPage() {
   }, [router]);
 
   const handleScan = (url: string) => {
-    if (!url) return;
+    if (!url || scanLockedRef.current) return;
+
+    let targetPath: string | null = null;
     try {
-      setShowScanner(false);
       // Expected URL pattern: .../q/[color]/[step]?secret=[secret]
       const parsed = new URL(url);
-      router.push(parsed.pathname + parsed.search);
+      if (parsed.pathname.startsWith('/q/')) {
+        targetPath = parsed.pathname + parsed.search;
+      }
     } catch {
       // In case raw path was returned
       if (url.includes('/q/')) {
         const idx = url.indexOf('/q/');
-        router.push(url.substring(idx));
-      } else {
-        alert("Scanned QR code is not a valid Wedding Quest clue. Please try again!");
+        targetPath = url.substring(idx);
       }
+    }
+
+    if (targetPath) {
+      scanLockedRef.current = true;
+      setShowScanner(false);
+      setIsNavigating(true);
+      router.push(targetPath);
+    } else {
+      setShowScanner(false);
+      alert("Scanned QR code is not a valid Wedding Quest clue. Please try again!");
     }
   };
 
   if (loading) {
     return (
-      <div style={{ padding: '4rem 1.5rem', textAlign: 'center', color: 'var(--primary)' }}>
-        <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>✦</div>
-        <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>Loading Active Quest Mission...</div>
-      </div>
+      <QuestLoader
+        title="Loading Active Quest Mission..."
+        subtitle="Fetching your current clue..."
+      />
     );
   }
 
@@ -157,6 +171,16 @@ export default function PlayPage() {
   return (
     <div style={{ padding: '2rem clamp(1rem, 4vw, 1.5rem)', maxWidth: '650px', margin: '0 auto', textAlign: 'center' }}>
       
+      {/* Full-Screen Loader Overlay while navigating to scanned clue page */}
+      {isNavigating && (
+        <QuestLoader
+          fullScreen
+          title="QR Scanned! Unlocking Clue..."
+          subtitle="Verifying your clue card and loading the next page..."
+          accentColor={themeHex}
+        />
+      )}
+
       {/* In-App Camera Scanner Modal */}
       {showScanner && (
         <div style={{
@@ -335,7 +359,11 @@ export default function PlayPage() {
 
       {/* Main Action: Scan In-App Camera */}
       <button 
-        onClick={() => setShowScanner(true)}
+        onClick={() => {
+          scanLockedRef.current = false;
+          setShowScanner(true);
+        }}
+        disabled={isNavigating}
         style={{
           width: '100%',
           padding: '1.1rem',
